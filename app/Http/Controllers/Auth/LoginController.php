@@ -21,18 +21,26 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo()
+    {
+        $user = auth()->user();
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+        if ($user->role->name === 'kades') {
+            return route('kades');
+        }
+
+        if ($user->role->name === 'sekretaris') {
+            return route('sekretaris');
+        }
+
+        if ($user->role->name === 'kaur') {
+            return route('kaur');
+        }
+
+        return route('/');
+    }
+
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
