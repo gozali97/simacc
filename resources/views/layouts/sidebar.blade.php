@@ -46,15 +46,15 @@
         </li>
         @elseif (Auth::user()->role->name === 'sekretaris')
         <li class="menu-item active">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+            <a href="/sekretaris" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle bx-tada-hover"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
          <!-- Layouts -->
          <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <i class="menu-icon tf-icons bx bx-archive bx-tada-hover"></i>
                 <div data-i18n="Layouts">Master</div>
             </a>
 
@@ -65,6 +65,12 @@
                     </a>
                 </li>
             </ul>
+        </li>
+        <li class="menu-item">
+            <a href="/kaurs" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                <div data-i18n="Analytics">Manajemen Kaur</div>
+            </a>
         </li>
         @elseif (Auth::user()->role->name === 'kaur')
         <li class="menu-item active">
@@ -89,6 +95,25 @@
             </ul>
         </li>
         @endif
+        <li class="menu-item">
+            <a href="#" class="menu-link" onclick="event.preventDefault(); Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: 'Anda akan keluar dari web!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Keluar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('logout-form').submit();
+                    }
+                });">
+            <i class="menu-icon tf-icons bx bx-log-out bx-tada-hover"></i>
+            <div>Logout</div>
+        </a>
+
+        </li>
         @else
         <li><a href="{{ route('login') }}">Login</a></li>
         <li><a href="{{ route('register') }}">Register</a></li>
