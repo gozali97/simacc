@@ -45,14 +45,14 @@
             </a>
         </li>
         @elseif (Auth::user()->role->name === 'sekretaris')
-        <li class="menu-item active">
+        <li class="menu-item {{ request()->is('sekretaris*') ? 'active' : '' }}">
             <a href="/sekretaris" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle bx-tada-hover"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
          <!-- Layouts -->
-         <li class="menu-item">
+         <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-archive bx-tada-hover"></i>
                 <div data-i18n="Layouts">Master</div>
@@ -60,13 +60,29 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">Data Asset</div>
+                    <a href="/jenis" class="menu-link">
+                        <div data-i18n="Without menu">Data Jenis Aset</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/ruang" class="menu-link">
+                        <div data-i18n="Without menu">Data Ruang</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/aset" class="menu-link">
+                        <div data-i18n="Without menu">Data Aset</div>
                     </a>
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">
+            <a href="/transaksi" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
+                <div data-i18n="Analytics">Transaksi</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
             <a href="/kaurs" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
                 <div data-i18n="Analytics">Manajemen Kaur</div>
