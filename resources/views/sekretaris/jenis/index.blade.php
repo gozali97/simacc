@@ -64,20 +64,16 @@
 @endif
 
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ruang /</span> Data Ruang</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Jenis /</span> Data Jenis</h4>
 
-    <!-- Basic Bootstrap Table -->
-    <div id="loading">
-
-    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-4 p-4">
             <div class="p-3 mt-4">
-                <h4 class="text-blue h4">Data Ruang</h4>
+                <h4 class="text-blue h4">Data Jenis</h4>
             </div>
             <div class="table-responsive text-nowrap">
-                <table class="table">
+                <table id="table1" class="table">
                     <thead>
                         <tr class="text-nowrap">
                             <th>No</th>
@@ -170,12 +166,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-    var table = $('#table').DataTable({
+    var table = $('#table1').({
         "processing": true,
         "serverSide": true,
         "ajax": "{{ route('jenis.index') }}",
         "columns": [
             { "data": "nama_jenis" },
+            { "data": "action", "orderable": false, "searchable": false },
         ]
     });
 
@@ -202,7 +199,7 @@
                 // Mengosongkan formulir setelah berhasil menambahkan data
                 form.trigger('reset');
                 // Menambahkan data baru ke dalam tabel
-                var table = $('#datatable').DataTable();
+                var table = $('#table1');
                 table.row.add([
                     response.nama_jenis,
                     '<a href="/jenis/' + response.kd_jenis + '/edit" type="button" class="btn btn-icon btn-warning"><span class="tf-icons bx bx-edit-alt"></span></a>' +

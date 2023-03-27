@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
@@ -50,12 +51,12 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::post('/kaurs/reset-password/{id}', [KelolaKaurController::class, 'reset_password'])->name('kaurs.reset-password');
 
     //  Route Kelola Asset
-    Route::get('/aset', [KelolaKaurController::class, 'index'])->name('aset.index');
-    Route::get('/aset/create', [KelolaKaurController::class, 'create'])->name('aset.create');
-    Route::post('/aset/store', [KelolaKaurController::class, 'store'])->name('aset.store');
-    Route::get('/aset/edit/{id}', [KelolaKaurController::class, 'edit'])->name('aset.edit');
-    Route::post('/aset/update/{id}', [KelolaKaurController::class, 'update'])->name('aset.update');
-    Route::get('/aset/destroy/{id}', [KelolaKaurController::class, 'destroy'])->name('aset.destroy');
+    Route::get('/aset', [AsetController::class, 'index'])->name('aset.index');
+    Route::get('/aset/create', [AsetController::class, 'create'])->name('aset.create');
+    Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
+    Route::get('/aset/edit/{id}', [AsetController::class, 'edit'])->name('aset.edit');
+    Route::post('/aset/update/{id}', [AsetController::class, 'update'])->name('aset.update');
+    Route::get('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
 
     //  Route Kelola Ruang
     Route::get('/ruang', [RuangController::class, 'index'])->name('ruang.index');

@@ -65,17 +65,12 @@
 <div class="row p-3">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ruang /</span> Data Ruang</h4>
 
-    <!-- Basic Bootstrap Table -->
-    <div id="loading">
-
-    </div>
+<div class="row">
     <div class="col-md-6">
         <div class="card mb-4 p-4">
             <div class="p-3 mt-4">
                 <h4 class="text-blue h4">Data Ruang</h4>
-                {{-- <a href="/ruang/create" type="button" class="btn btn-outline-success">Tambah</a> --}}
             </div>
-
             <div class="table-responsive text-nowrap">
                 <table id="table" class="table">
                     <thead>
@@ -162,6 +157,7 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
