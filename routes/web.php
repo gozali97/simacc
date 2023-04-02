@@ -6,6 +6,7 @@ use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
 use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaKaurController;
+use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
@@ -51,7 +52,13 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/kaurs/destroy/{id}', [KelolaKaurController::class, 'destroy'])->name('kaurs.destroy');
     Route::post('/kaurs/reset-password/{id}', [KelolaKaurController::class, 'reset_password'])->name('kaurs.reset-password');
 
-
+    //  Route Kelola Transaksi
+    Route::get('/listpinjam', [KelolaPeminjamanController::class, 'index'])->name('listpinjam.index');
+    Route::post('/listpinjam/confirm/{id}', [KelolaPeminjamanController::class, 'confirm'])->name('listpinjam.confirm');
+    Route::post('/listpinjam/store', [KelolaPeminjamanController::class, 'store'])->name('listpinjam.store');
+    Route::get('/listpinjam/edit/{id}', [KelolaPeminjamanController::class, 'edit'])->name('listpinjam.edit');
+    Route::post('/listpinjam/update/{id}', [KelolaPeminjamanController::class, 'update'])->name('listpinjam.update');
+    Route::get('/listpinjam/destroy/{id}', [KelolaPeminjamanController::class, 'destroy'])->name('listpinjam.destroy');
 });
 
 

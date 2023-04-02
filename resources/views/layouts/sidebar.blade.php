@@ -51,11 +51,19 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">
-            <a href="/transaksi" class="menu-link">
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->is('listpinjam*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
                 <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
-                <div data-i18n="Analytics">Transaksi</div>
+                <div data-i18n="Layouts">Transaksi</div>
             </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="/listpinjam" class="menu-link">
+                        <div data-i18n="Without menu">Peminjaman</div>
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
             <a href="/kaurs" class="menu-link">
