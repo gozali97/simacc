@@ -51,8 +51,26 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-         <!-- Layouts -->
-         <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">
+            <a href="/transaksi" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
+                <div data-i18n="Analytics">Transaksi</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
+            <a href="/kaurs" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                <div data-i18n="Analytics">Manajemen Kaur</div>
+            </a>
+        </li>
+        @elseif (Auth::user()->role->name === 'kaur')
+        <li class="menu-item active">
+            <a href="#" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-archive bx-tada-hover"></i>
                 <div data-i18n="Layouts">Master</div>
@@ -76,26 +94,6 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">
-            <a href="/transaksi" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
-                <div data-i18n="Analytics">Transaksi</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
-            <a href="/kaurs" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
-                <div data-i18n="Analytics">Manajemen Kaur</div>
-            </a>
-        </li>
-        @elseif (Auth::user()->role->name === 'kaur')
-        <li class="menu-item active">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
-         <!-- Layouts -->
          <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
@@ -104,7 +102,7 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
+                    <a href="/kaurpinjam" class="menu-link">
                         <div data-i18n="Without menu">Peminjaman</div>
                     </a>
                 </li>

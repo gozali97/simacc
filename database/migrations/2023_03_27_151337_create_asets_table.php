@@ -19,6 +19,7 @@ class CreateAsetsTable extends Migration
             $table->integer('kd_jenis');
             $table->integer('kd_ruang');
             $table->date('tgl_masuk');
+            $table->integer('stok');
             $table->string('gambar');
             $table->string('kondisi');
             $table->string('status', 2);

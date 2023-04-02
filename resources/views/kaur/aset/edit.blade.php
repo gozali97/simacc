@@ -7,12 +7,12 @@
     <div class="col-md-12">
         <div class="card mb-4 p-4">
             <h5 class="card-header">Tambah Kaur</h5>
-            <form action="{{ route('aset.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('aset.update', $data->kd_aset) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Nama Aset</label>
-                        <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Aset" />
+                        <input type="text" name="nama" value="{{ $data->nama_aset }}" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Aset" />
                         @error('nama')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -25,7 +25,7 @@
                             aria-label="Default select example">
                             <option value="">Pilih Jenis Aset</option>
                             @foreach ($jenis as $j)
-                            <option value="{{ $j->kd_jenis }}">{{ $j->nama_jenis }}</option>
+                            <option value="{{ $j->kd_jenis }}" {{ $j->kd_jenis == $data->kd_jenis ? 'selected' : '' }}>{{ $j->nama_jenis }}</option>
                             @endforeach
                         </select>
                         @error('jenis')
@@ -40,7 +40,7 @@
                             aria-label="Default select example">
                             <option value="">Pilih Ruang</option>
                             @foreach ($ruang as $r)
-                            <option value="{{ $r->kd_ruang }}">{{ $r->nama_ruang }}</option>
+                            <option value="{{ $r->kd_ruang }}" {{ $r->kd_ruang == $data->kd_ruang ? 'selected' : '' }}>{{ $r->nama_ruang }}</option>
                             @endforeach
                         </select>
                         @error('ruang')
@@ -51,9 +51,18 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tanggal Masuk</label>
-                        <input name="tgl_masuk" class="form-control @error('tgl_masuk') is-invalid @enderror" type="date" value="2023-03-18"
+                        <input name="tgl_masuk" class="form-control @error('tgl_masuk') is-invalid @enderror" type="date" value="{{ $data->tgl_masuk }}"
                             id="html5-date-input" />
                             @error('tgl_masuk')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah</label>
+                        <input type="text" name="jumlah" value="{{ $data->stok }}" class="form-control @error('jumlah') is-invalid @enderror" placeholder="Jumlah" />
+                        @error('jumlah')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -63,9 +72,9 @@
                         <label class="form-label">Kondisi</label>
                         <select name="kondisi" class="form-select @error('kondisi') is-invalid @enderror" id="exampleFormControlSelect1"
                             aria-label="Default select example">
-                            <option value="0">Baik</option>
-                            <option value="1">Cukup</option>
-                            <option value="2">Rusak</option>
+                            <option value="0" {{ $data->kondisi == "0" ? 'selected' : ''}}>Baik</option>
+                            <option value="1" {{ $data->kondisi == "1" ? 'selected' : ''}}>Cukup</option>
+                            <option value="2" {{ $data->kondisi == "2" ? 'selected' : ''}}>Rusak</option>
                         </select>
                         @error('kondisi')
                         <span class="invalid-feedback" role="alert">
@@ -85,12 +94,12 @@
                             </span>
                             @enderror
                             <div class="col-md-6">
-                                <img id="preview" src="" alt="" style="max-width: 100%; max-height: 100px;">
+                                <img id="preview" src="{{ url('assets/img/'.$data->gambar) }}"alt="" style="max-width: 100%; max-height: 100px;">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <a href="/kaurs" type="button" class="btn btn-secondary">Batal</a>
+                        <a href="/aset" type="button" class="btn btn-secondary">Batal</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>
@@ -119,6 +128,6 @@
         reader.readAsDataURL(file);
       }
     });
-</script>
+  </script>
 
 @endsection

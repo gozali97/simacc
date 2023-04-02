@@ -13,13 +13,13 @@ class JenisAsetController extends Controller
 
         $jenis = JenisAset::all();
 
-        return view('sekretaris.jenis.index', compact('jenis'));
+        return view('kaur.jenis.index', compact('jenis'));
     }
 
     public function create()
     {
 
-        return view('sekretaris.ruang.create');
+        return view('kaur.ruang.create');
     }
 
     public function store(Request $request)

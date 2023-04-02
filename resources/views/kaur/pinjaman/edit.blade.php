@@ -60,6 +60,15 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Jumlah</label>
+                        <input type="text" name="jumlah" value="{{ $data->stok }}" class="form-control @error('jumlah') is-invalid @enderror" placeholder="Jumlah" />
+                        @error('jumlah')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Kondisi</label>
                         <select name="kondisi" class="form-select @error('kondisi') is-invalid @enderror" id="exampleFormControlSelect1"
                             aria-label="Default select example">

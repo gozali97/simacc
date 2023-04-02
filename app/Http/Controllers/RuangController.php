@@ -13,13 +13,13 @@ class RuangController extends Controller
 
         $ruang = Ruang::all();
 
-        return view('sekretaris.ruang.index', compact('ruang'));
+        return view('kaur.ruang.index', compact('ruang'));
     }
 
     public function create()
     {
 
-        return view('sekretaris.ruang.create');
+        return view('kaur.ruang.create');
     }
 
     public function store(Request $request)

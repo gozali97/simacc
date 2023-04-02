@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Aset;
 use App\Models\JenisAset;
+use App\Models\Peminjaman;
 use App\Models\Ruang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class AsetController extends Controller
+class PeminjamanController extends Controller
 {
     public function index()
     {
 
-        $aset = Aset::query()
+        $data = Peminjaman::query()
+        ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
         ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
         ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
         ->select('asets.*', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
-        ->where('status', 1)
+        ->where('peminjaman.status', 1)
         ->get();
 
-        return view('kaur.aset.index', compact('aset'));
+        return view('kaur.pinjaman.index', compact('data'));
     }
 
     public function create()
@@ -29,7 +29,7 @@ class AsetController extends Controller
         $jenis = JenisAset::all();
         $ruang = Ruang::all();
 
-        return view('kaur.aset.create', compact('jenis', 'ruang'));
+        return view('kaur.pinjaman.create', compact('jenis', 'ruang'));
     }
 
     public function store(Request $request)

@@ -6,6 +6,7 @@ use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
 use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaKaurController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,14 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/kaurs/destroy/{id}', [KelolaKaurController::class, 'destroy'])->name('kaurs.destroy');
     Route::post('/kaurs/reset-password/{id}', [KelolaKaurController::class, 'reset_password'])->name('kaurs.reset-password');
 
-    //  Route Kelola Asset
+
+});
+
+
+Route::middleware(['auth', 'role:kaur'])->group(function () {
+    Route::get('/kaur', [KaurController::class, 'index'])->name('kaur');
+
+     //  Route Kelola Asset
     Route::get('/aset', [AsetController::class, 'index'])->name('aset.index');
     Route::get('/aset/create', [AsetController::class, 'create'])->name('aset.create');
     Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
@@ -73,11 +81,14 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
      Route::get('/jenis/edit/{id}', [JenisAsetController::class, 'edit'])->name('jenis.edit');
      Route::post('/jenis/update/{id}', [JenisAsetController::class, 'update'])->name('jenis.update');
      Route::get('/jenis/destroy/{id}', [JenisAsetController::class, 'destroy'])->name('jenis.destroy');
-});
 
-
-Route::middleware(['auth', 'role:kaur'])->group(function () {
-    Route::get('/kaur', [KaurController::class, 'index'])->name('kaur');
+     //  Route Kelola peminjaman
+     Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');
+     Route::get('/kaurpinjam/create', [PeminjamanController::class, 'create'])->name('kaurpinjam.create');
+     Route::post('/kaurpinjam/store', [PeminjamanController::class, 'store'])->name('kaurpinjam.store');
+     Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
+     Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');
+     Route::get('/kaurpinjam/destroy/{id}', [PeminjamanController::class, 'destroy'])->name('kaurpinjam.destroy');
 });
 
 

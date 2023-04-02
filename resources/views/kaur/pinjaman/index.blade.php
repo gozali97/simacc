@@ -63,7 +63,7 @@
 @endif
 
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Aset /</span> Data Aset</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Peminjaman /</span> List Pinjaman</h4>
 
     <!-- Basic Bootstrap Table -->
     <div class="card">
@@ -79,7 +79,8 @@
                         <th>Nama</th>
                         <th>Jenis</th>
                         <th>Ruang</th>
-                        <th>Tanggal Masuk</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Jumlah</th>
                         <th>Gambar</th>
                         <th>Actions</th>
                     </tr>
@@ -88,13 +89,14 @@
                     @php
                     $no = 1;
                     @endphp
-                    @foreach ($aset as $a)
+                    @foreach ($data as $a)
                     <tr>
                         <td>{{ $no++ }}</td>
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
                         <td>{{ $a->ruang }}</td>
-                        <td>{{ date('d-m-Y', strtotime($a->tgl_masuk)) }}</td>
+                        <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
+                        <td>{{ $a->jml_peminjaman }}</td>
                         <td><img src="{{ url('assets/img/'.$a->gambar) }}"
                                 style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
                         <td>
