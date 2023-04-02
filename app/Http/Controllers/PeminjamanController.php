@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
 use App\Models\JenisAset;
 use App\Models\Peminjaman;
 use App\Models\Ruang;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PeminjamanController extends Controller
@@ -14,10 +17,11 @@ class PeminjamanController extends Controller
     {
 
         $data = Peminjaman::query()
+        ->join('users', 'users.id', 'peminjaman.id_user')
         ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
         ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
         ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-        ->select('asets.*', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
+        ->select('peminjaman.*','asets.nama_aset', 'asets.gambar', 'users.nama','ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
         ->where('peminjaman.status', 1)
         ->get();
 
@@ -26,87 +30,102 @@ class PeminjamanController extends Controller
 
     public function create()
     {
-        $jenis = JenisAset::all();
-        $ruang = Ruang::all();
+        $id_user = Auth::user()->id;
+        $aset = Aset::all();
+        $user = User::query()->where('id', $id_user)->select('nama', 'id')->first();
 
-        return view('kaur.pinjaman.create', compact('jenis', 'ruang'));
+        return view('kaur.pinjaman.create', compact('aset', 'user'));
     }
 
     public function store(Request $request)
     {
         try {
+            // dd($request->all());
             // Validasi input dari form
             $validator = Validator::make($request->all(), [
-                'nama' => 'required|max:255',
-                'jenis' => 'required|max:255',
-                'ruang' => 'required|numeric',
-                'tgl_masuk' => 'required|max:255',
-                'gambar' => 'required|image',
-                'kondisi' => 'required',
+                'aset' => 'required',
+                'tgl_pinjam' => 'required',
+                'jumlah' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator);
             }
 
-            $gambar  = time() . 'aset' . '.' . $request->gambar->extension();
-            $path       = $request->file('gambar')->move('assets/img', $gambar);
+            $aset = Aset::where('kd_aset', $request->aset)->first();
+            // dd($request->jumlah > $aset->stok);
 
-            Aset::create([
-                'nama_aset' => $request->nama,
-                'kd_jenis' => $request->jenis,
-                'kd_ruang' => $request->ruang,
-                'tgl_masuk' => $request->tgl_masuk,
-                'stok' => $request->jumlah,
-                'kondisi' => $request->kondisi,
-                'gambar' => $gambar,
-                'status' => 1,
+            if (!$aset || $aset->stok == 0 || $request->jumlah > $aset->stok) {
+                return redirect()->back()->with('error', 'Aset tidak dapat dipinjam karena stoknya kosong atau jumlah yang dipinjam melebihi stok yang tersedia.');
+            }
+
+            Peminjaman::create([
+                'id_user' => $request->id_user,
+                'kd_aset' => $request->aset,
+                'tgl_pinjam' => $request->tgl_pinjam,
+                'jml_peminjaman' => $request->jumlah,
+                'status' => "Proses",
             ]);
 
+            // Kurangi stok aset sesuai jumlah yang dipinjam
+            $aset->stok -= $request->jumlah;
+            $aset->save();
+
             // Redirect ke halaman index kategori dengan pesan sukses
-            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil ditambahkan.');
+            return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // dd($e);
+            dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ', $e->getMessage());
         }
     }
 
     public function edit($id)
     {
-        $data = Aset::find($id);
-        $jenis = JenisAset::all();
-        $ruang = Ruang::all();
+        $data = Peminjaman::query()
+        ->join('users', 'users.id', 'peminjaman.id_user')
+        ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
+        ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
+        ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
+        ->select('peminjaman.*','asets.nama_aset', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis', 'users.nama')
+        ->where('peminjaman.id_peminjaman', $id)
+        ->first();
 
-        return view('kaur.aset.edit', compact('data', 'jenis', 'ruang'));
+        $aset = Aset::all();
+
+        return view('kaur.pinjaman.edit', compact('data', 'aset'));
     }
 
     public function update(Request $request, $id)
     {
 
-        $data = Aset::find($id);
+        $data = Peminjaman::find($id);
 
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if (file_exists(public_path('assets/img/' . $data->gambar))) {
-                unlink(public_path('assets/img/' . $data->gambar));
-            }
+        $aset = Aset::where('kd_aset', $data->kd_aset)->first();
 
-            // Simpan gambar baru
-            $gambar = time() . 'aset' . '.' . $request->gambar->extension();
-            $path = $request->file('gambar')->move('assets/img', $gambar);
-            $data->gambar = $gambar;
+        $count = $data->jml_peminjaman;
+
+        $countStok = $count += $aset->stok;
+        // dd($countStok);
+
+        if (!$aset || $countStok  < $request->jumlah) {
+            return redirect()->back()->with('error', 'Aset tidak dapat dipinjam karena stoknya kosong atau jumlah yang dipinjam melebihi stok yang tersedia.');
         }
 
-        $data->nama_aset = $request->nama;
-        $data->kd_jenis = $request->jenis;
-        $data->kd_ruang = $request->ruang;
-        $data->tgl_masuk = $request->tgl_masuk;
-        $data->stok = $request->jumlah;
-        $data->kondisi = $request->kondisi;
-        $data->save();
+        $stok = $countStok - $request->jumlah;
+        // dd($stok);
 
-        if ($data->save()) {
-            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil diupdate.');
+        if ($stok <= 0) {
+            $aset->stok = $stok;
+        } else {
+            $aset->stok += $stok;
+        }
+
+        $data->kd_aset = $request->aset;
+        $data->tgl_pinjam = $request->tgl_pinjam;
+        $data->jml_peminjaman = $request->jumlah;
+
+        if ($data->save() && $aset->save()) {
+            return redirect()->route('kaurpinjam.index')->with('success', 'Data Aset berhasil diupdate.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate aset');
         }
@@ -114,20 +133,19 @@ class PeminjamanController extends Controller
 
     public function destroy($id)
     {
-        $aset = Aset::find($id);
+        $data = Peminjaman::where('id_peminjaman', $id)->first();
 
-        if (!$aset) {
-            return redirect()->back()->with('error', 'Aset tidak ditemukan.');
+        $aset = Aset::where('kd_aset', $data->kd_aset)->first();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data Peminjaman tidak ditemukan.');
         }
 
-        // Hapus gambar dari server
-        $gambarPath = public_path('assets/img/' . $aset->gambar);
-        if (file_exists($gambarPath)) {
-            unlink($gambarPath);
-        }
+        $data->delete();
 
-        $aset->delete();
+        $aset->stok += $data->jml_peminjaman;
+        $aset->save();
 
-        return redirect()->route('kaurs.index')->with('success', 'Aset berhasil dihapus.');
+        return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil dihapus.');
     }
 }

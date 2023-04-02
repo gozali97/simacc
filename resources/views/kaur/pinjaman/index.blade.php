@@ -69,7 +69,7 @@
     <div class="card">
         <div class="p-3 mt-4">
             {{-- <h4 class="text-blue h4">Data Table Simple</h4> --}}
-            <a href="/aset/create" type="button" class="btn btn-outline-success">Tambah</a>
+            <a href="/kaurpinjam/create" type="button" class="btn btn-outline-success">Tambah</a>
         </div>
         <div class="p-2">
             <table id="datatable" class="data-table table stripe hover nowrap">
@@ -78,10 +78,9 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Jenis</th>
-                        <th>Ruang</th>
                         <th>Tanggal Pinjam</th>
                         <th>Jumlah</th>
-                        <th>Gambar</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -94,21 +93,103 @@
                         <td>{{ $no++ }}</td>
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
-                        <td>{{ $a->ruang }}</td>
                         <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
                         <td>{{ $a->jml_peminjaman }}</td>
-                        <td><img src="{{ url('assets/img/'.$a->gambar) }}"
-                                style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
+                        <td> <span class="badge bg-primary">{{ $a->status }}</span></td>
                         <td>
-                            <a href="{{ route('aset.edit', $a->kd_aset) }}" type="button" class="btn btn-icon btn-warning">
-                                <span class="tf-icons bx bx-edit-alt"></span>
-                            </a>
-                            <a href="#" class="btn btn-icon btn-danger"
-                                onclick="event.preventDefault(); confirmDelete({{ $a->kd_aset }});">
-                                <i class="bx bx-trash"></i>
-                            </a>
+                            <div class="btn-group" role="group" aria-label="First group">
+                                <a href="{{ route('kaurpinjam.edit', $a->id_peminjaman) }}" type="button"
+                                    class="btn btn-icon btn-warning">
+                                    <span class="tf-icons bx bx-edit-alt"></span>
+                                </a>
+                                <button type="button" data-bs-toggle="modal"
+                                    data-bs-target="#exLargeModal{{ $a->id_peminjaman }}" class="btn btn-icon btn-info">
+                                    <span class="tf-icons bx bx-info-circle"></span>
+                                </button>
+                                <a href="#" class="btn btn-icon btn-danger"
+                                    onclick="event.preventDefault(); confirmDelete({{ $a->id_peminjaman }});">
+                                    <i class="bx bx-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
+                    <div class="modal fade" id="exLargeModal{{ $a->id_peminjaman }}" tabindex="-1"
+                        style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel4">Detail Peminjaman</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2">
+                                        <div class="col mb-0">
+                                            <label for="nameExLarge" class="form-label">Nama Kaur</label>
+                                            <input type="text" id="nameExLarge" class="form-control"
+                                                value="{{ $a->nama }}" placeholder="Enter Name" disabled>
+                                        </div>
+                                        <div class="col mb-0">
+                                            <label for="dobExLarge" class="form-label">Ruang</label>
+                                            <input type="text" id="dobExLarge" class="form-control"
+                                                value="{{ $a->ruang }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col mb-0">
+                                            <label for="emailExLarge" class="form-label">Nama Aset</label>
+                                            <input type="text" id="emailExLarge" class="form-control"
+                                                value="{{ $a->nama_aset }}" placeholder="xxxx@xxx.xx" disabled>
+                                        </div>
+                                        <div class="col mb-0">
+                                            <div class="col mb-0">
+                                                <label for="dobExLarge" class="form-label">Tanggal Pinjam</label>
+                                                <input type="text" id="dobExLarge" class="form-control"
+                                                    value="{{ date('Y-m-d', strtotime($a->tgl_pinjam)) }}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col mb-0">
+                                            <label for="emailExLarge" class="form-label">Jenis Aset</label>
+                                            <input type="text" id="emailExLarge" class="form-control"
+                                                value="{{ $a->jenis }}" placeholder="xxxx@xxx.xx" disabled>
+                                        </div>
+                                        <div class="col mb-0">
+                                            <label for="dobExLarge" class="form-label">Status</label>
+                                            <input type="text" id="dobExLarge" class="form-control"
+                                                value="{{ $a->status }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-3">
+                                        <div class="col mb-0">
+                                            <label for="emailExLarge" class="form-label">Jumlah</label>
+                                            <input type="text" id="emailExLarge" class="form-control"
+                                                value="{{ $a->jml_peminjaman }}" placeholder="xxxx@xxx.xx" disabled>
+                                        </div>
+                                        <div class="col mb-0">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label for="emailExLarge" class="form-label mt-2">Gambar : </label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <img src="{{ url('/assets/img/'.$a->gambar) }}" alt="user-avatar"
+                                                        class="d-block rounded" height="100" width="100"
+                                                        id="uploadedAvatar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         </div>
     </div>
     @endforeach
@@ -136,7 +217,7 @@
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect ke route untuk menghapus data dengan ID yang telah ditentukan
-            window.location.href = "/aset/destroy/" + id;
+            window.location.href = "/kaurpinjam/destroy/" + id;
         }
     });
 }

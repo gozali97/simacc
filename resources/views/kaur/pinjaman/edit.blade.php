@@ -1,18 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
+@if(session('error'))
+<div class="bs-toast toast fade show bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{ session('error') }}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+            setTimeout(function(){
+                $(".bs-toast").alert('close');
+            }, 5000);
+        });
+</script>
+@endif
+
+@if ($errors->any())
+<div class="bs-toast toast fade show bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+                setTimeout(function(){
+                    $(".bs-toast").alert('close');
+                }, 5000);
+            });
+</script>
+@endif
+
 <div class="row p-3">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Kaur /</span> Data Kaur</h4>
 
     <div class="col-md-12">
         <div class="card mb-4 p-4">
             <h5 class="card-header">Tambah Kaur</h5>
-            <form action="{{ route('aset.update', $data->kd_aset) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('kaurpinjam.update', $data->id_peminjaman) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Nama Aset</label>
-                        <input type="text" name="nama" value="{{ $data->nama_aset }}" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Aset" />
+                        <label class="form-label">Nama Peminjam</label>
+                        <input type="text" name="nama" value="{{ $data->nama }}" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Aset" disabled/>
                         @error('nama')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -20,12 +61,12 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Jenis Aset</label>
-                        <select name="jenis" class="form-select @error('jenis') is-invalid @enderror" id="exampleFormControlSelect1"
+                        <label class="form-label">Nama Aset</label>
+                        <select name="aset" class="form-select @error('aset') is-invalid @enderror" id="exampleFormControlSelect1"
                             aria-label="Default select example">
                             <option value="">Pilih Jenis Aset</option>
-                            @foreach ($jenis as $j)
-                            <option value="{{ $j->kd_jenis }}" {{ $j->kd_jenis == $data->kd_jenis ? 'selected' : '' }}>{{ $j->nama_jenis }}</option>
+                            @foreach ($aset as $a)
+                            <option value="{{ $a->kd_aset }}" {{ $a->kd_aset == $data->kd_aset ? 'selected' : '' }}>{{ $a->nama_aset }}</option>
                             @endforeach
                         </select>
                         @error('jenis')
@@ -35,25 +76,9 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Ruang</label>
-                        <select name="ruang" class="form-select @error('ruang') is-invalid @enderror" id="exampleFormControlSelect1"
-                            aria-label="Default select example">
-                            <option value="">Pilih Ruang</option>
-                            @foreach ($ruang as $r)
-                            <option value="{{ $r->kd_ruang }}" {{ $r->kd_ruang == $data->kd_ruang ? 'selected' : '' }}>{{ $r->nama_ruang }}</option>
-                            @endforeach
-                        </select>
-                        @error('ruang')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tanggal Masuk</label>
-                        <input name="tgl_masuk" class="form-control @error('tgl_masuk') is-invalid @enderror" type="date" value="{{ $data->tgl_masuk }}"
-                            id="html5-date-input" />
-                            @error('tgl_masuk')
+                        <label class="form-label">Tanggal Pinjam</label>
+                        <input name="tgl_pinjam" class="form-control @error('tgl_pinjam') is-invalid @enderror" type="date" value="{{ date('Y-m-d', strtotime($data->tgl_pinjam)) }}" id="html5-date-input" />
+                            @error('tgl_pinjam')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -61,7 +86,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Jumlah</label>
-                        <input type="text" name="jumlah" value="{{ $data->stok }}" class="form-control @error('jumlah') is-invalid @enderror" placeholder="Jumlah" />
+                        <input type="text" name="jumlah" value="{{ $data->jml_peminjaman }}" class="form-control @error('jumlah') is-invalid @enderror" placeholder="Jumlah" />
                         @error('jumlah')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -69,37 +94,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kondisi</label>
-                        <select name="kondisi" class="form-select @error('kondisi') is-invalid @enderror" id="exampleFormControlSelect1"
-                            aria-label="Default select example">
-                            <option value="0" {{ $data->kondisi == "0" ? 'selected' : ''}}>Baik</option>
-                            <option value="1" {{ $data->kondisi == "1" ? 'selected' : ''}}>Cukup</option>
-                            <option value="2" {{ $data->kondisi == "2" ? 'selected' : ''}}>Rusak</option>
-                        </select>
-                        @error('kondisi')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="formFile" class="form-label">Foto</label>
-                                <input class="form-control @error('gambar') is-invalid @enderror" type="file" name="gambar" id="formFile" />
-                            </div>
-                            @error('gambar')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                            <div class="col-md-6">
-                                <img id="preview" src="{{ url('assets/img/'.$data->gambar) }}"alt="" style="max-width: 100%; max-height: 100px;">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <a href="/aset" type="button" class="btn btn-secondary">Batal</a>
+                        <a href="/kaurpinjam" type="button" class="btn btn-secondary">Batal</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>

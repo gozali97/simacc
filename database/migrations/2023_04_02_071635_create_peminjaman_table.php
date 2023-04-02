@@ -19,7 +19,7 @@ class CreatePeminjamanTable extends Migration
             $table->integer('kd_aset');
             $table->dateTime('tgl_pinjam');
             $table->integer('jml_peminjaman');
-            $table->integer('status');
+            $table->enum('status',['Proses', 'Aktif', 'Selesai']);
             $table->timestamps();
         });
     }
