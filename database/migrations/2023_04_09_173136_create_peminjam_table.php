@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAsetsTable extends Migration
+class CreatePeminjamTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateAsetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('asets', function (Blueprint $table) {
-            $table->string('kd_aset', 6);
-            $table->string('nama_aset');
-            $table->integer('kd_jenis');
-            $table->integer('kd_ruang');
-            $table->integer('stok');
+        Schema::create('peminjam', function (Blueprint $table) {
+            $table->string('id_peminjam', 5)->primary();
+            $table->string('nama_peminjam');
+            $table->text('alamat');
+            $table->string('no_hp', 15);
             $table->string('gambar');
-            $table->string('status', 2);
+            $table->integer('status');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateAsetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asets');
+        Schema::dropIfExists('peminjam');
     }
 }

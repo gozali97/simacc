@@ -39,7 +39,7 @@ class AsetController extends Controller
             $validator = Validator::make($request->all(), [
                 'nama' => 'required|max:255',
                 'jenis' => 'required|max:255',
-                'ruang' => 'required|numeric',
+                'ruang' => 'required',
                 'tgl_masuk' => 'required|max:255',
                 'gambar' => 'required|image',
                 'kondisi' => 'required',
@@ -48,11 +48,20 @@ class AsetController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator);
             }
+            $jumlahData = Aset::count();
+
+            if ($jumlahData > 0) {
+                $nomorUrutan = $jumlahData + 1;
+                $kode = 'A00' . $nomorUrutan;
+            } else {
+                $kode = 'A001';
+            }
 
             $gambar  = time() . 'aset' . '.' . $request->gambar->extension();
             $path       = $request->file('gambar')->move('assets/img', $gambar);
 
             Aset::create([
+                'kd_aset' => $kode,
                 'nama_aset' => $request->nama,
                 'kd_jenis' => $request->jenis,
                 'kd_ruang' => $request->ruang,
@@ -66,7 +75,7 @@ class AsetController extends Controller
             // Redirect ke halaman index kategori dengan pesan sukses
             return redirect()->route('aset.index')->with('success', 'Data Aset berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // dd($e);
+            dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ', $e->getMessage());
         }
     }
@@ -114,7 +123,8 @@ class AsetController extends Controller
 
     public function destroy($id)
     {
-        $aset = Aset::find($id);
+        $aset = Aset::where('kd_aset',$id)->first();
+        // dd($aset);
 
         if (!$aset) {
             return redirect()->back()->with('error', 'Aset tidak ditemukan.');
@@ -128,6 +138,6 @@ class AsetController extends Controller
 
         $aset->delete();
 
-        return redirect()->route('kaurs.index')->with('success', 'Aset berhasil dihapus.');
+        return redirect()->route('aset.index')->with('success', 'Aset berhasil dihapus.');
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaKaurController;
 use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     //  Route Kelola Transaksi
     Route::get('/listpinjam', [KelolaPeminjamanController::class, 'index'])->name('listpinjam.index');
     Route::post('/listpinjam/confirm/{id}', [KelolaPeminjamanController::class, 'confirm'])->name('listpinjam.confirm');
+    Route::post('/listpinjam/decline/{id}', [KelolaPeminjamanController::class, 'decline'])->name('listpinjam.decline');
     Route::post('/listpinjam/store', [KelolaPeminjamanController::class, 'store'])->name('listpinjam.store');
     Route::get('/listpinjam/edit/{id}', [KelolaPeminjamanController::class, 'edit'])->name('listpinjam.edit');
     Route::post('/listpinjam/update/{id}', [KelolaPeminjamanController::class, 'update'])->name('listpinjam.update');
@@ -71,7 +73,7 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
     Route::get('/aset/edit/{id}', [AsetController::class, 'edit'])->name('aset.edit');
     Route::post('/aset/update/{id}', [AsetController::class, 'update'])->name('aset.update');
-    Route::get('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
+    Route::post('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
 
     //  Route Kelola Ruang
     Route::get('/ruang', [RuangController::class, 'index'])->name('ruang.index');
@@ -88,6 +90,14 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
      Route::get('/jenis/edit/{id}', [JenisAsetController::class, 'edit'])->name('jenis.edit');
      Route::post('/jenis/update/{id}', [JenisAsetController::class, 'update'])->name('jenis.update');
      Route::get('/jenis/destroy/{id}', [JenisAsetController::class, 'destroy'])->name('jenis.destroy');
+
+        //  Route Kelola Asset
+    Route::get('/peminjam', [PeminjamController::class, 'index'])->name('peminjam.index');
+    Route::get('/peminjam/create', [PeminjamController::class, 'create'])->name('peminjam.create');
+    Route::post('/peminjam/store', [PeminjamController::class, 'store'])->name('peminjam.store');
+    Route::get('/peminjam/edit/{id}', [PeminjamController::class, 'edit'])->name('peminjam.edit');
+    Route::post('/peminjam/update/{id}', [PeminjamController::class, 'update'])->name('peminjam.update');
+    Route::post('/peminjam/destroy/{id}', [PeminjamController::class, 'destroy'])->name('peminjam.destroy');
 
      //  Route Kelola peminjaman
      Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');

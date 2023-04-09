@@ -96,7 +96,7 @@
                                     <i class="bx bx-edit-alt" aria-hidden="true"></i>
                                 </button>
                                 <a href="#" class="btn btn-icon btn-danger"
-                                    onclick="event.preventDefault(); confirmDelete({{ $r->kd_jenis }});">
+                                    onclick="event.preventDefault(); confirmDelete('{{ $r->kd_jenis }}');">
                                     <i class="bx bx-trash"></i>
                                 </a>
                             </td>

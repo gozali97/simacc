@@ -12,4 +12,5 @@ class Peminjaman extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'id_peminjaman';
+    public $incrementing = false;
 }

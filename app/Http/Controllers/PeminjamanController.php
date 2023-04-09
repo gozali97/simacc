@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Aset;
 use App\Models\JenisAset;
+use App\Models\Peminjam;
 use App\Models\Peminjaman;
 use App\Models\Ruang;
 use App\Models\User;
@@ -29,9 +30,8 @@ class PeminjamanController extends Controller
 
     public function create()
     {
-        $id_user = Auth::user()->id;
         $aset = Aset::all();
-        $user = User::query()->where('id', $id_user)->select('nama', 'id')->first();
+        $user = Peminjam::all();
 
         return view('kaur.pinjaman.create', compact('aset', 'user'));
     }
@@ -58,8 +58,19 @@ class PeminjamanController extends Controller
                 return redirect()->back()->with('error', 'Aset tidak dapat dipinjam karena stoknya kosong atau jumlah yang dipinjam melebihi stok yang tersedia.');
             }
 
+            $jumlahData = Peminjaman::count();
+
+            if ($jumlahData > 0) {
+                $nomorUrutan = $jumlahData + 1;
+                $kode = 'PJ00' . $nomorUrutan;
+            } else {
+                $kode = 'PJ001';
+            }
+
             Peminjaman::create([
-                'id_user' => $request->id_user,
+                'id_peminjaman' => $kode,
+                'id_user' => Auth::user()->id,
+                'id_peminjam' => $request->nama,
                 'kd_aset' => $request->aset,
                 'tgl_pinjam' => $request->tgl_pinjam,
                 'jml_peminjaman' => $request->jumlah,

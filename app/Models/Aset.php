@@ -12,4 +12,5 @@ class Aset extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_aset';
+    public $incrementing = false;
 }

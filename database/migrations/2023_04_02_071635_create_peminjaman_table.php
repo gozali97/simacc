@@ -14,12 +14,13 @@ class CreatePeminjamanTable extends Migration
     public function up()
     {
         Schema::create('peminjaman', function (Blueprint $table) {
-            $table->increments('id_peminjaman');
+            $table->string('id_peminjaman', 6)->primary();
             $table->integer('id_user');
-            $table->integer('kd_aset');
+            $table->string('id_peminjam', 6);
+            $table->string('kd_aset', 6);
             $table->dateTime('tgl_pinjam');
             $table->integer('jml_peminjaman');
-            $table->enum('status',['Proses', 'Aktif', 'Selesai']);
+            $table->enum('status',['Proses', 'Aktif', 'Selesai', 'Ditolak']);
             $table->timestamps();
         });
     }

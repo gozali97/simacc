@@ -53,9 +53,14 @@
                 @csrf
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Nama Kaur</label>
-                        <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" value="{{ $user->nama }}" disabled/>
-                        <input type="hidden" name="id_user" class="form-control @error('nama') is-invalid @enderror" value="{{ $user->id }}"/>
+                        <label class="form-label">Nama Peminjam</label>
+                        <select name="nama" class="form-select @error('aset') is-invalid @enderror" id="exampleFormControlSelect1"
+                        aria-label="Default select example">
+                        <option value="">Pilih Peminjam</option>
+                        @foreach ($user as $u)
+                        <option value="{{ $u->id_peminjam }}">{{ $u->nama_peminjam }}</option>
+                        @endforeach
+                    </select>
                         @error('nama')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

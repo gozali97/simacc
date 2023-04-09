@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JenisAset extends Model
+class Peminjam extends Model
 {
     use HasFactory;
-    protected $table = 'jenis_asets';
+    protected $table = 'peminjam';
     protected $guarded = [];
 
-    protected $primaryKey = 'kd_jenis';
+    protected $primaryKey = 'id_peminjam';
     public $incrementing = false;
-    // protected $keyType = 'string';
 }

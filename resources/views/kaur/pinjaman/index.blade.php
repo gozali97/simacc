@@ -95,7 +95,18 @@
                         <td>{{ $a->jenis }}</td>
                         <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
                         <td>{{ $a->jml_peminjaman }}</td>
-                        <td> <span class="badge bg-primary">{{ $a->status }}</span></td>
+                        <td>  <span class="badge
+                            @if($a->status === 'Proses')
+                                bg-primary
+                            @elseif($a->status === 'Aktif')
+                                bg-success
+                            @elseif($a->status === 'Selesai')
+                                bg-info
+                            @else
+                                bg-danger
+                            @endif">
+                            {{ $a->status }}
+                        </span></span></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="First group">
                                 <a href="{{ route('kaurpinjam.edit', $a->id_peminjaman) }}" type="button"
@@ -107,7 +118,7 @@
                                     <span class="tf-icons bx bx-info-circle"></span>
                                 </button>
                                 <a href="#" class="btn btn-icon btn-danger"
-                                    onclick="event.preventDefault(); confirmDelete({{ $a->id_peminjaman }});">
+                                    onclick="event.preventDefault(); confirmDelete('{{ $a->id_peminjaman }}');">
                                     <i class="bx bx-trash"></i>
                                 </a>
                             </div>

@@ -72,13 +72,13 @@
             </a>
         </li>
         @elseif (Auth::user()->role->name === 'kaur')
-        <li class="menu-item active">
+        <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
             <a href="#" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*')|| request()->is('peminjam*') || request()->is('asset*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-archive bx-tada-hover"></i>
                 <div data-i18n="Layouts">Master</div>
@@ -100,9 +100,14 @@
                         <div data-i18n="Without menu">Data Aset</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="/peminjam" class="menu-link">
+                        <div data-i18n="Without menu">Data Peminjam</div>
+                    </a>
+                </li>
             </ul>
         </li>
-         <li class="menu-item">
+         <li class="menu-item {{ request()->is('kaurpinjam*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">Transaksi</div>

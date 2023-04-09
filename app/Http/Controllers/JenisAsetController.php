@@ -25,7 +25,6 @@ class JenisAsetController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validasi input dari form
             $validator = Validator::make($request->all(), [
                 'nama' => 'required|max:255',
             ]);
@@ -34,14 +33,23 @@ class JenisAsetController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
+            $jumlahData = JenisAset::count();
+
+            if ($jumlahData > 0) {
+                $nomorUrutan = $jumlahData + 1;
+                $kode = 'J00' . $nomorUrutan;
+            } else {
+                $kode = 'J001';
+            }
+
             JenisAset::create([
-                'nama_jenis' => $request->nama,
+                'kd_jenis' => $kode,
+                'nama_jenis' => $request->nama
             ]);
 
-            // Redirect ke halaman index kategori dengan pesan sukses
             return redirect()->route('jenis.index')->with('success', 'Data Jenis Aset berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // dd($e);
+            dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, sebab :', $e->getMessage());
         }
     }
@@ -49,8 +57,8 @@ class JenisAsetController extends Controller
     public function update(Request $request, $id)
     {
 
-        $data = JenisAset::find($id);
-
+        $data = JenisAset::where('kd_jenis', $id)->first();
+   
         $data->nama_jenis = $request->nama;
         $data->save();
 
@@ -63,7 +71,8 @@ class JenisAsetController extends Controller
 
     public function destroy($id)
     {
-        $jenis = JenisAset::find($id);
+        $jenis = JenisAset::where('kd_jenis', $id)->first();
+
 
         if (!$jenis) {
             return redirect()->back()->with('error', 'Data jenis Aset tidak ditemukan.');

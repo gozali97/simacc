@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Kaur /</span> Data Kaur</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Aset /</span> Data Aset</h4>
 
     <div class="col-md-12">
         <div class="card mb-4 p-4">
-            <h5 class="card-header">Tambah Kaur</h5>
+            <h5 class="card-header">Tambah Aset</h5>
             <form action="{{ route('aset.update', $data->kd_aset) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">

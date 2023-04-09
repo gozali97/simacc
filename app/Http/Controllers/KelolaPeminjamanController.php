@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class KelolaPeminjamanController extends Controller
 {
@@ -32,6 +34,22 @@ class KelolaPeminjamanController extends Controller
 
         if ($data->save()) {
             return redirect()->route('listpinjam.index')->with('success', 'Data Peminjaman berhasil dikonfirmasi.');
+        } else {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kaur');
+        }
+    }
+
+    public function decline(Request $request, $id)
+    {
+       $id_pinjam = $request->id_pinjam;
+
+        $data = Peminjaman::query()->where('id_peminjaman', $id_pinjam)->first();
+
+        $data->status = "Ditolak";
+        $data->save();
+
+        if ($data->save()) {
+            return redirect()->route('listpinjam.index')->with('success', 'Data Peminjaman ditolak.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kaur');
         }
