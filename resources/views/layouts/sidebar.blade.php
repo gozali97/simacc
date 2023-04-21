@@ -107,7 +107,7 @@
                 </li>
             </ul>
         </li>
-         <li class="menu-item {{ request()->is('kaurpinjam*') ? 'active' : '' }}">
+         <li class="menu-item {{ request()->is('kaurpinjam*') || request()->is('kaurkembali*')  || request()->is('kaurmutasi*')  || request()->is('kaurajuan*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">Transaksi</div>
@@ -119,7 +119,29 @@
                         <div data-i18n="Without menu">Peminjaman</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="/kaurkembali" class="menu-link">
+                        <div data-i18n="Without menu">Pengembalian</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/kaurmutasi" class="menu-link">
+                        <div data-i18n="Without menu">Mutasi</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/kaurajuan" class="menu-link">
+                        <div data-i18n="Without menu">Pengajuan</div>
+                    </a>
+                </li>
             </ul>
+
+        </li>
+        <li class="menu-item {{ request()->is('laporan*') ? 'active' : '' }}">
+            <a href="/laporan" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-clipboard"></i>
+                <div data-i18n="Analytics">Laporan</div>
+            </a>
         </li>
         @endif
         <li class="menu-item">
