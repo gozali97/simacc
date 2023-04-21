@@ -63,6 +63,16 @@
                         <div data-i18n="Without menu">Peminjaman</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="/listajuan" class="menu-link">
+                        <div data-i18n="Without menu">Kebutuhan</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/listrencana" class="menu-link">
+                        <div data-i18n="Without menu">Perencanaan</div>
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
@@ -109,7 +119,7 @@
         </li>
          <li class="menu-item {{ request()->is('kaurpinjam*') || request()->is('kaurkembali*')  || request()->is('kaurmutasi*')  || request()->is('kaurajuan*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <i class="menu-icon tf-icons bx bx-cart"></i>
                 <div data-i18n="Layouts">Transaksi</div>
             </a>
 
@@ -131,7 +141,7 @@
                 </li>
                 <li class="menu-item">
                     <a href="/kaurajuan" class="menu-link">
-                        <div data-i18n="Without menu">Pengajuan</div>
+                        <div data-i18n="Without menu">Kebutuhan</div>
                     </a>
                 </li>
             </ul>

@@ -5,10 +5,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
 use App\Http\Controllers\KaurController;
+use App\Http\Controllers\KelolaAjuanController;
 use App\Http\Controllers\KelolaKaurController;
 use App\Http\Controllers\KelolaPeminjamanController;
+use App\Http\Controllers\KelolaPerencanaanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamController;
+use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +64,16 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listpinjam/edit/{id}', [KelolaPeminjamanController::class, 'edit'])->name('listpinjam.edit');
     Route::post('/listpinjam/update/{id}', [KelolaPeminjamanController::class, 'update'])->name('listpinjam.update');
     Route::get('/listpinjam/destroy/{id}', [KelolaPeminjamanController::class, 'destroy'])->name('listpinjam.destroy');
+
+    Route::get('/listajuan', [KelolaAjuanController::class, 'index'])->name('listajuan.index');
+    Route::post('/listajuan/confirm/{id}', [KelolaAjuanController::class, 'confirm'])->name('listajuan.confirm');
+    Route::post('/listajuan/decline/{id}', [KelolaAjuanController::class, 'decline'])->name('listajuan.decline');
+    Route::post('/listajuan/store', [KelolaAjuanController::class, 'store'])->name('listajuan.store');
+    Route::get('/listajuan/edit/{id}', [KelolaAjuanController::class, 'edit'])->name('listajuan.edit');
+    Route::post('/listajuan/update/{id}', [KelolaAjuanController::class, 'update'])->name('listajuan.update');
+    Route::get('/listajuan/destroy/{id}', [KelolaAjuanController::class, 'destroy'])->name('listajuan.destroy');
+
+    Route::get('/listrencana', [KelolaPerencanaanController::class, 'index'])->name('listrencana.index');
 });
 
 
@@ -107,6 +120,14 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
      Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
      Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');
      Route::get('/kaurpinjam/destroy/{id}', [PeminjamanController::class, 'destroy'])->name('kaurpinjam.destroy');
+
+     //  Route Kelola pengajuan
+     Route::get('/kaurajuan', [PengajuanController::class, 'index'])->name('kaurajuan.index');
+     Route::get('/kaurajuan/create', [PengajuanController::class, 'create'])->name('kaurajuan.create');
+     Route::post('/kaurajuan/store', [PengajuanController::class, 'store'])->name('kaurajuan.store');
+     Route::get('/kaurajuan/edit/{id}', [PengajuanController::class, 'edit'])->name('kaurajuan.edit');
+     Route::post('/kaurajuan/update/{id}', [PengajuanController::class, 'update'])->name('kaurajuan.update');
+     Route::post('/kaurajuan/destroy/{id}', [PengajuanController::class, 'destroy'])->name('kaurajuan.destroy');
 });
 
 
