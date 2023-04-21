@@ -20,9 +20,10 @@ class PeminjamanController extends Controller
         $data = Peminjaman::query()
         ->join('users', 'users.id', 'peminjaman.id_user')
         ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
-        ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
+        ->join('detail_asets', 'detail_asets.kd_aset', 'asets.kd_aset')
+        ->join('ruangs', 'ruangs.kd_ruang', 'detail_asets.kd_ruang')
         ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-        ->select('peminjaman.*','asets.nama_aset', 'asets.gambar', 'users.nama','ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
+        ->select('peminjaman.*','asets.nama_aset', 'detail_asets.gambar', 'users.nama','ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
         ->get();
 
         return view('kaur.pinjaman.index', compact('data'));

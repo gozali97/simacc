@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePengembaliansTable extends Migration
+class CreatePerencanaanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreatePengembaliansTable extends Migration
      */
     public function up()
     {
-        Schema::create('pengembalians', function (Blueprint $table) {
-            $table->id();
+        Schema::create('perencanaan', function (Blueprint $table) {
+            $table->string('kd_perencanaan')->primary();
+            $table->string('tgl_perencanaan');
+            $table->string('nama_perencaaan');
+            $table->enum('status',['Aktif', 'Selesai']);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreatePengembaliansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pengembalians');
+        Schema::dropIfExists('perencanaan');
     }
 }
