@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Asal;
 use App\Models\Aset;
+use App\Models\DetailAset;
 use App\Models\JenisAset;
+use App\Models\Kondisi;
 use App\Models\Ruang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AsetController extends Controller
@@ -15,9 +19,8 @@ class AsetController extends Controller
     {
 
         $aset = Aset::query()
-        ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
         ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-        ->select('asets.*', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
+        ->select('asets.*', 'jenis_asets.nama_jenis as jenis')
         ->where('status', 1)
         ->get();
 
@@ -28,71 +31,113 @@ class AsetController extends Controller
     {
         $jenis = JenisAset::all();
         $ruang = Ruang::all();
+        $kondisi = Kondisi::all();
+        $asal = Asal::all();
 
-        return view('kaur.aset.create', compact('jenis', 'ruang'));
+        return view('kaur.aset.create', compact('jenis', 'ruang', 'kondisi' , 'asal'));
     }
 
     public function store(Request $request)
     {
         try {
-            // Validasi input dari form
-            $validator = Validator::make($request->all(), [
-                'nama' => 'required|max:255',
-                'jenis' => 'required|max:255',
-                'ruang' => 'required',
-                'tgl_masuk' => 'required|max:255',
-                'gambar' => 'required|image',
-                'kondisi' => 'required',
-            ]);
+            DB::beginTransaction(); // Memulai transaksi database
 
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator);
-            }
-            $jumlahData = Aset::count();
+            $lastAset = Aset::orderBy('kd_aset', 'desc')->first();
 
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'A00' . $nomorUrutan;
+            if ($lastAset) {
+                $nomorUrutan = intval(substr($lastAset->kd_aset, 3)) + 1;
+                $kode = 'A' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
             } else {
                 $kode = 'A001';
             }
 
-            $gambar  = time() . 'aset' . '.' . $request->gambar->extension();
-            $path       = $request->file('gambar')->move('assets/img', $gambar);
+            $aset = new Aset;
+            $aset->kd_aset = $kode;
+            $aset->nama_aset = $request->nama;
+            $aset->id_user = Auth::user()->id;
+            $aset->kd_jenis = $request->jenis;
+            $aset->kd_asal = $request->asal;
+            $aset->status = 1;
+            if ($aset->save()) {
 
-            Aset::create([
-                'kd_aset' => $kode,
-                'nama_aset' => $request->nama,
-                'kd_jenis' => $request->jenis,
-                'kd_ruang' => $request->ruang,
-                'tgl_masuk' => $request->tgl_masuk,
-                'stok' => $request->jumlah,
-                'kondisi' => $request->kondisi,
-                'gambar' => $gambar,
-                'status' => 1,
-            ]);
+                $asetDetails = [];
+                $nomor = 0;
+                $jumlahDetail = DetailAset::max('kd_det_aset');
 
-            // Redirect ke halaman index kategori dengan pesan sukses
-            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil ditambahkan.');
+                    if ($jumlahDetail > 0) {
+                        $nomor = intval(substr($jumlahDetail, 5));
+                    } else {
+                        $kodeDetail = 'INV001';
+                    }
+
+                foreach ($request->ruang as $key => $asetdetail){
+                    $gambar  = time() . 'aset' . $key . '.' . $request->gambar[$key]->extension();
+                    $path = $request->file('gambar')[$key]->move('assets/img', $gambar);
+
+                    $nomor++;
+                    $kodeDetail = 'INV' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+
+                    $detail = [
+                        'kd_det_aset' => $kodeDetail,
+                        'kd_aset' => $aset->kd_aset,
+                        'kd_ruang' => $asetdetail,
+                        'kd_kondisi' => $request->kondisi[$key],
+                        'gambar' => $gambar,
+                        'tgl_masuk' => date('Y-m-d'),
+                        'created_at' => date('Y-m-d')
+                    ];
+                    $asetDetails[] = $detail;
+                }
+                DetailAset::insert($asetDetails);
+
+                DB::commit();
+
+                return redirect()->route('aset.index')->with('success', 'Data Aset berhasil ditambahkan.');
+            }
         } catch (\Exception $e) {
+            DB::rollback();
             dd($e);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
     }
 
+
     public function edit($id)
     {
-        $data = Aset::find($id);
+        $data = Aset::where('kd_aset', $id)->first();
+        $detail = DetailAset::where('kd_aset', $data->kd_aset)->get();
         $jenis = JenisAset::all();
         $ruang = Ruang::all();
+        $kondisi = Kondisi::all();
+        $asal = Asal::all();
+        // dd($detail);
 
-        return view('kaur.aset.edit', compact('data', 'jenis', 'ruang'));
+        return view('kaur.aset.edit', compact('data', 'jenis', 'ruang', 'kondisi', 'asal', 'detail'));
     }
 
     public function update(Request $request, $id)
     {
 
-        $data = Aset::find($id);
+        $data = Aset::where('kd_aset', $id)->first();
+        // dd($data);
+
+        $data->nama_aset = $request->nama;
+        $data->id_user = Auth::user()->id;
+        $data->kd_jenis = $request->jenis;
+        $data->kd_asal = $request->asal;
+        $data->save();
+
+        if ($data->save()) {
+            return redirect()->route('aset.edit', $id)->with('success', 'Data Aset berhasil diupdate.');
+        } else {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate aset');
+        }
+    }
+
+    public function updateDetail(Request $request, $id)
+    {
+
+        $data = DetailAset::where('kd_det_aset', $id)->first();
 
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama
@@ -106,35 +151,38 @@ class AsetController extends Controller
             $data->gambar = $gambar;
         }
 
-        $data->nama_aset = $request->nama;
-        $data->kd_jenis = $request->jenis;
+        $data->kd_aset = $request->kd_aset;
         $data->kd_ruang = $request->ruang;
-        $data->tgl_masuk = $request->tgl_masuk;
-        $data->stok = $request->jumlah;
-        $data->kondisi = $request->kondisi;
+        $data->kd_kondisi = $request->kondisi;
+        $data->updated_at = date('Y-m-d');
         $data->save();
 
         if ($data->save()) {
-            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil diupdate.');
+            return redirect()->route('aset.edit', $request->kd_aset)->with('success', 'Detail Aset berhasil diupdate.');
         } else {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate aset');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate detail aset');
         }
     }
 
     public function destroy($id)
     {
         $aset = Aset::where('kd_aset',$id)->first();
-        // dd($aset);
+
+        $detail = DetailAset::where('kd_aset', $id)->get();
+
 
         if (!$aset) {
             return redirect()->back()->with('error', 'Aset tidak ditemukan.');
         }
 
-        // Hapus gambar dari server
-        $gambarPath = public_path('assets/img/' . $aset->gambar);
-        if (file_exists($gambarPath)) {
-            unlink($gambarPath);
+        foreach($detail as $details){
+            $gambarPath = public_path('assets/img/' . $details->gambar);
+            if (file_exists($gambarPath)) {
+                unlink($gambarPath);
+            }
         }
+
+        $detail->each->delete();
 
         $aset->delete();
 

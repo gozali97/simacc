@@ -73,6 +73,7 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
     Route::get('/aset/edit/{id}', [AsetController::class, 'edit'])->name('aset.edit');
     Route::post('/aset/update/{id}', [AsetController::class, 'update'])->name('aset.update');
+    Route::post('/aset/updateDetail/{id}', [AsetController::class, 'updateDetail'])->name('aset.updateDetail');
     Route::post('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
 
     //  Route Kelola Ruang

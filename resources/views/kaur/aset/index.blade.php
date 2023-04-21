@@ -78,10 +78,6 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Jenis</th>
-                        <th>Ruang</th>
-                        <th>Tanggal Masuk</th>
-                        <th>Jumlah</th>
-                        <th>Gambar</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -94,11 +90,6 @@
                         <td>{{ $no++ }}</td>
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
-                        <td>{{ $a->ruang }}</td>
-                        <td>{{ date('d-m-Y', strtotime($a->tgl_masuk)) }}</td>
-                        <td>{{ $a->stok }}</td>
-                        <td><img src="{{ url('assets/img/'.$a->gambar) }}"
-                                style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
                         <td>
                             <a href="{{ route('aset.edit', $a->kd_aset) }}" type="button" class="btn btn-icon btn-warning">
                                 <span class="tf-icons bx bx-edit-alt"></span>

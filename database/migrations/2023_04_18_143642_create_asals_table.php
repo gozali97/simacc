@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAsetsTable extends Migration
+class CreateAsalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateAsetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('asets', function (Blueprint $table) {
-            $table->string('kd_aset', 6);
-            $table->integer('id_user');
-            $table->string('nama_aset');
-            $table->integer('kd_asal');
-            $table->string('kd_jenis', 6);
-            $table->integer('status');
+        Schema::create('asal', function (Blueprint $table) {
+            $table->id();
+            $table->string('asal_aset');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class CreateAsetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asets');
+        Schema::dropIfExists('asals');
     }
 }
