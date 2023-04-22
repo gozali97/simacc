@@ -34,11 +34,11 @@ class RuangController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
-            $jumlahData = Ruang::count();
+            $lastData = Ruang::orderBy('kd_ruang', 'desc')->first();
 
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'R00' . $nomorUrutan;
+            if ($lastData) {
+                $nomorUrutan = intval(substr($lastData->kd_ruang, 3)) + 1;
+                $kode = 'R' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
             } else {
                 $kode = 'R001';
             }

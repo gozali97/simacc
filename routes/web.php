@@ -74,6 +74,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listajuan/destroy/{id}', [KelolaAjuanController::class, 'destroy'])->name('listajuan.destroy');
 
     Route::get('/listrencana', [KelolaPerencanaanController::class, 'index'])->name('listrencana.index');
+    Route::get('/listrencana/print', [KelolaPerencanaanController::class, 'print'])->name('listrencana.print');
 });
 
 

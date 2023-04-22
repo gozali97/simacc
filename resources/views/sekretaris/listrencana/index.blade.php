@@ -75,6 +75,8 @@
     <!-- Basic Bootstrap Table -->
     <div class="card">
         <div class="p-3 mt-4">
+            <a href="{{ route('listrencana.print') }}" class="btn icon icon-left btn-primary">
+                <i class="bx bx-printer bx-tada-hover"></i> Cetak</a>
         </div>
         <div class="p-2">
             <table id="datatable" class="data-table table stripe hover nowrap">
@@ -105,7 +107,8 @@
                         <td>
                             <div class="btn-group" role="group" aria-label="First group">
                                 <button type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exLargeModal{{ $d->kd_perencanaan }}" class="btn btn-icon btn-info">
+                                    data-bs-target="#exLargeModal{{ $d->kd_perencanaan }}"
+                                    class="btn btn-icon btn-info">
                                     <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
                                 </button>
                                 @if ($d->status == 'Proses')
@@ -122,8 +125,8 @@
                         </td>
                     </tr>
                     <!-- Modal Info -->
-                    <div class="modal fade" id="exLargeModal{{ $d->kd_perencanaan }}" tabindex="-1" style="display: none;"
-                        aria-hidden="true">
+                    <div class="modal fade" id="exLargeModal{{ $d->kd_perencanaan }}" tabindex="-1"
+                        style="display: none;" aria-hidden="true">
                         <div class="modal-dialog modal-xl" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -136,8 +139,10 @@
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Nama Perencanaan </label>
-                                                <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
-                                                    placeholder="Nama kebutuhan" value="{{ $d->nama_perencanaan }}" readonly/>
+                                                <input type="text" name="nama"
+                                                    class="form-control @error('nama') is-invalid @enderror"
+                                                    placeholder="Nama kebutuhan" value="{{ $d->nama_perencanaan }}"
+                                                    readonly />
                                                 @error('nama')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -147,8 +152,8 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Tanggal Perencanan</label>
                                                 <input type="date" name="tanggal"
-                                                    class="form-control @error('tanggal') is-invalid @enderror" placeholder=""
-                                                    value="{{ $d->tgl_perencanaan }}" readonly/>
+                                                    class="form-control @error('tanggal') is-invalid @enderror"
+                                                    placeholder="" value="{{ $d->tgl_perencanaan }}" readonly />
                                                 @error('tanggal')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

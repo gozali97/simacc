@@ -28,10 +28,10 @@ class KelolaAjuanController extends Controller
         if ($data->save()) {
 
 
-            $lastData = Kebutuhan::orderBy('kd_kebutuhan', 'desc')->first();
+            $lastData = Perencanaan::orderBy('kd_perencanaan', 'desc')->first();
 
             if ($lastData) {
-                $nomorUrutan = intval(substr($lastData->kd_aset, 3)) + 1;
+                $nomorUrutan = intval(substr($lastData->kd_perencanaan, 3)) + 1;
                 $kode = 'PR' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
             } else {
                 $kode = 'PR001';

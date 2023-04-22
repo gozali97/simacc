@@ -39,7 +39,7 @@ class PengajuanController extends Controller
             $lastAset = Kebutuhan::orderBy('kd_kebutuhan', 'desc')->first();
 
             if ($lastAset) {
-                $nomorUrutan = intval(substr($lastAset->kd_aset, 3)) + 1;
+                $nomorUrutan = intval(substr($lastAset->kd_kebutuhan, 3)) + 1;
                 $kode = 'KB' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
             } else {
                 $kode = 'KB001';

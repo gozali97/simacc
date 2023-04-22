@@ -33,14 +33,15 @@ class JenisAsetController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
-            $jumlahData = JenisAset::count();
+            $lastData = JenisAset::orderBy('kd_jenis', 'desc')->first();
 
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'J00' . $nomorUrutan;
+            if ($lastData) {
+                $nomorUrutan = intval(substr($lastData->kd_jenis, 3)) + 1;
+                $kode = 'J' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
             } else {
                 $kode = 'J001';
             }
+
 
             JenisAset::create([
                 'kd_jenis' => $kode,
@@ -58,7 +59,7 @@ class JenisAsetController extends Controller
     {
 
         $data = JenisAset::where('kd_jenis', $id)->first();
-   
+
         $data->nama_jenis = $request->nama;
         $data->save();
 
