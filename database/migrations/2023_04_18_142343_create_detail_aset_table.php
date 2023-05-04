@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailAsetsTable extends Migration
+class CreateDetailAsetTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDetailAsetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_asets', function (Blueprint $table) {
+        Schema::create('detail_aset', function (Blueprint $table) {
             $table->string('kd_det_aset')->primary();
             $table->string('kd_aset');
             $table->string('kd_ruang');
@@ -31,6 +31,6 @@ class CreateDetailAsetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_asets');
+        Schema::dropIfExists('detail_aset');
     }
 }

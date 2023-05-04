@@ -3,67 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aset;
-use App\Models\Kebutuhan;
-use App\Models\Peminjaman;
-use App\Models\Perencanaan;
+use App\Models\DetailAset;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class KelolaAjuanController extends Controller
+class KelolaAsetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $kd_aset = $request->kd_aset;
 
-        $data = Kebutuhan::query()
-            ->select('kebutuhan.*')
+        $data = Aset::query()
+            ->join('asal', 'asal.id', 'aset.kd_asal')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('aset.*', 'asal.asal_aset', 'jenis_asets.nama_jenis')
             ->get();
+        
+        return view('sekretaris.listaset.index', compact('data'));
+    }
 
-        return view('sekretaris.listajuan.index', compact('data'));
+    public function getDetailAset($kd_aset) {
+        $detail = DetailAset::query()
+                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang')
+                    ->where('detail_aset.kd_aset', $kd_aset)
+                    ->get();
+        
+        return response()->json($detail);
     }
 
     public function confirm($id)
     {
 
-        $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();
+        $data = Aset::query()->where('kd_aset', $id)->first();
 
         $data->status = "Disetujui";
         $data->save();
         if ($data->save()) {
-
-
-            $lastData = Perencanaan::orderBy('kd_perencanaan', 'desc')->first();
-
-            if ($lastData) {
-                $nomorUrutan = intval(substr($lastData->kd_perencanaan, 3)) + 1;
-                $kode = 'PR' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
-            } else {
-                $kode = 'PR001';
-            }
-
-            Perencanaan::create([
-                'kd_perencanaan' => $kode,
-                'nama_Perencanaan' => $data->nama_kebutuhan,
-                'tgl_perencanaan' => $data->tgl_kebutuhan,
-                'status' => 'Aktif'
-            ]);
-
-            return redirect()->route('listajuan.index')->with('success', 'Data Kebutuhan berhasil dikonfirmasi.');
+            return redirect()->route('listaset.index')->with('success', 'Data Aset berhasil dikonfirmasi.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
         }
     }
 
-    public function decline(Request $request, $id)
+    public function decline($id)
     {
-        $id_pinjam = $request->id_pinjam;
 
-        $data = Kebutuhan::query()->where('kd_kebutuhan', $id_pinjam)->first();
+        $data = Aset::query()->where('kd_aset', $id)->first();
 
         $data->status = "Ditolak";
         $data->save();
 
         if ($data->save()) {
-            return redirect()->route('listpinjam.index')->with('success', 'Data Kebutuhan ditolak.');
+            return redirect()->route('listaset.index')->with('success', 'Data aset ditolak.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
         }

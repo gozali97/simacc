@@ -52,12 +52,36 @@
             </a>
         </li>
         <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->is('listaset*') ? 'active' : '' }}">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Layouts">Master Data</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="/listaset" class="menu-link">
+                        <div data-i18n="Without menu">Aset</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/listmutasi" class="menu-link">
+                        <div data-i18n="Without menu">Mutasi</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->is('listpinjam*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
                 <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
                 <div data-i18n="Layouts">Transaksi</div>
             </a>
 
             <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="/listaset" class="menu-link">
+                        <div data-i18n="Without menu">Aset</div>
+                    </a>
+                </li>
                 <li class="menu-item">
                     <a href="/listpinjam" class="menu-link">
                         <div data-i18n="Without menu">Peminjaman</div>

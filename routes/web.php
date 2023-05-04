@@ -6,6 +6,7 @@ use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
 use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaAjuanController;
+use App\Http\Controllers\KelolaAsetController;
 use App\Http\Controllers\KelolaKaurController;
 use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\KelolaPerencanaanController;
@@ -64,6 +65,15 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listpinjam/edit/{id}', [KelolaPeminjamanController::class, 'edit'])->name('listpinjam.edit');
     Route::post('/listpinjam/update/{id}', [KelolaPeminjamanController::class, 'update'])->name('listpinjam.update');
     Route::get('/listpinjam/destroy/{id}', [KelolaPeminjamanController::class, 'destroy'])->name('listpinjam.destroy');
+
+    Route::get('/listaset', [KelolaAsetController::class, 'index'])->name('listaset.index');
+    Route::get('/listaset/{kd_aset}', [KelolaAsetController::class, 'getDetailAset'])->name('listaset.getDetail');
+    Route::post('/listaset/confirm/{id}', [KelolaAsetController::class, 'confirm'])->name('listaset.confirm');
+    Route::post('/listaset/decline/{id}', [KelolaAsetController::class, 'decline'])->name('listaset.decline');
+    Route::post('/listaset/store', [KelolaAsetController::class, 'store'])->name('listaset.store');
+    Route::get('/listaset/edit/{id}', [KelolaAsetController::class, 'edit'])->name('listaset.edit');
+    Route::post('/listaset/update/{id}', [KelolaAsetController::class, 'update'])->name('listaset.update');
+    Route::get('/listaset/destroy/{id}', [KelolaAsetController::class, 'destroy'])->name('listaset.destroy');
 
     Route::get('/listajuan', [KelolaAjuanController::class, 'index'])->name('listajuan.index');
     Route::post('/listajuan/confirm/{id}', [KelolaAjuanController::class, 'confirm'])->name('listajuan.confirm');
