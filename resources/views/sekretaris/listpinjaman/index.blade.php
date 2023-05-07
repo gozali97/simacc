@@ -69,7 +69,7 @@
     <div class="card">
         <div class="p-3 mt-4">
             {{-- <h4 class="text-blue h4">Data Table Simple</h4> --}}
-            <a href="/kaurpinjam/create" type="button" class="btn btn-outline-success">Tambah</a>
+            {{-- <a href="/kaurpinjam/create" type="button" class="btn btn-outline-success">Tambah</a> --}}
         </div>
         <div class="p-2">
             <table id="datatable" class="data-table table stripe hover nowrap">
@@ -107,14 +107,10 @@
                         </span></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="First group">
-                                {{-- <a href="{{ route('kaurpinjam.edit', $a->kd_peminjaman) }}" type="button"
-                                    class="btn btn-icon btn-warning">
-                                    <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
-                                </a> --}}
                                 <a href="{{ route('listpinjam.view',$a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info detail-pinjam-btn" data-kd="{{ $a->kd_peminjaman }}">
                                     <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
                                 </a>
-                                @if ($a->status !== 'Aktif' && $a->status !== 'Ditolak')
+                                @if ($a->status !== 'Aktif' && $a->status !== 'Ditolak' && $a->status !== 'Selesai')
                                 <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->kd_peminjaman }}"
                                     class="btn btn-icon btn-success">
                                     <i class="bx bx-check-square bx-tada-hover"></i>
@@ -206,7 +202,7 @@
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect ke route untuk menghapus data dengan ID yang telah ditentukan
-            window.location.href = "/kaurpinjam/destroy/" + id;
+            window.location.href = "/listpinjam/destroy/" + id;
         }
     });
 

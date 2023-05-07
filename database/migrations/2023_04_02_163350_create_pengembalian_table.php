@@ -18,6 +18,7 @@ class CreatePengembalianTable extends Migration
             $table->string('kd_peminjaman');
             $table->integer('id_user');
             $table->date('tgl_kembali');
+            $table->enum('status',['Proses', 'Aktif', 'Selesai', 'Ditolak']);
             $table->timestamps();
         });
     }

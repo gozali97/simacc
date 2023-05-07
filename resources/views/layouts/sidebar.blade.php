@@ -84,6 +84,11 @@
                     </a>
                 </li>
                 <li class="menu-item">
+                    <a href="/listkembali" class="menu-link">
+                        <div data-i18n="Without menu">Pengembalian</div>
+                    </a>
+                </li>
+                <li class="menu-item">
                     <a href="/listajuan" class="menu-link">
                         <div data-i18n="Without menu">Kebutuhan</div>
                     </a>
@@ -167,12 +172,12 @@
             </ul>
 
         </li>
-        <li class="menu-item {{ request()->is('laporan*') ? 'active' : '' }}">
+        {{-- <li class="menu-item {{ request()->is('laporan*') ? 'active' : '' }}">
             <a href="/laporan" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-clipboard"></i>
                 <div data-i18n="Analytics">Laporan</div>
             </a>
-        </li>
+        </li> --}}
         @endif
         <li class="menu-item">
             <a href="#" class="menu-link" onclick="event.preventDefault(); Swal.fire({

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Peminjaman /</span> Detail Peminjaman</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Peminjaman /</span> Detail Peminjaman Kaur</h4>
     <div class="col-md-12">
         <div class="card mb-4 p-4">
             <div class="card-header">
@@ -55,7 +55,7 @@
                         </div>
             </div>
         </div>
-        <a href="/listkembali" type="button" class="btn btn-secondary">Kembali</a>
+        <a href="/kaurpinjam" type="button" class="btn btn-secondary">Kembali</a>
     </div>
 </div>
 

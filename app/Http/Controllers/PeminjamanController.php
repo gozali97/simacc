@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Aset;
 use App\Models\DetailAset;
 use App\Models\DetailPeminjaman;
+use App\Models\DetailPengembalian;
 use App\Models\JenisAset;
 use App\Models\Peminjam;
 use App\Models\Peminjaman;
+use App\Models\Pengembalian;
 use App\Models\Ruang;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,6 +47,21 @@ class PeminjamanController extends Controller
         $detail = DetailAset::query()->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')->where('detail_aset.kd_aset', $kd_aset)->where('detail_aset.status', 'in')->get();
 
         return response()->json($detail);
+    }
+
+    public function view($id) {
+        $data = DetailPeminjaman::query()
+                    ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+                    ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+                    ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset','peminjam.nama_peminjam', 'peminjaman.kd_peminjaman','peminjaman.tgl_pinjam')
+                    ->where('detail_peminjaman.kd_peminjaman', $id)
+                    ->get();
+
+        return view('kaur.pinjaman.view', compact('data'));
     }
 
     public function store(Request $request)
@@ -196,5 +213,68 @@ class PeminjamanController extends Controller
         $aset->save();
 
         return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil dihapus.');
+    }
+
+    public function insert(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $jumlahData = Pengembalian::count();
+
+            if ($jumlahData > 0) {
+                $nomorUrutan = $jumlahData + 1;
+                $kode = 'PB00' . $nomorUrutan;
+            } else {
+                $kode = 'PB001';
+            }
+
+            $kembali = new Pengembalian;
+            $kembali->kd_kembali = $kode;
+            $kembali->kd_peminjaman = $request->id_pinjam;
+            $kembali->id_user = Auth::user()->id;
+            $kembali->tgl_kembali = date('Y-m-d');
+            $kembali->status = "Proses";
+
+            if ($kembali->save()) {
+
+                $nomor = 0;
+
+                $jumlahDetail = DetailPengembalian::max('kd_det_pengembalian');
+
+                    if ($jumlahDetail > 0) {
+                        $nomor = intval(substr($jumlahDetail, 5));
+                    } else {
+                        $kodeDetail = 'PNB001';
+                    }
+
+                $detailPinjam = DetailPeminjaman::where('kd_peminjaman', $request->id_pinjam)->get();
+
+                foreach ($detailPinjam as $det){
+
+                    $nomor++;
+                    $kodeDetail = 'PNB' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+
+                    $detail = new DetailPengembalian;
+                    $detail->kd_det_pengembalian = $kodeDetail;
+                    $detail->kd_kembali = $kembali->kd_kembali;
+                    $detail->kd_det_aset = $det->kd_det_aset;
+                    $detail->tgl_kembali = date('Y-m-d');
+                    $detail->created_at = date('Y-m-d');
+                    $detail->save();
+                }
+
+                $pinjam = Peminjaman::where('kd_peminjaman', $request->id_pinjam)->first();
+                $pinjam->status = 'Selesai';
+                $pinjam->save();
+
+                DB::commit();
+                return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil dikembalikan.');
+            }
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, '. $e->getMessage());
+        }
     }
 }

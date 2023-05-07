@@ -81,8 +81,6 @@ class KelolaPeminjamanController extends Controller
     public function store(Request $request)
     {
         try {
-            // dd($request->all());
-            // Validasi input dari form
             $validator = Validator::make($request->all(), [
                 'aset' => 'required',
                 'tgl_pinjam' => 'required',

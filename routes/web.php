@@ -9,10 +9,12 @@ use App\Http\Controllers\KelolaAjuanController;
 use App\Http\Controllers\KelolaAsetController;
 use App\Http\Controllers\KelolaKaurController;
 use App\Http\Controllers\KelolaPeminjamanController;
+use App\Http\Controllers\KelolaPengembalianController;
 use App\Http\Controllers\KelolaPerencanaanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +68,16 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listpinjam/edit/{id}', [KelolaPeminjamanController::class, 'edit'])->name('listpinjam.edit');
     Route::post('/listpinjam/update/{id}', [KelolaPeminjamanController::class, 'update'])->name('listpinjam.update');
     Route::get('/listpinjam/destroy/{id}', [KelolaPeminjamanController::class, 'destroy'])->name('listpinjam.destroy');
+
+    //  Route Kelola Transaksi
+    Route::get('/listkembali', [KelolaPengembalianController::class, 'index'])->name('listkembali.index');
+    Route::get('/listkembali/view/{id}', [KelolaPengembalianController::class, 'View'])->name('listkembali.view');
+    Route::post('/listkembali/confirm/{id}', [KelolaPengembalianController::class, 'confirm'])->name('listkembali.confirm');
+    Route::post('/listkembali/decline/{id}', [KelolaPengembalianController::class, 'decline'])->name('listkembali.decline');
+    Route::post('/listkembali/store', [KelolaPengembalianController::class, 'store'])->name('listkembali.store');
+    Route::get('/listkembali/edit/{id}', [KelolaPengembalianController::class, 'edit'])->name('listkembali.edit');
+    Route::post('/listkembali/update/{id}', [KelolaPengembalianController::class, 'update'])->name('listkembali.update');
+    Route::get('/listkembali/destroy/{id}', [KelolaPengembalianController::class, 'destroy'])->name('listkembali.destroy');
 
     Route::get('/listaset', [KelolaAsetController::class, 'index'])->name('listaset.index');
     Route::get('/listaset/{kd_aset}', [KelolaAsetController::class, 'getDetailAset'])->name('listaset.getDetail');
@@ -129,11 +141,23 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
      //  Route Kelola peminjaman
      Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');
      Route::get('/kaurpinjam/create', [PeminjamanController::class, 'create'])->name('kaurpinjam.create');
+     Route::get('/kaurpinjam/view/{id}', [PeminjamanController::class, 'view'])->name('kaurpinjam.view');
      Route::get('/kaurpinjam/getDetailAset', [PeminjamanController::class, 'getDetailAset'])->name('kaurpinjam.getDetailAset');
      Route::post('/kaurpinjam/store', [PeminjamanController::class, 'store'])->name('kaurpinjam.store');
+     Route::post('/kaurpinjam/insert', [PeminjamanController::class, 'insert'])->name('kaurpinjam.insert');
      Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
      Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');
      Route::get('/kaurpinjam/destroy/{id}', [PeminjamanController::class, 'destroy'])->name('kaurpinjam.destroy');
+
+     //  Route Kelola pengembalian
+     Route::get('/kaurkembali', [PengembalianController::class, 'index'])->name('kaurkembali.index');
+     Route::get('/kaurkembali/create', [PengembalianController::class, 'create'])->name('kaurkembali.create');
+     Route::get('/kaurkembali/view/{id}', [PengembalianController::class, 'view'])->name('kaurkembali.view');
+     Route::get('/kaurkembali/getDetailAset', [PengembalianController::class, 'getDetailAset'])->name('kaurkembali.getDetailAset');
+     Route::post('/kaurkembali/store', [PengembalianController::class, 'store'])->name('kaurkembali.store');
+     Route::get('/kaurkembali/edit/{id}', [PengembalianController::class, 'edit'])->name('kaurkembali.edit');
+     Route::post('/kaurkembali/update/{id}', [PengembalianController::class, 'update'])->name('kaurkembali.update');
+     Route::get('/kaurkembali/destroy/{id}', [PengembalianController::class, 'destroy'])->name('kaurkembali.destroy');
 
      //  Route Kelola pengajuan
      Route::get('/kaurajuan', [PengajuanController::class, 'index'])->name('kaurajuan.index');

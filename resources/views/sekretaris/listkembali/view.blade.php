@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Peminjaman /</span> Detail Peminjaman</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pengembalian /</span> Detail Pengembalian</h4>
     <div class="col-md-12">
         <div class="card mb-4 p-4">
             <div class="card-header">
-                <h5 class="modal-title" id="exampleModalLabel4">Detail Peminjaman</h5>
+                <h5 class="modal-title" id="exampleModalLabel4">Detail Pengembalian</h5>
             </div>
             <div class="card-body">
                     <div class="row">
@@ -55,7 +55,7 @@
                         </div>
             </div>
         </div>
-        <a href="/listkembali" type="button" class="btn btn-secondary">Kembali</a>
+        <a href="/listpinjam" type="button" class="btn btn-secondary">Kembali</a>
     </div>
 </div>
 

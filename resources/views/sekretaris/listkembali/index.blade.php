@@ -63,13 +63,13 @@
 @endif
 
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Peminjaman /</span> List Pinjaman</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pengembalian /</span> List Pengembalian</h4>
 
     <!-- Basic Bootstrap Table -->
     <div class="card">
         <div class="p-3 mt-4">
             {{-- <h4 class="text-blue h4">Data Table Simple</h4> --}}
-            <a href="/kaurpinjam/create" type="button" class="btn btn-outline-success">Tambah</a>
+            {{-- <a href="/kaurpinjam/create" type="button" class="btn btn-outline-success">Tambah</a> --}}
         </div>
         <div class="p-2">
             <table id="datatable" class="data-table table stripe hover nowrap">
@@ -78,7 +78,7 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Jenis</th>
-                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Kembali</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -92,7 +92,7 @@
                         <td>{{ $no++ }}</td>
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
-                        <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
+                        <td>{{ date('d-m-Y', strtotime($a->tgl_kembali)) }}</td>
                         <td> <span class="badge
                             @if($a->status === 'Proses')
                                 bg-primary
@@ -103,43 +103,31 @@
                             @else
                                 bg-danger
                             @endif">
-                                {{ $a->status }}
-                            </span></span></td>
+                            {{ $a->status }}
+                        </span></td>
                         <td>
-                            @if ($a->status == 'Aktif')
                             <div class="btn-group" role="group" aria-label="First group">
-                                <a href="{{ route('kaurpinjam.view', $a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info">
-                                    <span class="tf-icons bx bx-info-circle"></span>
+                                <a href="{{ route('listkembali.view',$a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info detail-pinjam-btn" data-kd="{{ $a->kd_peminjaman }}">
+                                    <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
                                 </a>
-                                <button  data-bs-toggle="modal"
-                                    data-bs-target="#confirmModal{{ $a->kd_peminjaman }}" type="button"
+                                @if ($a->status !== 'Aktif' && $a->status !== 'Ditolak')
+                                <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->kd_kembali }}"
                                     class="btn btn-icon btn-success">
-                                    <span class="tf-icons bx bx-analyse bx-tada-hover"></span>
+                                    <i class="bx bx-check-square bx-tada-hover"></i>
                                 </button>
+                                <button data-bs-toggle="modal" data-bs-target="#declineModal{{ $a->kd_kembali }}"
+                                    class="btn btn-icon btn-danger">
+                                    <i class="bx bx-x-circle bx-tada-hover"></i>
+                                </button>
+                                @endif
                             </div>
-                            @elseif ($a->status == 'Proses')
-                            <div class="btn-group" role="group" aria-label="First group">
-                                <a href="{{ route('kaurpinjam.view', $a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info">
-                                    <span class="tf-icons bx bx-info-circle"></span>
-                                </a>
-                                <a href="{{ route('kaurpinjam.edit', $a->kd_peminjaman) }}" type="button"
-                                    class="btn btn-icon btn-warning">
-                                    <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
-                                </a>
-                                <a href="#" class="btn btn-icon btn-danger"
-                                    onclick="event.preventDefault(); confirmDelete('{{ $a->kd_peminjaman }}');">
-                                    <i class="bx bx-trash"></i>
-                                </a>
-                            </div>
-                            @else
-                            <a href="{{ route('kaurpinjam.view', $a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info">
-                                <span class="tf-icons bx bx-info-circle"></span>
-                            </a>
-                            @endif
                         </td>
                     </tr>
-                    <div class="modal fade" id="confirmModal{{ $a->kd_peminjaman }}"
-                        aria-labelledby="modalToggleLabel{{ $a->kd_peminjaman }}" tabindex="-1" style="display: none;"
+                    <!-- Modal Info -->
+
+                    <!-- Modal Konfirmasi -->
+                    <div class="modal fade" id="confirmModal{{ $a->kd_kembali }}"
+                        aria-labelledby="modalToggleLabel{{ $a->kd_kembali }}" tabindex="-1" style="display: none;"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -148,10 +136,35 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('kaurpinjam.insert',$a->kd_peminjaman) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('listkembali.confirm',$a->kd_kembali) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                <div class="modal-body">Apakah Anda yakin ingin melakukan pengembalian aset <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_peminjaman }}">
+                                <div class="modal-body">Apakah Anda yakin ingin konfirmasi pengembalian <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
+                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_kembali }}">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="declineModal{{ $a->kd_kembali }}"
+                        aria-labelledby="modalToggleLabel{{ $a->kd_kembali }}" tabindex="-1" style="display: none;"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalToggleLabel">Konfirmasi Pengembalian</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('listkembali.decline',$a->kd_kembali) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                <div class="modal-body">Apakah Anda yakin ingin tolak pengembalian <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
+                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_kembali }}">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
@@ -189,10 +202,12 @@
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect ke route untuk menghapus data dengan ID yang telah ditentukan
-            window.location.href = "/kaurpinjam/destroy/" + id;
+            window.location.href = "/listkembali/destroy/" + id;
         }
     });
+
 }
+
 </script>
 
 @endsection
