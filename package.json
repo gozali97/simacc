@@ -23,6 +23,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@selectize/selectize": "^0.15.2",
         "datatables.net": "^1.13.4",
         "sweetalert": "^2.1.2"
     }

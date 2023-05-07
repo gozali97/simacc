@@ -79,7 +79,6 @@
                         <th>Nama</th>
                         <th>Jenis</th>
                         <th>Tanggal Pinjam</th>
-                        <th>Jumlah</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -94,7 +93,6 @@
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
                         <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
-                        <td>{{ $a->jml_peminjaman }}</td>
                         <td>  <span class="badge
                             @if($a->status === 'Proses')
                                 bg-primary
@@ -109,22 +107,24 @@
                         </span></span></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="First group">
-                                <a href="{{ route('kaurpinjam.edit', $a->id_peminjaman) }}" type="button"
-                                    class="btn btn-icon btn-warning">
-                                    <span class="tf-icons bx bx-edit-alt"></span>
-                                </a>
                                 <button type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exLargeModal{{ $a->id_peminjaman }}" class="btn btn-icon btn-info">
-                                    <span class="tf-icons bx bx-info-circle"></span>
-                                </button>
+                                data-bs-target="#exLargeModal{{ $a->kd_peminjaman }}" class="btn btn-icon btn-info">
+                                <span class="tf-icons bx bx-info-circle"></span>
+                            </button>
+                            @if ($a->status !== 'Aktif' && $a->status !== 'Ditolak')
+                            <a href="{{ route('kaurpinjam.edit', $a->kd_peminjaman) }}" type="button"
+                                class="btn btn-icon btn-warning">
+                                <span class="tf-icons bx bx-edit-alt"></span>
+                            </a>
                                 <a href="#" class="btn btn-icon btn-danger"
-                                    onclick="event.preventDefault(); confirmDelete('{{ $a->id_peminjaman }}');">
+                                    onclick="event.preventDefault(); confirmDelete('{{ $a->kd_peminjaman }}');">
                                     <i class="bx bx-trash"></i>
                                 </a>
                             </div>
+                            @endif
                         </td>
                     </tr>
-                    <div class="modal fade" id="exLargeModal{{ $a->id_peminjaman }}" tabindex="-1"
+                    <div class="modal fade" id="exLargeModal{{ $a->kd_peminjaman }}" tabindex="-1"
                         style="display: none;" aria-hidden="true">
                         <div class="modal-dialog modal-xl" role="document">
                             <div class="modal-content">

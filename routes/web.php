@@ -59,6 +59,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
 
     //  Route Kelola Transaksi
     Route::get('/listpinjam', [KelolaPeminjamanController::class, 'index'])->name('listpinjam.index');
+    Route::get('/listpinjam/view/{id}', [KelolaPeminjamanController::class, 'View'])->name('listpinjam.view');
     Route::post('/listpinjam/confirm/{id}', [KelolaPeminjamanController::class, 'confirm'])->name('listpinjam.confirm');
     Route::post('/listpinjam/decline/{id}', [KelolaPeminjamanController::class, 'decline'])->name('listpinjam.decline');
     Route::post('/listpinjam/store', [KelolaPeminjamanController::class, 'store'])->name('listpinjam.store');
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
 
     Route::get('/listaset', [KelolaAsetController::class, 'index'])->name('listaset.index');
     Route::get('/listaset/{kd_aset}', [KelolaAsetController::class, 'getDetailAset'])->name('listaset.getDetail');
+    Route::get('/listaset/getDetailPinjam/{kd_peminjaman}', [KelolaAsetController::class, 'getDetailPinjam'])->name('listaset.getDetailPinjam');
     Route::post('/listaset/confirm/{id}', [KelolaAsetController::class, 'confirm'])->name('listaset.confirm');
     Route::post('/listaset/decline/{id}', [KelolaAsetController::class, 'decline'])->name('listaset.decline');
     Route::post('/listaset/store', [KelolaAsetController::class, 'store'])->name('listaset.store');
@@ -127,6 +129,7 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
      //  Route Kelola peminjaman
      Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');
      Route::get('/kaurpinjam/create', [PeminjamanController::class, 'create'])->name('kaurpinjam.create');
+     Route::get('/kaurpinjam/getDetailAset', [PeminjamanController::class, 'getDetailAset'])->name('kaurpinjam.getDetailAset');
      Route::post('/kaurpinjam/store', [PeminjamanController::class, 'store'])->name('kaurpinjam.store');
      Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
      Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');

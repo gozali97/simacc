@@ -19,7 +19,7 @@ class CreateAsetTable extends Migration
             $table->string('nama_aset');
             $table->integer('kd_asal');
             $table->string('kd_jenis', 6);
-            $table->enum('status',['Aktif', 'Disetujui','Ditolak']);
+            $table->enum('status',['Pending', 'Aktif','Ditolak']);
             $table->timestamps();
         });
     }

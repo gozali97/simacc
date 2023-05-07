@@ -77,10 +77,6 @@
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="/listaset" class="menu-link">
-                        <div data-i18n="Without menu">Aset</div>
-                    </a>
                 </li>
                 <li class="menu-item">
                     <a href="/listpinjam" class="menu-link">

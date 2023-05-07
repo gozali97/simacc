@@ -20,6 +20,7 @@ class CreateDetailAsetTable extends Migration
             $table->integer('kd_kondisi');
             $table->string('gambar');
             $table->date('tgl_masuk');
+            $table->enum('status',['in', 'out']);
             $table->timestamps();
         });
     }

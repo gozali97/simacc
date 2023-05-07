@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aset;
+use App\Models\DetailAset;
+use App\Models\DetailPeminjaman;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,21 +16,34 @@ class KelolaPeminjamanController extends Controller
 
         $data = Peminjaman::query()
             ->join('users', 'users.id', 'peminjaman.id_user')
-            ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
-            ->join('details_asets', 'details_asets.kd_aset', 'asets.kd_aset')
-            ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
-            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-            ->select('peminjaman.*', 'asets.nama_aset', 'details_asets.gambar', 'users.nama', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
+            ->join('aset', 'aset.kd_aset', 'peminjaman.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('peminjaman.*', 'aset.nama_aset', 'jenis_asets.nama_jenis as jenis')
             ->get();
 
         return view('sekretaris.listpinjaman.index', compact('data'));
+    }
+
+    public function view($id) {
+        $data = DetailPeminjaman::query()
+                    ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+                    ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+                    ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset','peminjam.nama_peminjam', 'peminjaman.kd_peminjaman','peminjaman.tgl_pinjam')
+                    ->where('detail_peminjaman.kd_peminjaman', $id)
+                    ->get();
+
+        return view('sekretaris.listpinjaman.view', compact('data'));
     }
 
     public function confirm(Request $request, $id)
     {
        $id_pinjam = $request->id_pinjam;
 
-        $data = Peminjaman::query()->where('id_peminjaman', $id_pinjam)->first();
+        $data = Peminjaman::query()->where('kd_peminjaman', $id)->first();
 
         $data->status = "Aktif";
         $data->save();
@@ -40,16 +55,23 @@ class KelolaPeminjamanController extends Controller
         }
     }
 
-    public function decline(Request $request, $id)
+    public function decline($id)
     {
-       $id_pinjam = $request->id_pinjam;
 
-        $data = Peminjaman::query()->where('id_peminjaman', $id_pinjam)->first();
+        $data = Peminjaman::query()->where('kd_peminjaman', $id)->first();
 
         $data->status = "Ditolak";
         $data->save();
 
         if ($data->save()) {
+
+            $detail =  DetailPeminjaman::where('kd_peminjaman', $id)->get();
+            foreach ($detail as $det) {
+                $detailAset = DetailAset::where('kd_det_aset', $det->kd_det_aset)->first();
+        $detailAset->status = "in";
+                $detailAset->save();
+            }
+
             return redirect()->route('listpinjam.index')->with('success', 'Data Peminjaman ditolak.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kaur');

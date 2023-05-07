@@ -79,7 +79,6 @@
                         <th>Nama</th>
                         <th>Jenis</th>
                         <th>Tanggal Pinjam</th>
-                        <th>Jumlah</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -94,7 +93,6 @@
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
                         <td>{{ date('d-m-Y', strtotime($a->tgl_pinjam)) }}</td>
-                        <td>{{ $a->jml_peminjaman }}</td>
                         <td> <span class="badge
                             @if($a->status === 'Proses')
                                 bg-primary
@@ -109,20 +107,19 @@
                         </span></td>
                         <td>
                             <div class="btn-group" role="group" aria-label="First group">
-                                {{-- <a href="{{ route('kaurpinjam.edit', $a->id_peminjaman) }}" type="button"
+                                {{-- <a href="{{ route('kaurpinjam.edit', $a->kd_peminjaman) }}" type="button"
                                     class="btn btn-icon btn-warning">
                                     <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
                                 </a> --}}
-                                <button type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exLargeModal{{ $a->id_peminjaman }}" class="btn btn-icon btn-info">
+                                <a href="{{ route('listpinjam.view',$a->kd_peminjaman) }}" type="button" class="btn btn-icon btn-info detail-pinjam-btn" data-kd="{{ $a->kd_peminjaman }}">
                                     <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
-                                </button>
-                                @if ($a->status !== 'Selesai')
-                                <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->id_peminjaman }}"
+                                </a>
+                                @if ($a->status !== 'Aktif' && $a->status !== 'Ditolak')
+                                <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->kd_peminjaman }}"
                                     class="btn btn-icon btn-success">
                                     <i class="bx bx-check-square bx-tada-hover"></i>
                                 </button>
-                                <button data-bs-toggle="modal" data-bs-target="#declineModal{{ $a->id_peminjaman }}"
+                                <button data-bs-toggle="modal" data-bs-target="#declineModal{{ $a->kd_peminjaman }}"
                                     class="btn btn-icon btn-danger">
                                     <i class="bx bx-x-circle bx-tada-hover"></i>
                                 </button>
@@ -131,87 +128,10 @@
                         </td>
                     </tr>
                     <!-- Modal Info -->
-                    <div class="modal fade" id="exLargeModal{{ $a->id_peminjaman }}" tabindex="-1"
-                        style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog modal-xl" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel4">Detail Peminjaman</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2">
-                                        <div class="col mb-0">
-                                            <label for="nameExLarge" class="form-label">Nama Kaur</label>
-                                            <input type="text" id="nameExLarge" class="form-control"
-                                                value="{{ $a->nama }}" placeholder="Enter Name" disabled>
-                                        </div>
-                                        <div class="col mb-0">
-                                            <label for="dobExLarge" class="form-label">Ruang</label>
-                                            <input type="text" id="dobExLarge" class="form-control"
-                                                value="{{ $a->ruang }}" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="row g-2">
-                                        <div class="col mb-0">
-                                            <label for="emailExLarge" class="form-label">Nama Aset</label>
-                                            <input type="text" id="emailExLarge" class="form-control"
-                                                value="{{ $a->nama_aset }}" placeholder="xxxx@xxx.xx" disabled>
-                                        </div>
-                                        <div class="col mb-0">
-                                            <div class="col mb-0">
-                                                <label for="dobExLarge" class="form-label">Tanggal Pinjam</label>
-                                                <input type="text" id="dobExLarge" class="form-control"
-                                                    value="{{ date('Y-m-d', strtotime($a->tgl_pinjam)) }}" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-2">
-                                        <div class="col mb-0">
-                                            <label for="emailExLarge" class="form-label">Jenis Aset</label>
-                                            <input type="text" id="emailExLarge" class="form-control"
-                                                value="{{ $a->jenis }}" placeholder="xxxx@xxx.xx" disabled>
-                                        </div>
-                                        <div class="col mb-0">
-                                            <label for="dobExLarge" class="form-label">Status</label>
-                                            <input type="text" id="dobExLarge" class="form-control"
-                                                value="{{ $a->status }}" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="row g-2 mt-3">
-                                        <div class="col mb-0">
-                                            <label for="emailExLarge" class="form-label">Jumlah</label>
-                                            <input type="text" id="emailExLarge" class="form-control"
-                                                value="{{ $a->jml_peminjaman }}" placeholder="xxxx@xxx.xx" disabled>
-                                        </div>
-                                        <div class="col mb-0">
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <label for="emailExLarge" class="form-label mt-2">Gambar : </label>
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <img src="{{ url('/assets/img/'.$a->gambar) }}" alt="user-avatar"
-                                                        class="d-block rounded" height="100" width="100"
-                                                        id="uploadedAvatar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Modal Konfirmasi -->
-                    <div class="modal fade" id="confirmModal{{ $a->id_peminjaman }}"
-                        aria-labelledby="modalToggleLabel{{ $a->id_peminjaman }}" tabindex="-1" style="display: none;"
+                    <div class="modal fade" id="confirmModal{{ $a->kd_peminjaman }}"
+                        aria-labelledby="modalToggleLabel{{ $a->kd_peminjaman }}" tabindex="-1" style="display: none;"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -220,10 +140,10 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('listpinjam.confirm',$a->id_peminjaman) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('listpinjam.confirm',$a->kd_peminjaman) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="modal-body">Apakah Anda yakin ingin konfirmasi peminjaman <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                <input type="hidden" name="id_pinjam" value="{{ $a->id_peminjaman }}">
+                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_peminjaman }}">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
@@ -235,8 +155,8 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="declineModal{{ $a->id_peminjaman }}"
-                        aria-labelledby="modalToggleLabel{{ $a->id_peminjaman }}" tabindex="-1" style="display: none;"
+                    <div class="modal fade" id="declineModal{{ $a->kd_peminjaman }}"
+                        aria-labelledby="modalToggleLabel{{ $a->kd_peminjaman }}" tabindex="-1" style="display: none;"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -245,10 +165,10 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('listpinjam.decline',$a->id_peminjaman) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('listpinjam.decline',$a->kd_peminjaman) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="modal-body">Apakah Anda yakin ingin tolak peminjaman <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                <input type="hidden" name="id_pinjam" value="{{ $a->id_peminjaman }}">
+                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_peminjaman }}">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
@@ -289,7 +209,32 @@
             window.location.href = "/kaurpinjam/destroy/" + id;
         }
     });
+
+    $('.detail-pinjam-btn').on('click', function() {
+        var kdPeminjaman = $(this).data('kd');
+        $.ajax({
+            url: "{{ route('listaset.getDetailPinjam', '') }}/" + kdPeminjaman,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var tableBody = '';
+                $.each(data, function(i, detail) {
+                    tableBody += '<tr>' +
+                        '<td>' + detail.kode_inventory + '</td>' +
+                        '<td>' + detail.nama_aset + '</td>' +
+                        '<td>' + detail.nama_ruang + '</td>' +
+                        '<td>' + detail.jenis_aset + '</td>' +
+                        '</tr>';
+                });
+                $('#detail-pinjam table tbody').html(tableBody);
+            },
+            error: function() {
+                alert('Gagal mengambil data detail pinjam!');
+            }
+        });
+    });
 }
+
 </script>
 
 @endsection

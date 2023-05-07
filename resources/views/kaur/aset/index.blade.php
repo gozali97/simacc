@@ -78,6 +78,7 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Jenis</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -90,6 +91,12 @@
                         <td>{{ $no++ }}</td>
                         <td>{{ $a->nama_aset }}</td>
                         <td>{{ $a->jenis }}</td>
+                        <td>
+
+                            <span
+                                class="badge @if($a->status == 'Pending') bg-label-warning @elseif($a->status == 'Aktif') bg-label-success @else bg-label-danger @endif">{{
+                                $a->status }}</span>
+                        </td>
                         <td>
                             <a href="{{ route('aset.edit', $a->kd_aset) }}" type="button" class="btn btn-icon btn-warning">
                                 <span class="tf-icons bx bx-edit-alt"></span>

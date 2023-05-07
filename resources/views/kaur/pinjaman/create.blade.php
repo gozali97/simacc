@@ -69,38 +69,25 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Nama Aset</label>
-                        <select name="aset" class="form-select @error('aset') is-invalid @enderror" id="exampleFormControlSelect1"
-                        aria-label="Default select example">
-                        <option value="">Pilih Aset</option>
-                        @foreach ($aset as $a)
-                        <option value="{{ $a->kd_aset }}">{{ $a->nama_aset }}</option>
-                        @endforeach
-                    </select>
+                        <select id="aset" name="aset" class="form-select @error('aset') is-invalid @enderror" id="exampleFormControlSelect1" aria-label="Default select example">
+                          <option value="">Pilih Aset</option>
+                          @foreach ($aset as $a)
+                            <option value="{{ $a->kd_aset }}">{{ $a->nama_aset }}</option>
+                          @endforeach
+                        </select>
                         @error('aset')
-                        <span class="invalid-feedback" role="alert">
+                          <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
-                        </span>
+                          </span>
                         @enderror
-                    </div>
+                      </div>
                     <div class="mb-3">
-                        <label class="form-label">Tanggal Pinjam</label>
-                        <input name="tgl_pinjam" class="form-control @error('tgl_pinjam') is-invalid @enderror" type="date" value="2023-03-18"
-                            id="html5-date-input" />
-                            @error('tgl_pinjam')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <label class="form-label">Detail Aset</label>
+                    <select id="detailAset" name="detail[]" class="custom-select2 form-control" multiple="multiple" style="width: 100%;">
+
+                    </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Jumlah Dipinjam</label>
-                        <input name="jumlah" class="form-control @error('jumlah') is-invalid @enderror" type="number" id="html5-date-input" />
-                            @error('jumlah')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
+
                     <div class="mb-3">
                         <a href="/kaurpinjam" type="button" class="btn btn-secondary">Batal</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -112,25 +99,31 @@
 </div>
 
 <script>
-    // Membuat event listener change pada input file
-    document.getElementById("formFile").addEventListener("change", function(event) {
-      // Mendapatkan file yang diupload
-      let file = event.target.files[0];
-
-      // Membuat objek FileReader
-      let reader = new FileReader();
-
-      // Membuat event listener untuk ketika file selesai dibaca
-      reader.addEventListener("load", function() {
-        // Mengganti sumber gambar pada elemen img dengan gambar yang sudah dipilih
-        document.getElementById("preview").src = reader.result;
-      }, false);
-
-      // Membaca file yang dipilih sebagai data URL
-      if (file) {
-        reader.readAsDataURL(file);
-      }
+    $(document).ready(function() {
+    $('#aset').on('change', function() {
+        var kd_aset = $(this).val();
+        $('#detailAset').empty();
+        $.ajax({
+            type: 'get',
+            url: '{{ route("kaurpinjam.getDetailAset") }}',
+            data: {'kd_aset': kd_aset},
+            success: function(data) {
+                $.each(data, function(i, item) {
+                    $('#detailAset').append($('<option>', {
+                        value: item.kd_det_aset,
+                        text : item.kd_det_aset + '-' + item.nama_aset
+                    }));
+                });
+            }
+        });
     });
+
+    $('.custom-select2').select2();
+});
+
+var today = new Date().toISOString().slice(0, 10);
+
+document.getElementById('html5-date-input').value = today;
 </script>
 
 @endsection

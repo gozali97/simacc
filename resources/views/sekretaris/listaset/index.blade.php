@@ -101,7 +101,7 @@
                         <td>
 
                             <span
-                                class="badge @if($d->status == 'Aktif') bg-label-warning @elseif($d->status == 'Disetujui') bg-label-success @else bg-label-danger @endif">{{
+                                class="badge @if($d->status == 'Pending') bg-label-warning @elseif($d->status == 'Aktif') bg-label-success @else bg-label-danger @endif">{{
                                 $d->status }}</span>
                         </td>
                         <td>
@@ -110,7 +110,7 @@
                                     data-bs-target="#exLargeModal{{ $d->kd_aset }}" class="btn btn-icon btn-info">
                                     <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
                                 </button>
-                                @if ($d->status == 'Aktif')
+                                @if ($d->status == 'Pending')
                                 <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $d->kd_aset }}"
                                     class="btn btn-icon btn-success">
                                     <i class="bx bx-check-square bx-tada-hover"></i>
@@ -170,7 +170,7 @@
                                     <div class="mt-4">
                                         <h5 class="modal-title" id="exampleModalLabel4">Detail Aset</h5>
                                         <div id="detail-aset" class="row">
-                                         
+
                                         </div>
                                     </div>
                                 </div>

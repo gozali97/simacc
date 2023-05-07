@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aset;
+use App\Models\DetailAset;
+use App\Models\DetailPeminjaman;
 use App\Models\JenisAset;
 use App\Models\Peminjam;
 use App\Models\Peminjaman;
@@ -10,6 +12,7 @@ use App\Models\Ruang;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PeminjamanController extends Controller
@@ -18,46 +21,48 @@ class PeminjamanController extends Controller
     {
 
         $data = Peminjaman::query()
-        ->join('users', 'users.id', 'peminjaman.id_user')
-        ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
-        ->join('detail_asets', 'detail_asets.kd_aset', 'asets.kd_aset')
-        ->join('ruangs', 'ruangs.kd_ruang', 'detail_asets.kd_ruang')
-        ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-        ->select('peminjaman.*','asets.nama_aset', 'detail_asets.gambar', 'users.nama','ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis')
-        ->get();
+            ->join('users', 'users.id', 'peminjaman.id_user')
+            ->join('aset', 'aset.kd_aset', 'peminjaman.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('peminjaman.*', 'aset.nama_aset', 'users.nama', 'jenis_asets.nama_jenis as jenis')
+            ->get();
 
         return view('kaur.pinjaman.index', compact('data'));
     }
 
     public function create()
     {
-        $aset = Aset::all();
+        $aset = Aset::query()->where('status', 'Aktif')->get();
+
         $user = Peminjam::all();
 
         return view('kaur.pinjaman.create', compact('aset', 'user'));
     }
 
+    public function getDetailAset(Request $request)
+    {
+        $kd_aset = $request->input('kd_aset');
+        $detail = DetailAset::query()->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')->where('detail_aset.kd_aset', $kd_aset)->where('detail_aset.status', 'in')->get();
+
+        return response()->json($detail);
+    }
+
     public function store(Request $request)
     {
         try {
-            // dd($request->all());
-            // Validasi input dari form
+            DB::beginTransaction();
+
             $validator = Validator::make($request->all(), [
+                'nama' => 'required',
                 'aset' => 'required',
-                'tgl_pinjam' => 'required',
-                'jumlah' => 'required',
+                'detail.*' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator);
             }
 
-            $aset = Aset::where('kd_aset', $request->aset)->first();
-            // dd($request->jumlah > $aset->stok);
-
-            if (!$aset || $aset->stok == 0 || $request->jumlah > $aset->stok) {
-                return redirect()->back()->with('error', 'Aset tidak dapat dipinjam karena stoknya kosong atau jumlah yang dipinjam melebihi stok yang tersedia.');
-            }
+            $detail = DetailAset::where('kd_det_aset', $request->detail)->first();
 
             $jumlahData = Peminjaman::count();
 
@@ -68,38 +73,71 @@ class PeminjamanController extends Controller
                 $kode = 'PJ001';
             }
 
-            Peminjaman::create([
-                'id_peminjaman' => $kode,
-                'id_user' => Auth::user()->id,
-                'id_peminjam' => $request->nama,
-                'kd_aset' => $request->aset,
-                'tgl_pinjam' => $request->tgl_pinjam,
-                'jml_peminjaman' => $request->jumlah,
-                'status' => "Proses",
-            ]);
+            $pinjam = new Peminjaman;
+            $pinjam->kd_peminjaman = $kode;
+            $pinjam->id_user = Auth::user()->id;
+            $pinjam->id_peminjam = $request->nama;
+            $pinjam->kd_aset = $request->aset;
+            $pinjam->tgl_pinjam = date('Y-m-d');
+            $pinjam->status = "Proses";
 
-            // Kurangi stok aset sesuai jumlah yang dipinjam
-            $aset->stok -= $request->jumlah;
-            $aset->save();
+            if ($pinjam->save()) {
 
+                $pinjamDetails = [];
+                $nomor = 0;
+
+                $jumlahDetail = DetailPeminjaman::max('kd_det_peminjaman');
+
+                    if ($jumlahDetail > 0) {
+                        $nomor = intval(substr($jumlahDetail, 5));
+                    } else {
+                        $kodeDetail = 'PNJ001';
+                    }
+
+                foreach ($request->detail as $key => $pinjamdetail){
+
+                    $nomor++;
+                    $kodeDetail = 'PNJ' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+
+                    $detailAset = DetailAset::where('kd_det_aset', $pinjamdetail)->first();
+
+                    $detail = [
+                        'kd_det_peminjaman' => $kodeDetail,
+                        'kd_peminjaman' => $pinjam->kd_peminjaman,
+                        'kd_det_aset' => $pinjamdetail,
+                        'tgl_pinjam' => date('Y-m-d'),
+                        'created_at' => date('Y-m-d')
+                    ];
+
+                    if ($detailAset) {
+                        $detailAset->status = 'out';
+                        $detailAset->save();
+                    }
+
+                    $pinjamDetails[] = $detail;
+                }
+                DetailPeminjaman::insert($pinjamDetails);
+                DB::commit();
+                return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil ditambahkan.');
+            }
             // Redirect ke halaman index kategori dengan pesan sukses
-            return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil ditambahkan.');
         } catch (\Exception $e) {
+            DB::rollback();
             dd($e);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, '. $e->getMessage());
         }
     }
 
     public function edit($id)
     {
         $data = Peminjaman::query()
-        ->join('users', 'users.id', 'peminjaman.id_user')
-        ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
-        ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
-        ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
-        ->select('peminjaman.*','asets.nama_aset', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis', 'users.nama')
-        ->where('peminjaman.id_peminjaman', $id)
-        ->first();
+            ->join('users', 'users.id', 'peminjaman.id_user')
+            ->join('asets', 'asets.kd_aset', 'peminjaman.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'asets.kd_ruang')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'asets.kd_jenis')
+            ->select('peminjaman.*', 'asets.nama_aset', 'ruangs.nama_ruang as ruang', 'jenis_asets.nama_jenis as jenis', 'users.nama')
+            ->where('peminjaman.id_peminjaman', $id)
+            ->first();
 
         $aset = Aset::all();
 

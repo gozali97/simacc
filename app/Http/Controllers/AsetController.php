@@ -21,7 +21,6 @@ class AsetController extends Controller
         $aset = Aset::query()
         ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
         ->select('aset.*', 'jenis_asets.nama_jenis as jenis')
-        ->where('status', 'Disetujui')
         ->get();
 
         return view('kaur.aset.index', compact('aset'));
@@ -57,7 +56,7 @@ class AsetController extends Controller
             $aset->id_user = Auth::user()->id;
             $aset->kd_jenis = $request->jenis;
             $aset->kd_asal = $request->asal;
-            $aset->status = 'Aktif';
+            $aset->status = 'Pending';
             if ($aset->save()) {
 
                 $asetDetails = [];
@@ -84,6 +83,7 @@ class AsetController extends Controller
                         'kd_kondisi' => $request->kondisi[$key],
                         'gambar' => $gambar,
                         'tgl_masuk' => date('Y-m-d'),
+                        'status' => 'in',
                         'created_at' => date('Y-m-d')
                     ];
                     $asetDetails[] = $detail;

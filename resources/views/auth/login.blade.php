@@ -15,7 +15,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Login | Sistem Informasi Manajemen Aset Desa Cibentang</title>
 
     <meta name="description" content="" />
 
@@ -76,6 +76,11 @@
                 <div class="mb-3">
                   <label for="email" class="form-label">Email or Username</label>
                   <input class="form-control @error('email') is-invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus/>
+                  @error('email')
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
@@ -84,6 +89,11 @@
                   <div class="input-group input-group-merge">
                     <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password" />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
                   </div>
                 </div>
                 <div class="mb-3">

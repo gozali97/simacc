@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DetailPeminjaman extends Model
 {
     use HasFactory;
+    protected $table = 'detail_peminjaman';
+    protected $guarded = [];
+
+    protected $primaryKey = 'kd_det_peminjaman';
+    public $incrementing = false;
 }

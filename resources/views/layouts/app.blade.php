@@ -25,15 +25,17 @@
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ url('/assets/vendor/fonts/boxicons.css')}}" />
 
+      <!-- Tambahkan link jQuery CDN -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{ url('/assets/vendor/css/core.css')}}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ url('/assets/vendor/css/theme-default.css')}}"
-        class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ url('/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ url('/assets/css/demo.css')}}" />
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('assets/src/plugins/datatables/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('assets/src/plugins/datatables/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('assets/src/plugins/datatables/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('assets/src/plugins/datatables/css/responsive.bootstrap4.min.css') }}">
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ url('/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
@@ -42,14 +44,13 @@
 
     <script src="{{ url('/assets/vendor/js/helpers.js')}}"></script>
 
-    <!-- Tambahkan link jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css" />
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
     <script src="{{ url('/assets/js/config.js')}}"></script>
 </head>
@@ -91,9 +92,9 @@
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 
-    <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="{{ url('/assets/vendor/libs/jquery/jquery.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ url('/assets/vendor/libs/popper/popper.js')}}"></script>
     <script src="{{ url('/assets/vendor/js/bootstrap.js')}}"></script>
     <script src="{{ url('/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
