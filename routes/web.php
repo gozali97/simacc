@@ -10,11 +10,13 @@ use App\Http\Controllers\KelolaAsetController;
 use App\Http\Controllers\KelolaKaurController;
 use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\KelolaPengembalianController;
+use App\Http\Controllers\KelolaPenghapusanController;
 use App\Http\Controllers\KelolaPerencanaanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\PengembalianController;
+use App\Http\Controllers\PenghapusanController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekretarisController;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +80,16 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listkembali/edit/{id}', [KelolaPengembalianController::class, 'edit'])->name('listkembali.edit');
     Route::post('/listkembali/update/{id}', [KelolaPengembalianController::class, 'update'])->name('listkembali.update');
     Route::get('/listkembali/destroy/{id}', [KelolaPengembalianController::class, 'destroy'])->name('listkembali.destroy');
+
+    //  Route Kelola Transaksi
+    Route::get('/listhapus', [KelolaPenghapusanController::class, 'index'])->name('listhapus.index');
+    Route::get('/listhapus/view/{id}', [KelolaPenghapusanController::class, 'View'])->name('listhapus.view');
+    Route::post('/listhapus/confirm/{id}', [KelolaPenghapusanController::class, 'confirm'])->name('listhapus.confirm');
+    Route::post('/listhapus/decline/{id}', [KelolaPenghapusanController::class, 'decline'])->name('listhapus.decline');
+    Route::post('/listhapus/store', [KelolaPenghapusanController::class, 'store'])->name('listhapus.store');
+    Route::get('/listhapus/edit/{id}', [KelolaPenghapusanController::class, 'edit'])->name('listhapus.edit');
+    Route::post('/listhapus/update/{id}', [KelolaPenghapusanController::class, 'update'])->name('listhapus.update');
+    Route::get('/listhapus/destroy/{id}', [KelolaPenghapusanController::class, 'destroy'])->name('listhapus.destroy');
 
     Route::get('/listaset', [KelolaAsetController::class, 'index'])->name('listaset.index');
     Route::get('/listaset/{kd_aset}', [KelolaAsetController::class, 'getDetailAset'])->name('listaset.getDetail');
@@ -158,6 +170,16 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
      Route::get('/kaurkembali/edit/{id}', [PengembalianController::class, 'edit'])->name('kaurkembali.edit');
      Route::post('/kaurkembali/update/{id}', [PengembalianController::class, 'update'])->name('kaurkembali.update');
      Route::get('/kaurkembali/destroy/{id}', [PengembalianController::class, 'destroy'])->name('kaurkembali.destroy');
+
+     //  Route Kelola penghapusan
+     Route::get('/kaurhapus', [PenghapusanController::class, 'index'])->name('kaurhapus.index');
+     Route::get('/kaurhapus/create', [PenghapusanController::class, 'create'])->name('kaurhapus.create');
+     Route::get('/kaurhapus/view/{id}', [PenghapusanController::class, 'view'])->name('kaurhapus.view');
+     Route::get('/kaurhapus/getDetailAset', [PenghapusanController::class, 'getDetailAset'])->name('kaurhapus.getDetailAset');
+     Route::post('/kaurhapus/store', [PenghapusanController::class, 'store'])->name('kaurhapus.store');
+     Route::get('/kaurhapus/edit/{id}', [PenghapusanController::class, 'edit'])->name('kaurhapus.edit');
+     Route::post('/kaurhapus/update/{id}', [PenghapusanController::class, 'update'])->name('kaurhapus.update');
+     Route::get('/kaurhapus/destroy/{id}', [PenghapusanController::class, 'destroy'])->name('kaurhapus.destroy');
 
      //  Route Kelola pengajuan
      Route::get('/kaurajuan', [PengajuanController::class, 'index'])->name('kaurajuan.index');
