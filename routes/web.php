@@ -8,10 +8,12 @@ use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaAjuanController;
 use App\Http\Controllers\KelolaAsetController;
 use App\Http\Controllers\KelolaKaurController;
+use App\Http\Controllers\KelolaMutasiController;
 use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\KelolaPengembalianController;
 use App\Http\Controllers\KelolaPenghapusanController;
 use App\Http\Controllers\KelolaPerencanaanController;
+use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\PengajuanController;
@@ -82,6 +84,16 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listkembali/destroy/{id}', [KelolaPengembalianController::class, 'destroy'])->name('listkembali.destroy');
 
     //  Route Kelola Transaksi
+    Route::get('/listmutasi', [KelolaMutasiController::class, 'index'])->name('listmutasi.index');
+    Route::get('/listmutasi/view/{id}', [KelolaMutasiController::class, 'View'])->name('listmutasi.view');
+    Route::post('/listmutasi/confirm/{id}', [KelolaMutasiController::class, 'confirm'])->name('listmutasi.confirm');
+    Route::post('/listmutasi/decline/{id}', [KelolaMutasiController::class, 'decline'])->name('listmutasi.decline');
+    Route::post('/listmutasi/store', [KelolaMutasiController::class, 'store'])->name('listmutasi.store');
+    Route::get('/listmutasi/edit/{id}', [KelolaMutasiController::class, 'edit'])->name('listmutasi.edit');
+    Route::post('/listmutasi/update/{id}', [KelolaMutasiController::class, 'update'])->name('listmutasi.update');
+    Route::get('/listmutasi/destroy/{id}', [KelolaMutasiController::class, 'destroy'])->name('listmutasi.destroy');
+
+    //  Route Kelola Transaksi
     Route::get('/listhapus', [KelolaPenghapusanController::class, 'index'])->name('listhapus.index');
     Route::get('/listhapus/view/{id}', [KelolaPenghapusanController::class, 'View'])->name('listhapus.view');
     Route::post('/listhapus/confirm/{id}', [KelolaPenghapusanController::class, 'confirm'])->name('listhapus.confirm');
@@ -122,6 +134,7 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::get('/aset/create', [AsetController::class, 'create'])->name('aset.create');
     Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
     Route::get('/aset/edit/{id}', [AsetController::class, 'edit'])->name('aset.edit');
+    Route::get('/aset/view/{id}', [AsetController::class, 'view'])->name('aset.view');
     Route::post('/aset/update/{id}', [AsetController::class, 'update'])->name('aset.update');
     Route::post('/aset/updateDetail/{id}', [AsetController::class, 'updateDetail'])->name('aset.updateDetail');
     Route::post('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
@@ -149,6 +162,17 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::get('/peminjam/edit/{id}', [PeminjamController::class, 'edit'])->name('peminjam.edit');
     Route::post('/peminjam/update/{id}', [PeminjamController::class, 'update'])->name('peminjam.update');
     Route::post('/peminjam/destroy/{id}', [PeminjamController::class, 'destroy'])->name('peminjam.destroy');
+
+     //  Route Kelola peminjaman
+     Route::get('/kaurmutasi', [MutasiController::class, 'index'])->name('kaurmutasi.index');
+     Route::get('/kaurmutasi/create', [MutasiController::class, 'create'])->name('kaurmutasi.create');
+     Route::get('/kaurmutasi/view/{id}', [MutasiController::class, 'view'])->name('kaurmutasi.view');
+     Route::get('/kaurmutasi/getDetailAset', [MutasiController::class, 'getDetailAset'])->name('kaurmutasi.getDetailAset');
+     Route::post('/kaurmutasi/store', [MutasiController::class, 'store'])->name('kaurmutasi.store');
+     Route::post('/kaurmutasi/insert', [MutasiController::class, 'insert'])->name('kaurmutasi.insert');
+     Route::get('/kaurmutasi/edit/{id}', [MutasiController::class, 'edit'])->name('kaurmutasi.edit');
+     Route::post('/kaurmutasi/update/{id}', [MutasiController::class, 'update'])->name('kaurmutasi.update');
+     Route::get('/kaurmutasi/destroy/{id}', [MutasiController::class, 'destroy'])->name('kaurmutasi.destroy');
 
      //  Route Kelola peminjaman
      Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');

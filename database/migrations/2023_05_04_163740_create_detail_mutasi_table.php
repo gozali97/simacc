@@ -14,10 +14,10 @@ class CreateDetailMutasiTable extends Migration
     public function up()
     {
         Schema::create('detail_mutasi', function (Blueprint $table) {
-            $table->increments('kd_det_mutasi');
+            $table->increments('kd_det_mutasi')->primary();
             $table->integer('kd_mutasi');
             $table->string('kd_detail_aset');
-            $table->integer('id_ruang');
+            $table->string('id_ruang');
             $table->date('tgl_mutasi');
             $table->timestamps();
         });

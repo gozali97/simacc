@@ -14,7 +14,7 @@ class CreateMutasiTable extends Migration
     public function up()
     {
         Schema::create('mutasi', function (Blueprint $table) {
-            $table->increments('kd_mutasi');
+            $table->increments('kd_mutasi')->primary();
             $table->integer('id_user');
             $table->string('nama_mutasi');
             $table->enum('status',['Aktif', 'Disetujui','Ditolak']);

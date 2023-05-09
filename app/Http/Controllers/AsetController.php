@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Asal;
 use App\Models\Aset;
 use App\Models\DetailAset;
+use App\Models\DetailMutasi;
 use App\Models\JenisAset;
 use App\Models\Kondisi;
+use App\Models\Mutasi;
 use App\Models\Ruang;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -110,34 +113,95 @@ class AsetController extends Controller
         $ruang = Ruang::all();
         $kondisi = Kondisi::all();
         $asal = Asal::all();
-        // dd($detail);
 
         return view('kaur.aset.edit', compact('data', 'jenis', 'ruang', 'kondisi', 'asal', 'detail'));
     }
 
+    public function view($id)
+    {
+        $data = Aset::where('kd_aset', $id)->first();
+        $detail = DetailAset::where('kd_aset', $data->kd_aset)->get();
+        $jenis = JenisAset::all();
+        $ruang = Ruang::all();
+        $kondisi = Kondisi::all();
+        $asal = Asal::all();
+
+        return view('kaur.aset.view', compact('data', 'jenis', 'ruang', 'kondisi', 'asal', 'detail'));
+    }
+
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
 
-        $data = Aset::where('kd_aset', $id)->first();
-        // dd($data);
+        try {
+            $data = Aset::where('kd_aset', $id)->first();
 
-        $data->nama_aset = $request->nama;
-        $data->id_user = Auth::user()->id;
-        $data->kd_jenis = $request->jenis;
-        $data->kd_asal = $request->asal;
-        $data->save();
+            $data->nama_aset = $request->nama;
+            $data->id_user = Auth::user()->id;
+            $data->kd_jenis = $request->jenis;
+            $data->kd_asal = $request->asal;
 
-        if ($data->save()) {
-            return redirect()->route('aset.edit', $id)->with('success', 'Data Aset berhasil diupdate.');
-        } else {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate aset');
+            if(!$data->save()){
+                throw new Exception('Gagal menyimpan data aset');
+            }
+
+            $kd_aset = $request->kd_aset;
+            $kd_detail = $request->kd_detail;
+            $ruang = $request->ruang;
+            $kondisi = $request->kondisi;
+
+            for($i=0; $i<count($kd_detail); $i++) {
+                $detail = DetailAset::where('kd_det_aset', $kd_detail[$i])->first();
+
+                $detail->kd_det_aset = $kd_detail[$i];
+                $detail->kd_aset = $kd_aset;
+                $detail->kd_ruang = $ruang[$i];
+                $detail->kd_kondisi = $kondisi[$i];
+
+                if(!$detail->save()){
+                    throw new Exception('Gagal menyimpan data detail aset');
+                }
+            }
+
+            $mutasi = new Mutasi;
+            $mutasi->nama_mutasi = $request->nama_mutasi;
+            $mutasi->id_user = Auth::user()->id;
+            $mutasi->status = 'Aktif';
+            $mutasi->created_at = date('Y-m-d');
+
+            if (!$mutasi->save()) {
+                throw new Exception('Gagal menyimpan data mutasi');
+            }
+
+            $details = DetailAset::where('kd_aset', $request->kd_aset)->get();
+            foreach($details as $d){
+                $mutasiDetail = new DetailMutasi;
+                $mutasiDetail->kd_mutasi = $mutasi->kd_mutasi;
+                $mutasiDetail->kd_detail_aset = $d->kd_det_aset;
+                $mutasiDetail->id_ruang = $d->kd_ruang;
+                $mutasiDetail->tgl_mutasi = date('Y-m-d');
+                $mutasiDetail->created_at = date('Y-m-d');
+
+                if (!$mutasiDetail->save()) {
+                    throw new Exception('Gagal menyimpan data detail mutasi');
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil diperbarui.');
+
+        }catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
     }
 
     public function updateDetail(Request $request, $id)
     {
-
+        dd($request->all());
         $data = DetailAset::where('kd_det_aset', $id)->first();
+        // dd($data);
 
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama
@@ -145,7 +209,7 @@ class AsetController extends Controller
                 unlink(public_path('assets/img/' . $data->gambar));
             }
 
-            // Simpan gambar baru
+
             $gambar = time() . 'aset' . '.' . $request->gambar->extension();
             $path = $request->file('gambar')->move('assets/img', $gambar);
             $data->gambar = $gambar;

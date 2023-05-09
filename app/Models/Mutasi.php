@@ -11,5 +11,5 @@ class Mutasi extends Model
     protected $table = 'mutasi';
     protected $guarded = [];
 
-    protected $primaryKey = 'kode_mutasi';
+    protected $primaryKey = 'kd_mutasi';
 }

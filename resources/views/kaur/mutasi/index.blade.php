@@ -63,21 +63,21 @@
 @endif
 
 <div class="row p-3">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Aset /</span> Data Aset</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Mutasi /</span> List Mutasi</h4>
 
     <!-- Basic Bootstrap Table -->
     <div class="card">
         <div class="p-3 mt-4">
             {{-- <h4 class="text-blue h4">Data Table Simple</h4> --}}
-            <a href="/aset/create" type="button" class="btn btn-outline-success">Tambah</a>
+            <a href="/kaurmutasi/create" type="button" class="btn btn-outline-success">Tambah</a>
         </div>
         <div class="p-2">
             <table id="datatable" class="data-table table stripe hover nowrap">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama</th>
-                        <th>Jenis</th>
+                        <th>Nama Mutasi</th>
+                        <th>Tanggal Mutasi</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -86,49 +86,75 @@
                     @php
                     $no = 1;
                     @endphp
-                    @foreach ($aset as $a)
+                    @foreach ($data as $a)
                     <tr>
                         <td>{{ $no++ }}</td>
-                        <td>{{ $a->nama_aset }}</td>
-                        <td>{{ $a->jenis }}</td>
+                        <td>{{ $a->nama_mutasi }}</td>
+                        <td>{{ date('d-m-Y', strtotime($a->created_at)) }}</td>
+                        <td> <span class="badge
+                            @if($a->status === 'Proses')
+                                bg-primary
+                            @elseif($a->status === 'Aktif')
+                                bg-success
+                            @elseif($a->status === 'Selesai')
+                                bg-info
+                            @else
+                                bg-danger
+                            @endif">
+                                {{ $a->status }}
+                            </span></span></td>
                         <td>
-
-                            <span
-                                class="badge @if($a->status == 'Pending') bg-label-warning @elseif($a->status == 'Aktif') bg-label-success @else bg-label-danger @endif">{{
-                                $a->status }}</span>
-                        </td>
-                        <td>
-                            <a href="{{ route('aset.view', $a->kd_aset) }}" type="button" class="btn btn-icon btn-info">
+                            @if ($a->status == 'Disetujui')
+                            <div class="btn-group" role="group" aria-label="First group">
+                                <a href="{{ route('kaurmutasi.view', $a->kd_mutasi) }}" type="button" class="btn btn-icon btn-info">
+                                    <span class="tf-icons bx bx-info-circle"></span>
+                                </a>
+                                <button  data-bs-toggle="modal"
+                                    data-bs-target="#confirmModal{{ $a->kd_mutasi }}" type="button"
+                                    class="btn btn-icon btn-success">
+                                    <span class="tf-icons bx bx-analyse bx-tada-hover"></span>
+                                </button>
+                            </div>
+                            @elseif ($a->status == 'Aktif')
+                            <div class="btn-group" role="group" aria-label="First group">
+                                <a href="{{ route('kaurmutasi.view', $a->kd_mutasi) }}" type="button" class="btn btn-icon btn-info">
+                                    <span class="tf-icons bx bx-info-circle"></span>
+                                </a>
+                                <a href="{{ route('kaurmutasi.edit', $a->kd_mutasi) }}" type="button"
+                                    class="btn btn-icon btn-warning">
+                                    <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
+                                </a>
+                                <a href="#" class="btn btn-icon btn-danger"
+                                    onclick="event.preventDefault(); confirmDelete('{{ $a->kd_mutasi }}');">
+                                    <i class="bx bx-trash"></i>
+                                </a>
+                            </div>
+                            @else
+                            <a href="{{ route('kaurpinjam.view', $a->kd_mutasi) }}" type="button" class="btn btn-icon btn-info">
                                 <span class="tf-icons bx bx-info-circle"></span>
                             </a>
-                            <a href="{{ route('aset.edit', $a->kd_aset) }}" type="button" class="btn btn-warning">
-                                <span class="tf-icons bx bx-edit-alt"></span> Mutasi
-                            </a>
-                            {{-- <button data-bs-toggle="modal" data-bs-target="#deleteModal{{ $a->kd_aset}}"
-                                class="btn btn-icon btn-danger">
-                                <i class="bx bx-trash bx-tada-hover"></i>
-                            </button> --}}
+                            @endif
                         </td>
                     </tr>
-                    <div class="modal fade" id="deleteModal{{ $a->kd_aset }}"
-                        aria-labelledby="modalToggleLabel{{ $a->kd_aset }}" tabindex="-1" style="display: none;"
+                    <div class="modal fade" id="confirmModal{{ $a->kd_mutasi }}"
+                        aria-labelledby="modalToggleLabel{{ $a->kd_mutasi }}" tabindex="-1" style="display: none;"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalToggleLabel">Hapus Aset</h5>
+                                    <h5 class="modal-title" id="modalToggleLabel">Konfirmasi Pengembalian</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('aset.destroy',$a->kd_aset) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('kaurpinjam.insert',$a->kd_mutasi) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                <div class="modal-body">Apakah Anda yakin ingin hapus <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_aset }}">
+                                <div class="modal-body">Apakah Anda yakin ingin melakukan pengembalian aset <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
+                                <input type="hidden" name="id_pinjam" value="{{ $a->kd_mutasi }}">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
                                 </div>
                             </form>
                             </div>
@@ -148,7 +174,7 @@
         $('#datatable').DataTable();
     });
 
-    function confirmDelete(kd_aset) {
+    function confirmDelete(id) {
     Swal.fire({
         title: "Apakah Anda yakin?",
         text: "Data yang dihapus tidak bisa dikembalikan!",
@@ -161,7 +187,7 @@
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect ke route untuk menghapus data dengan ID yang telah ditentukan
-            window.location.href = "/aset/destroy/" + kd_aset;
+            window.location.href = "/kaurpinjam/destroy/" + id;
         }
     });
 }
