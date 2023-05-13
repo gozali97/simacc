@@ -14,10 +14,10 @@ class CreateDetailPengembalianTable extends Migration
     public function up()
     {
         Schema::create('detail_pengembalian', function (Blueprint $table) {
-            $table->string('kd_det_pengembalian')->primary();
-            $table->string('kd_kembali');
-            $table->string('kd_det_aset');
-            $table->string('tgl_kembali');
+            $table->integer('kd_det_pengembalian');
+            $table->integer('kd_kembali');
+            $table->integer('kd_det_aset');
+            $table->date('tgl_kembali');
             $table->timestamps();
         });
     }

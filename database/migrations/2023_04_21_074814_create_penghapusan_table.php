@@ -14,10 +14,10 @@ class CreatePenghapusanTable extends Migration
     public function up()
     {
         Schema::create('penghapusan', function (Blueprint $table) {
-            $table->string('kd_penghapusan')->primary();
+            $table->increments('kd_penghapusan');
             $table->integer('id_user');
             $table->date('tgl_penghapusan');
-            $table->enum('status',['Proses', 'Aktif', 'Selesai', 'Ditolak']);
+            $table->enum('status', ['Proses', 'Aktif', 'Selesai', 'Ditolak']);
             $table->timestamps();
         });
     }

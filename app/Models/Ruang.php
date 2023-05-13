@@ -13,5 +13,4 @@ class Ruang extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_ruang';
-    public $incrementing = false;
 }

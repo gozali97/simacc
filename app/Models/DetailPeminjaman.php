@@ -12,5 +12,4 @@ class DetailPeminjaman extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_det_peminjaman';
-    public $incrementing = false;
 }

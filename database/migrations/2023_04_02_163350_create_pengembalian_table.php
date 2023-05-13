@@ -14,11 +14,11 @@ class CreatePengembalianTable extends Migration
     public function up()
     {
         Schema::create('pengembalian', function (Blueprint $table) {
-            $table->string('kd_kembali')->primary();
-            $table->string('kd_peminjaman');
+            $table->integer('kd_kembali')->primary();
+            $table->integer('kd_peminjaman');
             $table->integer('id_user');
             $table->date('tgl_kembali');
-            $table->enum('status',['Proses', 'Aktif', 'Selesai', 'Ditolak']);
+            $table->enum('status', ['Proses', 'Aktif', 'Selesai', 'Ditolak']);
             $table->timestamps();
         });
     }

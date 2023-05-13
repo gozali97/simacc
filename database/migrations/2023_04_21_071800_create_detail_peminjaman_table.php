@@ -14,9 +14,9 @@ class CreateDetailPeminjamanTable extends Migration
     public function up()
     {
         Schema::create('detail_peminjaman', function (Blueprint $table) {
-            $table->string('kd_det_peminjaman', 8)->primary();
-            $table->string('kd_peminjaman', 6);
-            $table->string('kd_det_aset');
+            $table->increments('kd_det_peminjaman');
+            $table->integer('kd_peminjaman');
+            $table->integer('kd_det_aset');
             $table->date('tgl_pinjam');
             $table->timestamps();
         });

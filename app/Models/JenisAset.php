@@ -12,6 +12,4 @@ class JenisAset extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_jenis';
-    public $incrementing = false;
-    // protected $keyType = 'string';
 }

@@ -14,10 +14,10 @@ class CreateDetailPenghapusanTable extends Migration
     public function up()
     {
         Schema::create('detail_penghapusan', function (Blueprint $table) {
-            $table->string('kd_det_penghapusan')->primary();
-            $table->string('kd_penghapusan');
-            $table->string('tgl_penghapusan');
-            $table->string('kd_det_aset');
+            $table->integer('kd_det_penghapusan');
+            $table->integer('kd_penghapusan');
+            $table->date('tgl_penghapusan');
+            $table->integer('kd_det_aset');
             $table->string('kondisi_akhir');
             $table->timestamps();
         });

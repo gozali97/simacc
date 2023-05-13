@@ -14,12 +14,12 @@ class CreateKebutuhanTable extends Migration
     public function up()
     {
         Schema::create('kebutuhan', function (Blueprint $table) {
-            $table->string('kd_kebutuhan', 6)->primary();
+            $table->increments('kd_kebutuhan');
             $table->string('nama_kebutuhan');
             $table->integer('jumlah');
             $table->string('gambar');
             $table->date('tgl_kebutuhan');
-            $table->enum('status',['Proses', 'Selesai']);
+            $table->enum('status', ['Proses', 'Selesai']);
             $table->timestamps();
         });
     }

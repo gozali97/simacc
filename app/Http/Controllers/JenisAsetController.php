@@ -33,24 +33,12 @@ class JenisAsetController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
-            $lastData = JenisAset::orderBy('kd_jenis', 'desc')->first();
-
-            if ($lastData) {
-                $nomorUrutan = intval(substr($lastData->kd_jenis, 3)) + 1;
-                $kode = 'J' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
-            } else {
-                $kode = 'J001';
-            }
-
-
             JenisAset::create([
-                'kd_jenis' => $kode,
                 'nama_jenis' => $request->nama
             ]);
 
             return redirect()->route('jenis.index')->with('success', 'Data Jenis Aset berhasil ditambahkan.');
         } catch (\Exception $e) {
-            dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, sebab :', $e->getMessage());
         }
     }

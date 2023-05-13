@@ -12,5 +12,4 @@ class DetailPenghapusan extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_det_penghapusan';
-    public $incrementing = false;
 }

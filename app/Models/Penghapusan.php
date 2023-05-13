@@ -12,5 +12,4 @@ class Penghapusan extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_penghapusan';
-    public $incrementing = false;
 }

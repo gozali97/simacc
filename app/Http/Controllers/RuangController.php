@@ -34,24 +34,13 @@ class RuangController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
-            $lastData = Ruang::orderBy('kd_ruang', 'desc')->first();
-
-            if ($lastData) {
-                $nomorUrutan = intval(substr($lastData->kd_ruang, 3)) + 1;
-                $kode = 'R' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
-            } else {
-                $kode = 'R001';
-            }
-
             Ruang::create([
-                'kd_ruang' => $kode,
                 'nama_ruang' => $request->nama
             ]);
 
             // Redirect ke halaman index kategori dengan pesan sukses
             return redirect()->route('ruang.index')->with('success', 'Data Ruang berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, sebab :', $e->getMessage());
         }
     }
@@ -59,7 +48,7 @@ class RuangController extends Controller
     public function update(Request $request, $id)
     {
 
-        $data = Ruang::where('kd_ruang',$id)->first();
+        $data = Ruang::where('kd_ruang', $id)->first();
 
         $data->nama_ruang = $request->nama;
         $data->save();
@@ -73,7 +62,7 @@ class RuangController extends Controller
 
     public function destroy($id)
     {
-        $ruang = Ruang::where('kd_ruang',$id)->first();
+        $ruang = Ruang::where('kd_ruang', $id)->first();
 
         if (!$ruang) {
             return redirect()->back()->with('error', 'Ruang tidak ditemukan.');

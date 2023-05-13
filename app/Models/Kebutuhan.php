@@ -12,5 +12,4 @@ class Kebutuhan extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_kebutuhan';
-    public $incrementing = false;
 }

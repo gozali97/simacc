@@ -14,12 +14,12 @@ class CreateAsetTable extends Migration
     public function up()
     {
         Schema::create('aset', function (Blueprint $table) {
-            $table->string('kd_aset', 6);
+            $table->increments('kd_aset');
             $table->integer('id_user');
             $table->string('nama_aset');
             $table->integer('kd_asal');
             $table->string('kd_jenis', 6);
-            $table->enum('status',['Pending', 'Aktif','Ditolak']);
+            $table->enum('status', ['Pending', 'Aktif', 'Ditolak']);
             $table->timestamps();
         });
     }

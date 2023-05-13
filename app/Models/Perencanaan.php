@@ -12,5 +12,4 @@ class Perencanaan extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_perencanaan';
-    public $incrementing = false;
 }

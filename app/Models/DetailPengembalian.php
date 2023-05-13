@@ -12,5 +12,4 @@ class DetailPengembalian extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_det_pengembalian';
-    public $incrementing = false;
 }

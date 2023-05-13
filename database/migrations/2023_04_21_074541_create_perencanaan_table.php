@@ -14,10 +14,10 @@ class CreatePerencanaanTable extends Migration
     public function up()
     {
         Schema::create('perencanaan', function (Blueprint $table) {
-            $table->string('kd_perencanaan')->primary();
-            $table->string('tgl_perencanaan');
+            $table->integer('kd_perencanaan');
+            $table->date('tgl_perencanaan');
             $table->string('nama_perencaaan');
-            $table->enum('status',['Aktif', 'Selesai']);
+            $table->enum('status', ['Aktif', 'Selesai']);
             $table->timestamps();
         });
     }

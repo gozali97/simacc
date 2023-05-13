@@ -12,5 +12,5 @@ class Pengembalian extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_kembali';
-    public $incrementing = false;
+    // public $incrementing = false;
 }

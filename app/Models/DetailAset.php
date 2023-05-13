@@ -12,5 +12,4 @@ class DetailAset extends Model
     protected $guarded = [];
 
     protected $primaryKey = 'kd_det_aset';
-    public $incrementing = false;
 }

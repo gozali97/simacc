@@ -22,9 +22,9 @@ class AsetController extends Controller
     {
 
         $aset = Aset::query()
-        ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
-        ->select('aset.*', 'jenis_asets.nama_jenis as jenis')
-        ->get();
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('aset.*', 'jenis_asets.nama_jenis as jenis')
+            ->get();
 
         return view('kaur.aset.index', compact('aset'));
     }
@@ -36,25 +36,18 @@ class AsetController extends Controller
         $kondisi = Kondisi::all();
         $asal = Asal::all();
 
-        return view('kaur.aset.create', compact('jenis', 'ruang', 'kondisi' , 'asal'));
+        return view('kaur.aset.create', compact('jenis', 'ruang', 'kondisi', 'asal'));
     }
 
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction(); // Memulai transaksi database
 
-            $lastAset = Aset::orderBy('kd_aset', 'desc')->first();
 
-            if ($lastAset) {
-                $nomorUrutan = intval(substr($lastAset->kd_aset, 3)) + 1;
-                $kode = 'A' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
-            } else {
-                $kode = 'A001';
-            }
+            DB::beginTransaction();
+
 
             $aset = new Aset;
-            $aset->kd_aset = $kode;
             $aset->nama_aset = $request->nama;
             $aset->id_user = Auth::user()->id;
             $aset->kd_jenis = $request->jenis;
@@ -63,24 +56,13 @@ class AsetController extends Controller
             if ($aset->save()) {
 
                 $asetDetails = [];
-                $nomor = 0;
-                $jumlahDetail = DetailAset::max('kd_det_aset');
-
-                    if ($jumlahDetail > 0) {
-                        $nomor = intval(substr($jumlahDetail, 5));
-                    } else {
-                        $kodeDetail = 'INV001';
-                    }
-
-                foreach ($request->ruang as $key => $asetdetail){
+                foreach ($request->ruang as $key => $asetdetail) {
                     $gambar  = time() . 'aset' . $key . '.' . $request->gambar[$key]->extension();
                     $path = $request->file('gambar')[$key]->move('assets/img', $gambar);
 
-                    $nomor++;
-                    $kodeDetail = 'INV' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
 
                     $detail = [
-                        'kd_det_aset' => $kodeDetail,
+                        'kode_detail' => $request->kode[$key],
                         'kd_aset' => $aset->kd_aset,
                         'kd_ruang' => $asetdetail,
                         'kd_kondisi' => $request->kondisi[$key],
@@ -99,7 +81,6 @@ class AsetController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
     }
@@ -134,34 +115,6 @@ class AsetController extends Controller
         DB::beginTransaction();
 
         try {
-            $data = Aset::where('kd_aset', $id)->first();
-
-            $data->nama_aset = $request->nama;
-            $data->id_user = Auth::user()->id;
-            $data->kd_jenis = $request->jenis;
-            $data->kd_asal = $request->asal;
-
-            if(!$data->save()){
-                throw new Exception('Gagal menyimpan data aset');
-            }
-
-            $kd_aset = $request->kd_aset;
-            $kd_detail = $request->kd_detail;
-            $ruang = $request->ruang;
-            $kondisi = $request->kondisi;
-
-            for($i=0; $i<count($kd_detail); $i++) {
-                $detail = DetailAset::where('kd_det_aset', $kd_detail[$i])->first();
-
-                $detail->kd_det_aset = $kd_detail[$i];
-                $detail->kd_aset = $kd_aset;
-                $detail->kd_ruang = $ruang[$i];
-                $detail->kd_kondisi = $kondisi[$i];
-
-                if(!$detail->save()){
-                    throw new Exception('Gagal menyimpan data detail aset');
-                }
-            }
 
             $mutasi = new Mutasi;
             $mutasi->nama_mutasi = $request->nama_mutasi;
@@ -174,7 +127,8 @@ class AsetController extends Controller
             }
 
             $details = DetailAset::where('kd_aset', $request->kd_aset)->get();
-            foreach($details as $d){
+
+            foreach ($details as $d) {
                 $mutasiDetail = new DetailMutasi;
                 $mutasiDetail->kd_mutasi = $mutasi->kd_mutasi;
                 $mutasiDetail->kd_detail_aset = $d->kd_det_aset;
@@ -187,11 +141,39 @@ class AsetController extends Controller
                 }
             }
 
+            $data = Aset::where('kd_aset', $id)->first();
+
+            $data->nama_aset = $request->nama;
+            $data->id_user = Auth::user()->id;
+            $data->kd_jenis = $request->jenis;
+            $data->kd_asal = $request->asal;
+
+            if (!$data->save()) {
+                throw new Exception('Gagal menyimpan data aset');
+            }
+
+            $kd_aset = $request->kd_aset;
+            $kd_detail = $request->kd_detail;
+            $ruang = $request->ruang;
+            $kondisi = $request->kondisi;
+
+            for ($i = 0; $i < count($kd_detail); $i++) {
+                $detail = DetailAset::where('kd_det_aset', $kd_detail[$i])->first();
+
+                $detail->kd_det_aset = $kd_detail[$i];
+                $detail->kd_aset = $kd_aset;
+                $detail->kd_ruang = $ruang[$i];
+                $detail->kd_kondisi = $kondisi[$i];
+
+                if (!$detail->save()) {
+                    throw new Exception('Gagal menyimpan data detail aset');
+                }
+            }
+
             DB::commit();
 
             return redirect()->route('aset.index')->with('success', 'Data Aset berhasil diperbarui.');
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
@@ -230,7 +212,7 @@ class AsetController extends Controller
 
     public function destroy($id)
     {
-        $aset = Aset::where('kd_aset',$id)->first();
+        $aset = Aset::where('kd_aset', $id)->first();
 
         $detail = DetailAset::where('kd_aset', $id)->get();
 
@@ -239,7 +221,7 @@ class AsetController extends Controller
             return redirect()->back()->with('error', 'Aset tidak ditemukan.');
         }
 
-        foreach($detail as $details){
+        foreach ($detail as $details) {
             $gambarPath = public_path('assets/img/' . $details->gambar);
             if (file_exists($gambarPath)) {
                 unlink($gambarPath);
