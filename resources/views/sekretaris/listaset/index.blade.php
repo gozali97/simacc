@@ -105,14 +105,12 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="First group">
-                                        <button type="button" id="detail-aset-btn-{{ $d->kd_aset }}"
-                                            data-bs-toggle="modal" data-bs-target="#exLargeModal{{ $d->kd_aset }}"
+                                        <a href="{{ route('listaset.view', $d->kd_aset) }}" type="button"
                                             class="btn btn-icon btn-info">
                                             <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
-                                        </button>
+                                        </a>
                                         @if ($d->status == 'Pending')
-                                            <button data-bs-toggle="modal"
-                                                data-bs-target="#confirmModal{{ $d->kd_aset }}"
+                                            <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $d->kd_aset }}"
                                                 class="btn btn-icon btn-success">
                                                 <i class="bx bx-check-square bx-tada-hover"></i>
                                             </button>
@@ -125,76 +123,11 @@
                                     </div>
                                 </td>
                             </tr>
-                            <!-- Modal Info -->
-                            <div class="modal fade" id="exLargeModal{{ $d->kd_aset }}" tabindex="-1"
-                                style="display: none;" aria-hidden="true">
-                                <div class="modal-dialog modal-xl" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel4">Informasi Aset</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Nama Aset</label>
-                                                    <input type="text" name="nama"
-                                                        class="form-control @error('nama') is-invalid @enderror"
-                                                        placeholder="Nama kebutuhan" value="{{ $d->nama_aset }}"
-                                                        readonly />
-                                                    @error('nama')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Asal</label>
-                                                    <input name="jumlah"
-                                                        class="form-control @error('jumlah') is-invalid @enderror"
-                                                        type="text" id="html5-date-input" value="{{ $d->asal_aset }}"
-                                                        readonly />
-                                                    @error('jumlah')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label">Jeni Aset</label>
-                                                    <input type="text" name="tanggal"
-                                                        class="form-control @error('tanggal') is-invalid @enderror"
-                                                        placeholder="" value="{{ $d->nama_jenis }}" readonly />
-                                                    @error('tanggal')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <h5 class="modal-title" id="exampleModalLabel4">Detail Aset</h5>
-                                                <div id="detail-aset" class="row">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                            {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Modal Konfirmasi -->
                             <div class="modal fade" id="confirmModal{{ $d->kd_aset }}"
-                                aria-labelledby="modalToggleLabel{{ $d->kd_aset }}" tabindex="-1"
-                                style="display: none;" aria-hidden="true">
+                                aria-labelledby="modalToggleLabel{{ $d->kd_aset }}" tabindex="-1" style="display: none;"
+                                aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -221,8 +154,8 @@
                             </div>
 
                             <div class="modal fade" id="declineModal{{ $d->kd_aset }}"
-                                aria-labelledby="modalToggleLabel{{ $d->kd_aset }}" tabindex="-1"
-                                style="display: none;" aria-hidden="true">
+                                aria-labelledby="modalToggleLabel{{ $d->kd_aset }}" tabindex="-1" style="display: none;"
+                                aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -278,50 +211,5 @@
                 }
             });
         }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#detail-aset-btn-{{ $d->kd_aset }}').click(function() {
-                $.ajax({
-                    url: "{{ route('listaset.getDetail', $d->kd_aset) }}",
-                    type: "GET",
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.length > 0) {
-                            $('#detail-aset').html(
-                            ''); // Clear the previous data in #detail-aset
-
-                            $.each(data, function(index, value) {
-                                var html = '<div class="row">' +
-                                    '<div class="col-md-4">' +
-                                    '<label class="form-label">Kode Inventory</label>' +
-                                    '<input type="text" name="nama" class="form-control"' +
-                                    'value="' + value.kode_detail + '" readonly/>' +
-                                    '</div>' +
-                                    '<div class="col-md-4">' +
-                                    '<label class="form-label">Asal Ruang</label>' +
-                                    '<input name="jumlah" class="form-control"' +
-                                    'value="' + value.nama_ruang + '" readonly/>' +
-                                    '</div>' +
-                                    '<div class="col-md-4">' +
-                                    '<label class="form-label">Kondisi Aset</label>' +
-                                    '<input type="text" name="tanggal" class="form-control"' +
-                                    'value="' + value.kondisi_aset + '" readonly/>' +
-                                    '</div>' +
-                                    '</div>';
-                                $('#detail-aset').append(html);
-                            });
-                        } else {
-                            $('#detail-aset').html(
-                                '<div class="text-center">No data available</div>');
-                        }
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-        });
     </script>
 @endsection

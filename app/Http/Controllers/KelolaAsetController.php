@@ -22,17 +22,19 @@ class KelolaAsetController extends Controller
         return view('sekretaris.listaset.index', compact('data'));
     }
 
-    public function getDetailAset($kd_aset) {
-        
-        $detail = DetailAset::query()
-                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
-                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
-                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
-                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang')
-                    ->where('detail_aset.kd_aset', $kd_aset)
-                    ->get();
+    public function view($id)
+    {
 
-        return response()->json($detail);
+        $data = DetailAset::query()
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('users', 'users.id', 'aset.id_user')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('aset.nama_aset', 'aset.kd_aset', 'aset.status as status_aset', 'detail_aset.*', 'users.nama', 'kondisi.kondisi_aset', 'ruangs.nama_ruang')
+            ->where('detail_aset.kd_aset', $id)
+            ->get();
+
+        return view('sekretaris.listaset.view', compact('data'));
     }
 
     public function confirm($id)
@@ -63,5 +65,4 @@ class KelolaAsetController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
         }
     }
-
 }

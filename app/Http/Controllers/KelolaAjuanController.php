@@ -7,6 +7,7 @@ use App\Models\Kebutuhan;
 use App\Models\Peminjaman;
 use App\Models\Perencanaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class KelolaAjuanController extends Controller
@@ -24,32 +25,30 @@ class KelolaAjuanController extends Controller
     public function confirm($id)
     {
 
-        $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();
+        try {
 
-        $data->status = "Disetujui";
-        $data->save();
-        if ($data->save()) {
+            DB::beginTransaction();
+            $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();
 
+            $data->status = "Disetujui";
+            $data->save();
 
-            $lastData = Perencanaan::orderBy('kd_perencanaan', 'desc')->first();
+            if ($data->save()) {
 
-            if ($lastData) {
-                $nomorUrutan = intval(substr($lastData->kd_perencanaan, 3)) + 1;
-                $kode = 'PR' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
+                Perencanaan::create([
+                    'nama_perencanaan' => $data->nama_kebutuhan,
+                    'tgl_perencanaan' => $data->tgl_kebutuhan,
+                    'status' => 'Aktif'
+                ]);
+
+                DB::commit();
+                return redirect()->route('listajuan.index')->with('success', 'Data Kebutuhan berhasil dikonfirmasi.');
             } else {
-                $kode = 'PR001';
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
             }
-
-            Perencanaan::create([
-                'kd_perencanaan' => $kode,
-                'nama_Perencanaan' => $data->nama_kebutuhan,
-                'tgl_perencanaan' => $data->tgl_kebutuhan,
-                'status' => 'Aktif'
-            ]);
-
-            return redirect()->route('listajuan.index')->with('success', 'Data Kebutuhan berhasil dikonfirmasi.');
-        } else {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan, ' . $e->getMessage());
         }
     }
 

@@ -16,7 +16,7 @@
                                     <tr>
                                         <th>Kode Inventory</th>
                                         <th>Nama Aset</th>
-                                        <th>Ruang Aset</th>
+                                        <th>Ruang Asal</th>
                                         <th>Gambar Aset</th>
                                     </tr>
                                 </thead>
@@ -50,7 +50,7 @@
                                     <tr>
                                         <th>Kode Inventory</th>
                                         <th>Nama Aset</th>
-                                        <th>Ruang Aset</th>
+                                        <th>Ruang Baru</th>
                                         <th>Gambar Aset</th>
                                     </tr>
                                 </thead>

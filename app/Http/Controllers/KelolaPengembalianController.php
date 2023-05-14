@@ -46,17 +46,17 @@ class KelolaPengembalianController extends Controller
 
         $data = Pengembalian::query()->where('kd_kembali', $id)->first();
 
-        $data->status = "Aktif";
+        $data->status = "Selesai";
         $data->save();
 
         if ($data->save()) {
 
             $detail = Pengembalian::query()
-            ->join('peminjaman', 'peminjaman.kd_peminjaman', 'pengembalian.kd_peminjaman')
-            ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'peminjaman.kd_peminjaman')
-            ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
-            ->where('peminjaman.kd_peminjaman', $data->kd_peminjaman)
-            ->get();
+                ->join('peminjaman', 'peminjaman.kd_peminjaman', 'pengembalian.kd_peminjaman')
+                ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'peminjaman.kd_peminjaman')
+                ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+                ->where('peminjaman.kd_peminjaman', $data->kd_peminjaman)
+                ->get();
 
             foreach ($detail as $det) {
                 $detailAset = DetailAset::where('kd_det_aset', $det->kd_det_aset)->first();
@@ -78,9 +78,9 @@ class KelolaPengembalianController extends Controller
 
         if ($data->save()) {
 
-        $pinjam =  Peminjaman::where('kd_peminjaman', $data->kd_peminjaman)->first();
-        $pinjam->status = "Aktif";
-        $pinjam->save();
+            $pinjam =  Peminjaman::where('kd_peminjaman', $data->kd_peminjaman)->first();
+            $pinjam->status = "Aktif";
+            $pinjam->save();
 
             return redirect()->route('listpinjam.index')->with('success', 'Data Peminjaman ditolak.');
         } else {

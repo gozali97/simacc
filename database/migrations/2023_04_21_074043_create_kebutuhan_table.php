@@ -19,7 +19,7 @@ class CreateKebutuhanTable extends Migration
             $table->integer('jumlah');
             $table->string('gambar');
             $table->date('tgl_kebutuhan');
-            $table->enum('status', ['Proses', 'Selesai']);
+            $table->enum('status', ['Proses', 'Disetujui']);
             $table->timestamps();
         });
     }

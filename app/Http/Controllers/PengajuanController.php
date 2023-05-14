@@ -36,20 +36,10 @@ class PengajuanController extends Controller
                 return redirect()->back()->withErrors($validator);
             }
 
-            $lastAset = Kebutuhan::orderBy('kd_kebutuhan', 'desc')->first();
-
-            if ($lastAset) {
-                $nomorUrutan = intval(substr($lastAset->kd_kebutuhan, 3)) + 1;
-                $kode = 'KB' . str_pad($nomorUrutan, 3, '0', STR_PAD_LEFT);
-            } else {
-                $kode = 'KB001';
-            }
-
             $gambar  = time() . 'kebutuhan'  . '.' .  $request->gambar->extension();
             $path = $request->file('gambar')->move('assets/img', $gambar);
 
             Kebutuhan::create([
-                'kd_kebutuhan' => $kode,
                 'nama_kebutuhan' => $request->nama,
                 'tgl_kebutuhan' => $request->tanggal,
                 'jumlah' => $request->jumlah,
@@ -59,8 +49,8 @@ class PengajuanController extends Controller
 
             return redirect()->route('kaurajuan.index')->with('success', 'Data Pengajuan berhasil ditambahkan.');
         } catch (\Exception $e) {
-            dd($e);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, sebab :', $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, sebab :' . $e->getMessage());
         }
     }
 

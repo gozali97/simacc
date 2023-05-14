@@ -37,20 +37,11 @@ class PeminjamController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator);
             }
-            $jumlahData = Peminjam::count();
-
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'PM00' . $nomorUrutan;
-            } else {
-                $kode = 'PM001';
-            }
 
             $gambar  = time() . 'peminjam' . '.' . $request->gambar->extension();
             $path       = $request->file('gambar')->move('assets/img', $gambar);
 
             Peminjam::create([
-                'id_peminjam' => $kode,
                 'nama_peminjam' => $request->nama,
                 'alamat' => $request->alamat,
                 'no_hp' => $request->nohp,
@@ -68,7 +59,7 @@ class PeminjamController extends Controller
 
     public function edit($id)
     {
-        $data = Peminjam::where('id_peminjam',$id)->first();
+        $data = Peminjam::where('id_peminjam', $id)->first();
 
 
         return view('kaur.peminjam.edit', compact('data'));
@@ -77,7 +68,7 @@ class PeminjamController extends Controller
     public function update(Request $request, $id)
     {
 
-        $data = Peminjam::where('id_peminjam',$id)->first();
+        $data = Peminjam::where('id_peminjam', $id)->first();
 
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama
@@ -106,7 +97,7 @@ class PeminjamController extends Controller
 
     public function destroy($id)
     {
-        $aset = Peminjam::where('id_peminjam',$id)->first();
+        $aset = Peminjam::where('id_peminjam', $id)->first();
 
         if (!$aset) {
             return redirect()->back()->with('error', 'Data Peminjam tidak ditemukan.');

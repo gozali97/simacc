@@ -25,6 +25,9 @@
     "dependencies": {
         "@selectize/selectize": "^0.15.2",
         "datatables.net": "^1.13.4",
+        "jquery": "^3.7.0",
+        "jquery-ui": "^1.13.2",
+        "sortablejs": "^1.15.0",
         "sweetalert": "^2.1.2"
     }
 }

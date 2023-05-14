@@ -14,69 +14,125 @@
 
     <ul class="menu-inner py-1">
         @auth
-        <!-- Dashboard -->
-        @if (Auth::user()->role->name === 'kades')
-        <li class="menu-item active">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
-
-        <!-- Layouts -->
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Master</div>
-            </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">Data User</div>
+            <!-- Dashboard -->
+            @if (Auth::user()->role->name === 'kades')
+                <li class="menu-item active">
+                    <a href="#" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">Dashboard</div>
                     </a>
                 </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Analytics">Laporan</div>
-            </a>
-        </li>
-        @elseif (Auth::user()->role->name === 'sekretaris')
-        <li class="menu-item {{ request()->is('sekretaris*') ? 'active' : '' }}">
-            <a href="/sekretaris" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle bx-tada-hover"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->is('listaset*') ? 'active' : '' }}">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Layouts">Master Data</div>
-            </a>
 
-            <ul class="menu-sub">
+                <!-- Layouts -->
                 <li class="menu-item">
-                    <a href="/listaset" class="menu-link">
-                        <div data-i18n="Without menu">Aset</div>
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons bx bx-archive"></i>
+                        <div data-i18n="Layouts">Master</div>
+                    </a>
+
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a href="/kades/sekre" class="menu-link">
+                                <div data-i18n="Without menu">Data Sekretaris</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/kades/kaur" class="menu-link">
+                                <div data-i18n="Without menu">Data Kaur</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/kades/peminjam" class="menu-link">
+                                <div data-i18n="Without menu">Data Peminjam</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons bx bx bx-file"></i>
+                        <div data-i18n="Layouts">Laporan</div>
+                    </a>
+
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a href="/kades/laporan/user" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Peminjam</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/kades/laporan/peminjaman" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Peminjaman</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/kades/laporan/kembali" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Pengembalian</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/kades/laporan/mutasi" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Mutasi</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-without-menu.html" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Penghapusan</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="layouts-without-menu.html" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Perencanaan</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-item {{ request()->is('profile*') ? 'active' : '' }}">
+                    <a href="/kades/profile" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                        <div data-i18n="Analytics">Profile</div>
+                    </a>
+                </li>
+            @elseif (Auth::user()->role->name === 'sekretaris')
+                <li class="menu-item {{ request()->is('sekretaris*') ? 'active' : '' }}">
+                    <a href="/sekretaris" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle bx-tada-hover"></i>
+                        <div data-i18n="Analytics">Dashboard</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="/listmutasi" class="menu-link">
-                        <div data-i18n="Without menu">Mutasi</div>
+                    <a href="javascript:void(0);"
+                        class="menu-link menu-toggle {{ request()->is('listaset*') ? 'active' : '' }}">
+                        <i class="menu-icon tf-icons bx bx-collection"></i>
+                        <div data-i18n="Layouts">Master Data</div>
                     </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle {{ request()->is('listpinjam*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
-                <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
-                <div data-i18n="Layouts">Transaksi</div>
-            </a>
 
-            <ul class="menu-sub">
+                    <ul class="menu-sub">
+                        <li class="menu-item">
+                            <a href="/listaset" class="menu-link">
+                                <div data-i18n="Without menu">Aset</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/listmutasi" class="menu-link">
+                                <div data-i18n="Without menu">Mutasi</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/listhapus" class="menu-link">
+                                <div data-i18n="Without menu">Penghapusan</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a href="javascript:void(0);"
+                        class="menu-link menu-toggle {{ request()->is('listpinjam*') || request()->is('jenis*') || request()->is('asset*') ? 'active' : '' }}">
+                        <i class="menu-icon tf-icons bx bx-cart-alt bx-tada-hover"></i>
+                        <div data-i18n="Layouts">Transaksi</div>
+                    </a>
+
+                    <ul class="menu-sub">
                 </li>
                 <li class="menu-item">
                     <a href="/listpinjam" class="menu-link">
@@ -98,22 +154,29 @@
                         <div data-i18n="Without menu">Perencanaan</div>
                     </a>
                 </li>
-            </ul>
+        </ul>
         </li>
         <li class="menu-item {{ request()->is('kaurs*') ? 'active' : '' }}">
             <a href="/kaurs" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                <i class="menu-icon tf-icons bx bx-user-circle bx-tada-hover"></i>
                 <div data-i18n="Analytics">Manajemen Kaur</div>
             </a>
         </li>
-        @elseif (Auth::user()->role->name === 'kaur')
+        <li class="menu-item {{ request()->is('profile*') ? 'active' : '' }}">
+            <a href="/sekretaris/profile" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                <div data-i18n="Analytics">Profile</div>
+            </a>
+        </li>
+    @elseif (Auth::user()->role->name === 'kaur')
         <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
             <a href="#" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-item {{ request()->is('ruang*') || request()->is('jenis*')|| request()->is('peminjam*') || request()->is('asset*') ? 'active' : '' }}">
+        <li
+            class="menu-item {{ request()->is('ruang*') || request()->is('jenis*') || request()->is('peminjam*') || request()->is('asset*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-archive bx-tada-hover"></i>
                 <div data-i18n="Layouts">Master</div>
@@ -142,7 +205,8 @@
                 </li>
             </ul>
         </li>
-         <li class="menu-item {{ request()->is('kaurpinjam*') || request()->is('kaurkembali*') || request()->is('kaurhapus*')  || request()->is('kaurmutasi*')  || request()->is('kaurajuan*') ? 'active' : '' }}">
+        <li
+            class="menu-item {{ request()->is('kaurpinjam*') || request()->is('kaurkembali*') || request()->is('kaurhapus*') || request()->is('kaurmutasi*') || request()->is('kaurajuan*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cart"></i>
                 <div data-i18n="Layouts">Transaksi</div>
@@ -177,6 +241,12 @@
             </ul>
 
         </li>
+        <li class="menu-item {{ request()->is('profile*') ? 'active' : '' }}">
+            <a href="/kaur/profile" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user bx-tada-hover"></i>
+                <div data-i18n="Analytics">Profile</div>
+            </a>
+        </li>
         {{-- <li class="menu-item {{ request()->is('laporan*') ? 'active' : '' }}">
             <a href="/laporan" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-clipboard"></i>
@@ -185,7 +255,8 @@
         </li> --}}
         @endif
         <li class="menu-item">
-            <a href="#" class="menu-link" onclick="event.preventDefault(); Swal.fire({
+            <a href="#" class="menu-link"
+                onclick="event.preventDefault(); Swal.fire({
                 title: 'Apakah anda yakin?',
                 text: 'Anda akan keluar dari web!',
                 icon: 'warning',
@@ -198,14 +269,14 @@
                         document.getElementById('logout-form').submit();
                     }
                 });">
-            <i class="menu-icon tf-icons bx bx-log-out bx-tada-hover"></i>
-            <div>Logout</div>
-        </a>
+                <i class="menu-icon tf-icons bx bx-log-out bx-tada-hover"></i>
+                <div>Logout</div>
+            </a>
 
         </li>
-        @else
+    @else
         <li><a href="{{ route('login') }}">Login</a></li>
         <li><a href="{{ route('register') }}">Register</a></li>
-        @endauth
+    @endauth
     </ul>
 </aside>

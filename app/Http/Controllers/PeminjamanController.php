@@ -49,17 +49,18 @@ class PeminjamanController extends Controller
         return response()->json($detail);
     }
 
-    public function view($id) {
+    public function view($id)
+    {
         $data = DetailPeminjaman::query()
-                    ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
-                    ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
-                    ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
-                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
-                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
-                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
-                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset','peminjam.nama_peminjam', 'peminjaman.kd_peminjaman','peminjaman.tgl_pinjam')
-                    ->where('detail_peminjaman.kd_peminjaman', $id)
-                    ->get();
+            ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+            ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+            ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.kd_peminjaman', 'peminjaman.tgl_pinjam')
+            ->where('detail_peminjaman.kd_peminjaman', $id)
+            ->get();
 
         return view('kaur.pinjaman.view', compact('data'));
     }
@@ -81,17 +82,7 @@ class PeminjamanController extends Controller
 
             $detail = DetailAset::where('kd_det_aset', $request->detail)->first();
 
-            $jumlahData = Peminjaman::count();
-
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'PJ00' . $nomorUrutan;
-            } else {
-                $kode = 'PJ001';
-            }
-
             $pinjam = new Peminjaman;
-            $pinjam->kd_peminjaman = $kode;
             $pinjam->id_user = Auth::user()->id;
             $pinjam->id_peminjam = $request->nama;
             $pinjam->kd_aset = $request->aset;
@@ -101,25 +92,12 @@ class PeminjamanController extends Controller
             if ($pinjam->save()) {
 
                 $pinjamDetails = [];
-                $nomor = 0;
 
-                $jumlahDetail = DetailPeminjaman::max('kd_det_peminjaman');
-
-                    if ($jumlahDetail > 0) {
-                        $nomor = intval(substr($jumlahDetail, 5));
-                    } else {
-                        $kodeDetail = 'PNJ001';
-                    }
-
-                foreach ($request->detail as $key => $pinjamdetail){
-
-                    $nomor++;
-                    $kodeDetail = 'PNJ' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+                foreach ($request->detail as $key => $pinjamdetail) {
 
                     $detailAset = DetailAset::where('kd_det_aset', $pinjamdetail)->first();
 
                     $detail = [
-                        'kd_det_peminjaman' => $kodeDetail,
                         'kd_peminjaman' => $pinjam->kd_peminjaman,
                         'kd_det_aset' => $pinjamdetail,
                         'tgl_pinjam' => date('Y-m-d'),
@@ -140,8 +118,7 @@ class PeminjamanController extends Controller
             // Redirect ke halaman index kategori dengan pesan sukses
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, '. $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
     }
 
@@ -222,15 +199,7 @@ class PeminjamanController extends Controller
 
             $jumlahData = Pengembalian::count();
 
-            if ($jumlahData > 0) {
-                $nomorUrutan = $jumlahData + 1;
-                $kode = 'PB00' . $nomorUrutan;
-            } else {
-                $kode = 'PB001';
-            }
-
             $kembali = new Pengembalian;
-            $kembali->kd_kembali = $kode;
             $kembali->kd_peminjaman = $request->id_pinjam;
             $kembali->id_user = Auth::user()->id;
             $kembali->tgl_kembali = date('Y-m-d');
@@ -238,25 +207,12 @@ class PeminjamanController extends Controller
 
             if ($kembali->save()) {
 
-                $nomor = 0;
-
-                $jumlahDetail = DetailPengembalian::max('kd_det_pengembalian');
-
-                    if ($jumlahDetail > 0) {
-                        $nomor = intval(substr($jumlahDetail, 5));
-                    } else {
-                        $kodeDetail = 'PNB001';
-                    }
 
                 $detailPinjam = DetailPeminjaman::where('kd_peminjaman', $request->id_pinjam)->get();
 
-                foreach ($detailPinjam as $det){
-
-                    $nomor++;
-                    $kodeDetail = 'PNB' . str_pad($nomor, 3, '0', STR_PAD_LEFT);
+                foreach ($detailPinjam as $det) {
 
                     $detail = new DetailPengembalian;
-                    $detail->kd_det_pengembalian = $kodeDetail;
                     $detail->kd_kembali = $kembali->kd_kembali;
                     $detail->kd_det_aset = $det->kd_det_aset;
                     $detail->tgl_kembali = date('Y-m-d');
@@ -271,10 +227,9 @@ class PeminjamanController extends Controller
                 DB::commit();
                 return redirect()->route('kaurpinjam.index')->with('success', 'Data Peminjaman berhasil dikembalikan.');
             }
-            
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, '. $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
         }
     }
 }

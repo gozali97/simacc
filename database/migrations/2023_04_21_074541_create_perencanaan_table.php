@@ -14,9 +14,9 @@ class CreatePerencanaanTable extends Migration
     public function up()
     {
         Schema::create('perencanaan', function (Blueprint $table) {
-            $table->integer('kd_perencanaan');
+            $table->increments('kd_perencanaan');
             $table->date('tgl_perencanaan');
-            $table->string('nama_perencaaan');
+            $table->string('nama_perencanaan');
             $table->enum('status', ['Aktif', 'Selesai']);
             $table->timestamps();
         });

@@ -14,7 +14,7 @@ class CreatePengembalianTable extends Migration
     public function up()
     {
         Schema::create('pengembalian', function (Blueprint $table) {
-            $table->integer('kd_kembali')->primary();
+            $table->increments('kd_kembali');
             $table->integer('kd_peminjaman');
             $table->integer('id_user');
             $table->date('tgl_kembali');

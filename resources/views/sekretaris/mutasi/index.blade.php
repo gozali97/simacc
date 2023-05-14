@@ -93,11 +93,9 @@
                                 <td>{{ date('d-m-Y', strtotime($a->created_at)) }}</td>
                                 <td> <span
                                         class="badge
-                            @if ($a->status === 'Proses') bg-primary
-                            @elseif($a->status === 'Aktif')
+                            @if ($a->status === 'Aktif') bg-primary
+                            @elseif($a->status === 'Disetujui')
                                 bg-success
-                            @elseif($a->status === 'Selesai')
-                                bg-info
                             @else
                                 bg-danger @endif">
                                         {{ $a->status }}
@@ -108,7 +106,7 @@
                                             class="btn btn-icon btn-info detail-pinjam-btn" data-kd="{{ $a->kd_mutasi }}">
                                             <span class="tf-icons bx bx-info-circle bx-tada-hover"></span>
                                         </a>
-                                        @if ($a->status !== 'Disetujui' && $a->status !== 'Ditolak' && $a->status !== 'Selesai')
+                                        @if ($a->status !== 'Disetujui' && $a->status !== 'Ditolak')
                                             <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->kd_mutasi }}"
                                                 class="btn btn-icon btn-success">
                                                 <i class="bx bx-check-square bx-tada-hover"></i>
@@ -140,7 +138,7 @@
                                             @csrf
                                             <div class="modal-body">Apakah Anda yakin ingin konfirmasi mutasi <span
                                                     class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                            <input type="hidden" name="id_pinjam" value="{{ $a->kd_mutasi }}">
+                                            <input type="hidden" name="kd_mutasi" value="{{ $a->kd_mutasi }}">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary"
                                                     data-bs-dismiss="modal">
@@ -159,16 +157,16 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="modalToggleLabel">Konfirmasi Peminjaman</h5>
+                                            <h5 class="modal-title" id="modalToggleLabel">Konfirmasi Mutasi</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <form action="{{ route('listmutasi.decline', $a->kd_mutasi) }}" method="POST"
                                             enctype="multipart/form-data">
                                             @csrf
-                                            <div class="modal-body">Apakah Anda yakin ingin tolak peminjaman <span
+                                            <div class="modal-body">Apakah Anda yakin ingin tolak mutasi <span
                                                     class="fw-bold">{{ $a->nama_aset }}</span>?</div>
-                                            <input type="hidden" name="id_pinjam" value="{{ $a->kd_mutasi }}">
+                                            <input type="hidden" name="kd_mutasi" value="{{ $a->kd_mutasi }}">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary"
                                                     data-bs-dismiss="modal">

@@ -14,7 +14,7 @@ class CreateDetailPengembalianTable extends Migration
     public function up()
     {
         Schema::create('detail_pengembalian', function (Blueprint $table) {
-            $table->integer('kd_det_pengembalian');
+            $table->increments('kd_det_pengembalian');
             $table->integer('kd_kembali');
             $table->integer('kd_det_aset');
             $table->date('tgl_kembali');

@@ -93,11 +93,9 @@
                                 <td>{{ date('d-m-Y', strtotime($a->created_at)) }}</td>
                                 <td> <span
                                         class="badge
-                            @if ($a->status === 'Proses') bg-primary
-                            @elseif($a->status === 'Aktif')
+                            @if ($a->status === 'Aktif') bg-primary
+                            @elseif($a->status === 'Disetujui')
                                 bg-success
-                            @elseif($a->status === 'Selesai')
-                                bg-info
                             @else
                                 bg-danger @endif">
                                         {{ $a->status }}
@@ -105,32 +103,20 @@
                                 <td>
                                     @if ($a->status == 'Disetujui')
                                         <div class="btn-group" role="group" aria-label="First group">
-                                            <a href="{{ route('listmutasi.view', $a->kd_mutasi) }}" type="button"
+                                            <a href="{{ route('kaurmutasi.view', $a->kd_mutasi) }}" type="button"
                                                 class="btn btn-icon btn-info">
                                                 <span class="tf-icons bx bx-info-circle"></span>
                                             </a>
-                                            <button data-bs-toggle="modal" data-bs-target="#confirmModal{{ $a->kd_mutasi }}"
-                                                type="button" class="btn btn-icon btn-success">
-                                                <span class="tf-icons bx bx-analyse bx-tada-hover"></span>
-                                            </button>
                                         </div>
                                     @elseif ($a->status == 'Aktif')
                                         <div class="btn-group" role="group" aria-label="First group">
-                                            <a href="{{ route('listmutasi.view', $a->kd_mutasi) }}" type="button"
+                                            <a href="{{ route('kaurmutasi.view', $a->kd_mutasi) }}" type="button"
                                                 class="btn btn-icon btn-info">
                                                 <span class="tf-icons bx bx-info-circle"></span>
                                             </a>
-                                            {{-- <a href="{{ route('kaurmutasi.edit', $a->kd_mutasi) }}" type="button"
-                                                class="btn btn-icon btn-warning">
-                                                <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
-                                            </a> --}}
-                                            {{-- <a href="#" class="btn btn-icon btn-danger"
-                                    onclick="event.preventDefault(); confirmDelete('{{ $a->kd_mutasi }}');">
-                                    <i class="bx bx-trash"></i>
-                                </a> --}}
                                         </div>
                                     @else
-                                        <a href="{{ route('kaurpinjam.view', $a->kd_mutasi) }}" type="button"
+                                        <a href="{{ route('kaurmutasi.view', $a->kd_mutasi) }}" type="button"
                                             class="btn btn-icon btn-info">
                                             <span class="tf-icons bx bx-info-circle"></span>
                                         </a>

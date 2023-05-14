@@ -16,6 +16,7 @@ class CreatePenghapusanTable extends Migration
         Schema::create('penghapusan', function (Blueprint $table) {
             $table->increments('kd_penghapusan');
             $table->integer('id_user');
+            $table->integer('kd_aset');
             $table->date('tgl_penghapusan');
             $table->enum('status', ['Proses', 'Aktif', 'Selesai', 'Ditolak']);
             $table->timestamps();

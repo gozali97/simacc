@@ -4,6 +4,7 @@ use App\Http\Controllers\AsetController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisAsetController;
 use App\Http\Controllers\KadesController;
+use App\Http\Controllers\KadesMasterController;
 use App\Http\Controllers\KaurController;
 use App\Http\Controllers\KelolaAjuanController;
 use App\Http\Controllers\KelolaAsetController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\KelolaPeminjamanController;
 use App\Http\Controllers\KelolaPengembalianController;
 use App\Http\Controllers\KelolaPenghapusanController;
 use App\Http\Controllers\KelolaPerencanaanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamController;
@@ -48,11 +50,32 @@ Route::resource('roles', RoleController::class);
 
 Route::middleware(['auth', 'role:kades'])->group(function () {
     Route::get('/kades', [KadesController::class, 'index'])->name('kades');
+    Route::get('/kades/profile', [KadesController::class, 'profile'])->name('kades.profile');
+
+    Route::get('/kades/laporan/user', [LaporanController::class, 'user'])->name('kades.laporan.user');
+    Route::get('/kades/laporan/user/print', [LaporanController::class, 'userPrint'])->name('kades.laporan.userPrint');
+
+    Route::get('/kades/laporan/kembali', [LaporanController::class, 'kembali'])->name('kades.laporan.kembali');
+    Route::get('/kades/laporan/kembali/print', [LaporanController::class, 'kembaliPrint'])->name('kades.laporan.kembaliPrint');
+
+    Route::get('/kades/laporan/mutasi', [LaporanController::class, 'mutasi'])->name('kades.laporan.mutasi');
+    Route::get('/kades/laporan/mutasi/print', [LaporanController::class, 'mutasiPrint'])->name('kades.laporan.mutasiPrint');
+
+    Route::get('/kades/sekre', [KadesMasterController::class, 'index'])->name('kades.sekretaris');
+    Route::get('/kades/kaur', [KadesMasterController::class, 'indexKaur'])->name('kades.sekretaris.kaur');
+    Route::get('/kades/peminjam', [KadesMasterController::class, 'indexPeminjam'])->name('kades.sekretaris.peminjam');
+    Route::get('/kades/sekre/create', [KadesMasterController::class, 'create'])->name('kades.sekretaris.create');
+    Route::post('/kades/sekre/store', [KadesMasterController::class, 'store'])->name('kades.sekretaris.store');
+    Route::get('/kades/sekre/edit/{id}', [KadesMasterController::class, 'edit'])->name('kades.sekretaris.edit');
+    Route::post('/kades/sekre/update/{id}', [KadesMasterController::class, 'update'])->name('kades.sekretaris.update');
+    Route::get('/kades/sekre/destroy/{id}', [KadesMasterController::class, 'destroy'])->name('kades.sekretaris.destroy');
+    Route::post('/kades/sekre/reset-password/{id}', [KelolaKaurController::class, 'reset_password'])->name('kades.sekretaris.reset-password');
 });
 
 
 Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/sekretaris', [SekretarisController::class, 'index'])->name('sekretaris');
+    Route::get('/sekretaris/profile', [SekretarisController::class, 'profile'])->name('sekretaris.profile');
 
     //  Route Kelola Kaur
     Route::get('/kaurs', [KelolaKaurController::class, 'index'])->name('kaurs.index');
@@ -104,7 +127,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listhapus/destroy/{id}', [KelolaPenghapusanController::class, 'destroy'])->name('listhapus.destroy');
 
     Route::get('/listaset', [KelolaAsetController::class, 'index'])->name('listaset.index');
-    Route::get('/listaset/{kd_aset}', [KelolaAsetController::class, 'getDetailAset'])->name('listaset.getDetail');
+    Route::get('/listaset/view/{id}', [KelolaAsetController::class, 'view'])->name('listaset.view');
     Route::get('/listaset/getDetailPinjam/{kd_peminjaman}', [KelolaAsetController::class, 'getDetailPinjam'])->name('listaset.getDetailPinjam');
     Route::post('/listaset/confirm/{id}', [KelolaAsetController::class, 'confirm'])->name('listaset.confirm');
     Route::post('/listaset/decline/{id}', [KelolaAsetController::class, 'decline'])->name('listaset.decline');
@@ -128,8 +151,9 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
 
 Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::get('/kaur', [KaurController::class, 'index'])->name('kaur');
+    Route::get('/kaur/profile', [KaurController::class, 'profile'])->name('kaur.profile');
 
-     //  Route Kelola Asset
+    //  Route Kelola Asset
     Route::get('/aset', [AsetController::class, 'index'])->name('aset.index');
     Route::get('/aset/create', [AsetController::class, 'create'])->name('aset.create');
     Route::post('/aset/store', [AsetController::class, 'store'])->name('aset.store');
@@ -137,7 +161,8 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::get('/aset/view/{id}', [AsetController::class, 'view'])->name('aset.view');
     Route::post('/aset/update/{id}', [AsetController::class, 'update'])->name('aset.update');
     Route::post('/aset/updateDetail/{id}', [AsetController::class, 'updateDetail'])->name('aset.updateDetail');
-    Route::post('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
+    Route::get('/aset/destroy/{id}', [AsetController::class, 'destroy'])->name('aset.destroy');
+    Route::post('/aset/destroy', [AsetController::class, 'destroyAset'])->name('aset.destroy.aset');
 
     //  Route Kelola Ruang
     Route::get('/ruang', [RuangController::class, 'index'])->name('ruang.index');
@@ -147,15 +172,15 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::post('/ruang/update/{id}', [RuangController::class, 'update'])->name('ruang.update');
     Route::get('/ruang/destroy/{id}', [RuangController::class, 'destroy'])->name('ruang.destroy');
 
-     //  Route Kelola Jenis Aset
-     Route::get('/jenis', [JenisAsetController::class, 'index'])->name('jenis.index');
-     Route::get('/jenis/create', [JenisAsetController::class, 'create'])->name('jenis.create');
-     Route::post('/jenis/store', [JenisAsetController::class, 'store'])->name('jenis.store');
-     Route::get('/jenis/edit/{id}', [JenisAsetController::class, 'edit'])->name('jenis.edit');
-     Route::post('/jenis/update/{id}', [JenisAsetController::class, 'update'])->name('jenis.update');
-     Route::get('/jenis/destroy/{id}', [JenisAsetController::class, 'destroy'])->name('jenis.destroy');
+    //  Route Kelola Jenis Aset
+    Route::get('/jenis', [JenisAsetController::class, 'index'])->name('jenis.index');
+    Route::get('/jenis/create', [JenisAsetController::class, 'create'])->name('jenis.create');
+    Route::post('/jenis/store', [JenisAsetController::class, 'store'])->name('jenis.store');
+    Route::get('/jenis/edit/{id}', [JenisAsetController::class, 'edit'])->name('jenis.edit');
+    Route::post('/jenis/update/{id}', [JenisAsetController::class, 'update'])->name('jenis.update');
+    Route::get('/jenis/destroy/{id}', [JenisAsetController::class, 'destroy'])->name('jenis.destroy');
 
-        //  Route Kelola Asset
+    //  Route Kelola Asset
     Route::get('/peminjam', [PeminjamController::class, 'index'])->name('peminjam.index');
     Route::get('/peminjam/create', [PeminjamController::class, 'create'])->name('peminjam.create');
     Route::post('/peminjam/store', [PeminjamController::class, 'store'])->name('peminjam.store');
@@ -163,56 +188,52 @@ Route::middleware(['auth', 'role:kaur'])->group(function () {
     Route::post('/peminjam/update/{id}', [PeminjamController::class, 'update'])->name('peminjam.update');
     Route::post('/peminjam/destroy/{id}', [PeminjamController::class, 'destroy'])->name('peminjam.destroy');
 
-     //  Route Kelola peminjaman
-     Route::get('/kaurmutasi', [MutasiController::class, 'index'])->name('kaurmutasi.index');
-     Route::get('/kaurmutasi/create', [MutasiController::class, 'create'])->name('kaurmutasi.create');
-     Route::get('/kaurmutasi/view/{id}', [MutasiController::class, 'view'])->name('kaurmutasi.view');
-     Route::get('/kaurmutasi/getDetailAset', [MutasiController::class, 'getDetailAset'])->name('kaurmutasi.getDetailAset');
-     Route::post('/kaurmutasi/store', [MutasiController::class, 'store'])->name('kaurmutasi.store');
-     Route::post('/kaurmutasi/insert', [MutasiController::class, 'insert'])->name('kaurmutasi.insert');
-     Route::get('/kaurmutasi/edit/{id}', [MutasiController::class, 'edit'])->name('kaurmutasi.edit');
-     Route::post('/kaurmutasi/update/{id}', [MutasiController::class, 'update'])->name('kaurmutasi.update');
-     Route::get('/kaurmutasi/destroy/{id}', [MutasiController::class, 'destroy'])->name('kaurmutasi.destroy');
+    //  Route Kelola peminjaman
+    Route::get('/kaurmutasi', [MutasiController::class, 'index'])->name('kaurmutasi.index');
+    Route::get('/kaurmutasi/view/{id}', [MutasiController::class, 'view'])->name('kaurmutasi.view');
+    Route::post('/kaurmutasi/store', [MutasiController::class, 'store'])->name('kaurmutasi.store');
+    Route::post('/kaurmutasi/insert', [MutasiController::class, 'insert'])->name('kaurmutasi.insert');
+    Route::get('/kaurmutasi/edit/{id}', [MutasiController::class, 'edit'])->name('kaurmutasi.edit');
+    Route::post('/kaurmutasi/update/{id}', [MutasiController::class, 'update'])->name('kaurmutasi.update');
+    Route::get('/kaurmutasi/destroy/{id}', [MutasiController::class, 'destroy'])->name('kaurmutasi.destroy');
 
-     //  Route Kelola peminjaman
-     Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');
-     Route::get('/kaurpinjam/create', [PeminjamanController::class, 'create'])->name('kaurpinjam.create');
-     Route::get('/kaurpinjam/view/{id}', [PeminjamanController::class, 'view'])->name('kaurpinjam.view');
-     Route::get('/kaurpinjam/getDetailAset', [PeminjamanController::class, 'getDetailAset'])->name('kaurpinjam.getDetailAset');
-     Route::post('/kaurpinjam/store', [PeminjamanController::class, 'store'])->name('kaurpinjam.store');
-     Route::post('/kaurpinjam/insert', [PeminjamanController::class, 'insert'])->name('kaurpinjam.insert');
-     Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
-     Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');
-     Route::get('/kaurpinjam/destroy/{id}', [PeminjamanController::class, 'destroy'])->name('kaurpinjam.destroy');
+    //  Route Kelola peminjaman
+    Route::get('/kaurpinjam', [PeminjamanController::class, 'index'])->name('kaurpinjam.index');
+    Route::get('/kaurpinjam/create', [PeminjamanController::class, 'create'])->name('kaurpinjam.create');
+    Route::get('/kaurpinjam/view/{id}', [PeminjamanController::class, 'view'])->name('kaurpinjam.view');
+    Route::get('/kaurpinjam/getDetailAset', [PeminjamanController::class, 'getDetailAset'])->name('kaurpinjam.getDetailAset');
+    Route::post('/kaurpinjam/store', [PeminjamanController::class, 'store'])->name('kaurpinjam.store');
+    Route::post('/kaurpinjam/insert', [PeminjamanController::class, 'insert'])->name('kaurpinjam.insert');
+    Route::get('/kaurpinjam/edit/{id}', [PeminjamanController::class, 'edit'])->name('kaurpinjam.edit');
+    Route::post('/kaurpinjam/update/{id}', [PeminjamanController::class, 'update'])->name('kaurpinjam.update');
+    Route::get('/kaurpinjam/destroy/{id}', [PeminjamanController::class, 'destroy'])->name('kaurpinjam.destroy');
 
-     //  Route Kelola pengembalian
-     Route::get('/kaurkembali', [PengembalianController::class, 'index'])->name('kaurkembali.index');
-     Route::get('/kaurkembali/create', [PengembalianController::class, 'create'])->name('kaurkembali.create');
-     Route::get('/kaurkembali/view/{id}', [PengembalianController::class, 'view'])->name('kaurkembali.view');
-     Route::get('/kaurkembali/getDetailAset', [PengembalianController::class, 'getDetailAset'])->name('kaurkembali.getDetailAset');
-     Route::post('/kaurkembali/store', [PengembalianController::class, 'store'])->name('kaurkembali.store');
-     Route::get('/kaurkembali/edit/{id}', [PengembalianController::class, 'edit'])->name('kaurkembali.edit');
-     Route::post('/kaurkembali/update/{id}', [PengembalianController::class, 'update'])->name('kaurkembali.update');
-     Route::get('/kaurkembali/destroy/{id}', [PengembalianController::class, 'destroy'])->name('kaurkembali.destroy');
+    //  Route Kelola pengembalian
+    Route::get('/kaurkembali', [PengembalianController::class, 'index'])->name('kaurkembali.index');
+    Route::get('/kaurkembali/create', [PengembalianController::class, 'create'])->name('kaurkembali.create');
+    Route::get('/kaurkembali/view/{id}', [PengembalianController::class, 'view'])->name('kaurkembali.view');
+    Route::get('/kaurkembali/getDetailAset', [PengembalianController::class, 'getDetailAset'])->name('kaurkembali.getDetailAset');
+    Route::post('/kaurkembali/store', [PengembalianController::class, 'store'])->name('kaurkembali.store');
+    Route::get('/kaurkembali/edit/{id}', [PengembalianController::class, 'edit'])->name('kaurkembali.edit');
+    Route::post('/kaurkembali/update/{id}', [PengembalianController::class, 'update'])->name('kaurkembali.update');
+    Route::get('/kaurkembali/destroy/{id}', [PengembalianController::class, 'destroy'])->name('kaurkembali.destroy');
 
-     //  Route Kelola penghapusan
-     Route::get('/kaurhapus', [PenghapusanController::class, 'index'])->name('kaurhapus.index');
-     Route::get('/kaurhapus/create', [PenghapusanController::class, 'create'])->name('kaurhapus.create');
-     Route::get('/kaurhapus/view/{id}', [PenghapusanController::class, 'view'])->name('kaurhapus.view');
-     Route::get('/kaurhapus/getDetailAset', [PenghapusanController::class, 'getDetailAset'])->name('kaurhapus.getDetailAset');
-     Route::post('/kaurhapus/store', [PenghapusanController::class, 'store'])->name('kaurhapus.store');
-     Route::get('/kaurhapus/edit/{id}', [PenghapusanController::class, 'edit'])->name('kaurhapus.edit');
-     Route::post('/kaurhapus/update/{id}', [PenghapusanController::class, 'update'])->name('kaurhapus.update');
-     Route::get('/kaurhapus/destroy/{id}', [PenghapusanController::class, 'destroy'])->name('kaurhapus.destroy');
+    //  Route Kelola penghapusan
+    Route::get('/kaurhapus', [PenghapusanController::class, 'index'])->name('kaurhapus.index');
+    Route::get('/kaurhapus/create', [PenghapusanController::class, 'create'])->name('kaurhapus.create');
+    Route::get('/kaurhapus/view/{id}', [PenghapusanController::class, 'view'])->name('kaurhapus.view');
+    Route::get('/kaurhapus/getDetailAset', [PenghapusanController::class, 'getDetailAset'])->name('kaurhapus.getDetailAset');
+    Route::post('/kaurhapus/store', [PenghapusanController::class, 'store'])->name('kaurhapus.store');
+    Route::get('/kaurhapus/edit/{id}', [PenghapusanController::class, 'edit'])->name('kaurhapus.edit');
+    Route::post('/kaurhapus/update/{id}', [PenghapusanController::class, 'update'])->name('kaurhapus.update');
+    Route::get('/kaurhapus/destroy/{id}', [PenghapusanController::class, 'destroy'])->name('kaurhapus.destroy');
 
-     //  Route Kelola pengajuan
-     Route::get('/kaurajuan', [PengajuanController::class, 'index'])->name('kaurajuan.index');
-     Route::get('/kaurajuan/create', [PengajuanController::class, 'create'])->name('kaurajuan.create');
-     Route::post('/kaurajuan/store', [PengajuanController::class, 'store'])->name('kaurajuan.store');
-     Route::get('/kaurajuan/edit/{id}', [PengajuanController::class, 'edit'])->name('kaurajuan.edit');
-     Route::post('/kaurajuan/update/{id}', [PengajuanController::class, 'update'])->name('kaurajuan.update');
-     Route::post('/kaurajuan/destroy/{id}', [PengajuanController::class, 'destroy'])->name('kaurajuan.destroy');
+    //  Route Kelola pengajuan
+    Route::get('/kaurajuan', [PengajuanController::class, 'index'])->name('kaurajuan.index');
+    Route::get('/kaurajuan/create', [PengajuanController::class, 'create'])->name('kaurajuan.create');
+    Route::post('/kaurajuan/store', [PengajuanController::class, 'store'])->name('kaurajuan.store');
+    Route::get('/kaurajuan/edit/{id}', [PengajuanController::class, 'edit'])->name('kaurajuan.edit');
+    Route::get('/kaurajuan/view/{id}', [PengajuanController::class, 'view'])->name('kaurajuan.view');
+    Route::post('/kaurajuan/update/{id}', [PengajuanController::class, 'update'])->name('kaurajuan.update');
+    Route::post('/kaurajuan/destroy/{id}', [PengajuanController::class, 'destroy'])->name('kaurajuan.destroy');
 });
-
-
-

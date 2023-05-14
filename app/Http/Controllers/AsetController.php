@@ -6,9 +6,11 @@ use App\Models\Asal;
 use App\Models\Aset;
 use App\Models\DetailAset;
 use App\Models\DetailMutasi;
+use App\Models\DetailPenghapusan;
 use App\Models\JenisAset;
 use App\Models\Kondisi;
 use App\Models\Mutasi;
+use App\Models\Penghapusan;
 use App\Models\Ruang;
 use Exception;
 use Illuminate\Http\Request;
@@ -164,6 +166,7 @@ class AsetController extends Controller
                 $detail->kd_aset = $kd_aset;
                 $detail->kd_ruang = $ruang[$i];
                 $detail->kd_kondisi = $kondisi[$i];
+                $detail->status = "out";
 
                 if (!$detail->save()) {
                     throw new Exception('Gagal menyimpan data detail aset');
@@ -172,66 +175,79 @@ class AsetController extends Controller
 
             DB::commit();
 
-            return redirect()->route('aset.index')->with('success', 'Data Aset berhasil diperbarui.');
+            return redirect()->route('aset.index')->with('success', 'Berhasil menyimpan mutasi Aset.');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data, ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mutasi aset, ' . $e->getMessage());
         }
     }
 
-    public function updateDetail(Request $request, $id)
-    {
-        dd($request->all());
-        $data = DetailAset::where('kd_det_aset', $id)->first();
-        // dd($data);
-
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if (file_exists(public_path('assets/img/' . $data->gambar))) {
-                unlink(public_path('assets/img/' . $data->gambar));
-            }
-
-
-            $gambar = time() . 'aset' . '.' . $request->gambar->extension();
-            $path = $request->file('gambar')->move('assets/img', $gambar);
-            $data->gambar = $gambar;
-        }
-
-        $data->kd_aset = $request->kd_aset;
-        $data->kd_ruang = $request->ruang;
-        $data->kd_kondisi = $request->kondisi;
-        $data->updated_at = date('Y-m-d');
-        $data->save();
-
-        if ($data->save()) {
-            return redirect()->route('aset.edit', $request->kd_aset)->with('success', 'Detail Aset berhasil diupdate.');
-        } else {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate detail aset');
-        }
-    }
 
     public function destroy($id)
     {
-        $aset = Aset::where('kd_aset', $id)->first();
 
-        $detail = DetailAset::where('kd_aset', $id)->get();
+        $data = Aset::query()
+            ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->where('aset.kd_aset', $id)
+            ->get();
+        $kondisi = Kondisi::all();
 
+        return view('kaur.aset.hapus-aset', compact('data', 'kondisi'));
+    }
 
-        if (!$aset) {
-            return redirect()->back()->with('error', 'Aset tidak ditemukan.');
-        }
-
-        foreach ($detail as $details) {
-            $gambarPath = public_path('assets/img/' . $details->gambar);
-            if (file_exists($gambarPath)) {
-                unlink($gambarPath);
+    public function destroyAset(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if (!$request->has('kd_det_aset')) {
+                return redirect()->back()->with('error', 'Kode detail aset tidak ditemukan dalam request.');
             }
+
+            $hapusAset = new Penghapusan;
+            $hapusAset->id_user = Auth::user()->id;
+            $hapusAset->kd_aset = $request->kd_aset;
+            $hapusAset->tgl_penghapusan = date('Y-m-d');
+            $hapusAset->status = "Proses";
+
+            if (!$hapusAset->save()) {
+                throw new \Exception('Gagal menyimpan data Penghapusan.');
+            }
+
+            $kdDetAsetArray = $request->kd_det_aset;
+
+            foreach ($kdDetAsetArray as $key => $detailAset) {
+                $detailHapus = new DetailPenghapusan;
+                $detailHapus->kd_penghapusan =  $hapusAset->kd_penghapusan;
+                $detailHapus->tgl_penghapusan = date('Y-m-d');
+                $detailHapus->kd_det_aset = $detailAset;
+                $detailHapus->kondisi_akhir = $request->kondisi;
+
+                if (!$detailHapus->save()) {
+                    throw new \Exception('Gagal menyimpan data DetailPenghapusan.');
+                }
+            }
+
+            foreach ($kdDetAsetArray as $kdDetAset) {
+                // Temukan detail aset berdasarkan kd_det_aset
+                $detail = DetailAset::where('kd_det_aset', $kdDetAset)->first();
+
+                if (!$detail) {
+                    return redirect()->back()->with('error', 'Detail aset tidak ditemukan.');
+                }
+
+                $detail->status = "out";
+
+                if (!$detail->save()) {
+                    throw new \Exception('Gagal mengubah status DetailAset.');
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('aset.index')->with('success', 'Permohonan hapus aset berhasil.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat permohonan hapus aset, ' . $e->getMessage());
         }
-
-        $detail->each->delete();
-
-        $aset->delete();
-
-        return redirect()->route('aset.index')->with('success', 'Aset berhasil dihapus.');
     }
 }
