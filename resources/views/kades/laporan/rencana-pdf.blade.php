@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Laporan Peminjam</title>
+    <title>Laporan Perencanaan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,23 +32,23 @@
 </head>
 
 <body>
-    <h2 style="text-align:center;">Laporan Data Peminjam</h2>
+    <h2 style="text-align:center;">Laporan Perencanaan</h2>
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama Peminjam</th>
-                <th>Alamat</th>
-                <th>No Handphone</th>
+                <th>Nama Perencanaan</th>
+                <th>Tanggal Perencanaan</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($data as $d)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $d->nama_peminjam }}</td>
-                    <td>{{ $d->alamat }}</td>
-                    <td>{{ $d->no_hp }}</td>
+                    <td>{{ $d->nama_perencanaan }}</td>
+                    <td>{{ $d->tgl_perencanaan }}</td>
+                    <td>{{ $d->status }}</td>
                 </tr>
             @endforeach
         </tbody>

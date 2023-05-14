@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Laporan Perencanaan</title>
+    <title>Laporan Pengembalian</title>
     <style>
         body {
             font-family: Arial, sans-serif;

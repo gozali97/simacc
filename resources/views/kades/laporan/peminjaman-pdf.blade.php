@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Laporan Peminjam</title>
+    <title>Laporan Peminjaman</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,14 +32,17 @@
 </head>
 
 <body>
-    <h2 style="text-align:center;">Laporan Data Peminjam</h2>
+    <h2 style="text-align:center;">Laporan Data Peminjaman Aset</h2>
     <table>
         <thead>
             <tr>
                 <th>No</th>
                 <th>Nama Peminjam</th>
-                <th>Alamat</th>
-                <th>No Handphone</th>
+                <th>Nama Aset</th>
+                <th>Kode Inventory</th>
+                <th>Jenis</th>
+                <th>Tanggal Pinjam</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -47,8 +50,11 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $d->nama_peminjam }}</td>
-                    <td>{{ $d->alamat }}</td>
-                    <td>{{ $d->no_hp }}</td>
+                    <td>{{ $d->nama_aset }}</td>
+                    <td>{{ $d->kode_detail }}</td>
+                    <td>{{ $d->nama_jenis }}</td>
+                    <td>{{ date('d-m-Y', strtotime($d->tgl_pinjam)) }}</td>
+                    <td>{{ $d->status }}</td>
                 </tr>
             @endforeach
         </tbody>

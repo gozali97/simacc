@@ -111,11 +111,11 @@
                                                 class="btn btn-icon btn-info">
                                                 <span class="tf-icons bx bx-info-circle"></span>
                                             </a>
-                                            <button data-bs-toggle="modal"
+                                            {{-- <button data-bs-toggle="modal"
                                                 data-bs-target="#confirmModal{{ $a->kd_peminjaman }}" type="button"
                                                 class="btn btn-icon btn-success">
                                                 <span class="tf-icons bx bx-analyse bx-tada-hover"></span>
-                                            </button>
+                                            </button> --}}
                                         </div>
                                     @elseif ($a->status == 'Proses')
                                         <div class="btn-group" role="group" aria-label="First group">
@@ -127,10 +127,10 @@
                                     class="btn btn-icon btn-warning">
                                     <span class="tf-icons bx bx-edit-alt bx-tada-hover"></span>
                                 </a> --}}
-                                            <a href="#" class="btn btn-icon btn-danger"
+                                            {{-- <a href="#" class="btn btn-icon btn-danger"
                                                 onclick="event.preventDefault(); confirmDelete('{{ $a->kd_peminjaman }}');">
                                                 <i class="bx bx-trash"></i>
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     @else
                                         <a href="{{ route('kaurpinjam.view', $a->kd_peminjaman) }}" type="button"
@@ -154,7 +154,8 @@
                                             enctype="multipart/form-data">
                                             @csrf
                                             <div class="modal-body">Apakah Anda yakin ingin melakukan pengembalian aset
-                                                <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
+                                                <span class="fw-bold">{{ $a->nama_aset }}</span>?
+                                            </div>
                                             <input type="hidden" name="id_pinjam" value="{{ $a->kd_peminjaman }}">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary"

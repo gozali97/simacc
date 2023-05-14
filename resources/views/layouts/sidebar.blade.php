@@ -76,12 +76,12 @@
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="layouts-without-menu.html" class="menu-link">
+                            <a href="/kades/laporan/hapus" class="menu-link">
                                 <div data-i18n="Without menu">Laporan Penghapusan</div>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="layouts-without-menu.html" class="menu-link">
+                            <a href="/kades/laporan/rencana" class="menu-link">
                                 <div data-i18n="Without menu">Laporan Perencanaan</div>
                             </a>
                         </li>

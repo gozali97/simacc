@@ -55,11 +55,21 @@ Route::middleware(['auth', 'role:kades'])->group(function () {
     Route::get('/kades/laporan/user', [LaporanController::class, 'user'])->name('kades.laporan.user');
     Route::get('/kades/laporan/user/print', [LaporanController::class, 'userPrint'])->name('kades.laporan.userPrint');
 
+    Route::get('/kades/laporan/peminjaman', [LaporanController::class, 'peminjaman'])->name('kades.laporan.peminjaman');
+    Route::get('/kades/laporan/peminjaman/print', [LaporanController::class, 'peminjamanPrint'])->name('kades.laporan.peminjamanPrint');
+
     Route::get('/kades/laporan/kembali', [LaporanController::class, 'kembali'])->name('kades.laporan.kembali');
     Route::get('/kades/laporan/kembali/print', [LaporanController::class, 'kembaliPrint'])->name('kades.laporan.kembaliPrint');
 
     Route::get('/kades/laporan/mutasi', [LaporanController::class, 'mutasi'])->name('kades.laporan.mutasi');
     Route::get('/kades/laporan/mutasi/print', [LaporanController::class, 'mutasiPrint'])->name('kades.laporan.mutasiPrint');
+
+    Route::get('/kades/laporan/hapus', [LaporanController::class, 'hapus'])->name('kades.laporan.hapus');
+    Route::get('/kades/laporan/hapus/print', [LaporanController::class, 'hapusPrint'])->name('kades.laporan.hapusPrint');
+
+    Route::get('/kades/laporan/rencana', [LaporanController::class, 'rencana'])->name('kades.laporan.rencana');
+    Route::get('/kades/laporan/rencana/print', [LaporanController::class, 'rencanaPrint'])->name('kades.laporan.rencanaPrint');
+
 
     Route::get('/kades/sekre', [KadesMasterController::class, 'index'])->name('kades.sekretaris');
     Route::get('/kades/kaur', [KadesMasterController::class, 'indexKaur'])->name('kades.sekretaris.kaur');

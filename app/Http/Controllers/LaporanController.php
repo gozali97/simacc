@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Mutasi;
 use App\Models\Peminjam;
+use App\Models\Peminjaman;
 use App\Models\Pengembalian;
+use App\Models\Penghapusan;
+use App\Models\Perencanaan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -27,6 +30,38 @@ class LaporanController extends Controller
 
         $pdf = Pdf::loadView('kades.laporan.peminjam-pdf', compact('data'));
         return $pdf->download('laporan-data-peminjam.pdf');
+    }
+
+    public function peminjaman()
+    {
+        $data = Peminjaman::query()
+            ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'peminjaman.kd_peminjaman')
+            ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+            ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('peminjaman.tgl_pinjam', 'detail_aset.kode_detail', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
+            ->get();
+
+        return view('kades.laporan.peminjaman', compact('data'));
+    }
+
+    public function peminjamanPrint()
+    {
+
+        $data = Peminjaman::query()
+            ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'peminjaman.kd_peminjaman')
+            ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+            ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('peminjaman.tgl_pinjam', 'detail_aset.kode_detail', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
+            ->get();
+
+        $pdf = Pdf::loadView('kades.laporan.peminjaman-pdf', compact('data'));
+        return $pdf->download('laporan-data-peminjaman.pdf');
     }
 
     public function kembali()
@@ -87,5 +122,53 @@ class LaporanController extends Controller
 
         $pdf = Pdf::loadView('kades.laporan.mutasi-pdf', compact('data'));
         return $pdf->download('laporan-data-mutasi.pdf');
+    }
+
+    public function hapus()
+    {
+        $data = Penghapusan::query()
+            ->join('detail_penghapusan', 'detail_penghapusan.kd_penghapusan', 'penghapusan.kd_penghapusan')
+            ->join('users', 'users.id', 'penghapusan.id_user')
+            ->join('aset', 'aset.kd_aset', 'penghapusan.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('penghapusan.tgl_penghapusan', 'aset.nama_aset', 'users.nama', 'penghapusan.status', 'jenis_asets.nama_jenis',)
+            ->get();
+
+        return view('kades.laporan.penghapusan', compact('data'));
+    }
+
+    public function hapusPrint()
+    {
+
+        $data = Penghapusan::query()
+            ->join('detail_penghapusan', 'detail_penghapusan.kd_penghapusan', 'penghapusan.kd_penghapusan')
+            ->join('users', 'users.id', 'penghapusan.id_user')
+            ->join('aset', 'aset.kd_aset', 'penghapusan.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->select('penghapusan.tgl_penghapusan', 'aset.nama_aset', 'users.nama', 'penghapusan.status', 'jenis_asets.nama_jenis',)
+            ->get();
+
+        $pdf = Pdf::loadView('kades.laporan.penghapusan-pdf', compact('data'));
+        return $pdf->download('laporan-data-penghapusan.pdf');
+    }
+
+    public function rencana()
+    {
+        $data = Perencanaan::query()
+            ->select('perencanaan.*')
+            ->get();
+
+        return view('kades.laporan.rencana', compact('data'));
+    }
+
+    public function rencanaPrint()
+    {
+
+        $data = Perencanaan::query()
+            ->select('perencanaan.*')
+            ->get();
+
+        $pdf = Pdf::loadView('kades.laporan.rencana-pdf', compact('data'));
+        return $pdf->download('laporan-data-perencanaan.pdf');
     }
 }
