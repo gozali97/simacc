@@ -56,6 +56,11 @@
 
                     <ul class="menu-sub">
                         <li class="menu-item">
+                            <a href="/kades/laporan/aset" class="menu-link">
+                                <div data-i18n="Without menu">Laporan Aset</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
                             <a href="/kades/laporan/user" class="menu-link">
                                 <div data-i18n="Without menu">Laporan Peminjam</div>
                             </a>

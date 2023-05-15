@@ -63,48 +63,37 @@
     @endif
 
     <div class="row p-3">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Penghapusan /</span> List Penghapusan</h4>
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Aset /</span> Data Aset</h4>
 
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <div class="p-3 mt-4">
-                <a href="{{ route('kades.laporan.hapusPrint') }}" class="btn icon icon-left btn-primary">
+                <a href="{{ route('kades.laporan.asetPrint') }}" class="btn icon icon-left btn-primary">
                     <i class="bx bx-printer bx-tada-hover"></i> Cetak</a>
             </div>
             <div class="p-2">
                 <table id="datatable" class="data-table table stripe hover nowrap">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Nama Kaur</th>
+                            <th>Kode Detail</th>
                             <th>Nama Aset</th>
-                            <th>Jenis</th>
-                            <th>Tanggal Penghapusan</th>
-                            <th>Status</th>
+                            <th>Ruang Aset</th>
+                            <th>Jenis Aset</th>
+                            <th>Kondisi Aset</th>
+                            <th>Gambar Aset</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        @php
-                            $no = 1;
-                        @endphp
-                        @foreach ($data as $a)
+                        @foreach ($data as $d)
                             <tr>
-                                <td>{{ $no++ }}</td>
-                                <td>{{ $a->nama }}</td>
-                                <td>{{ $a->nama_aset }}</td>
-                                <td>{{ $a->nama_jenis }}</td>
-                                <td>{{ date('d-m-Y', strtotime($a->tgl_penghapusan)) }}</td>
-                                <td> <span
-                                        class="badge
-                            @if ($a->status === 'Proses') bg-primary
-                            @elseif($a->status === 'Disetujui')
-                                bg-success
-                            @elseif($a->status === 'Selesai')
-                                bg-info
-                            @else
-                                bg-danger @endif">
-                                        {{ $a->status }}
-                                    </span></span></td>
+                                <td>{{ $d->kode_detail }}</td>
+                                <td>{{ $d->nama_aset }}</td>
+                                <td>{{ $d->nama_ruang }}</td>
+                                <td>{{ $d->nama_jenis }}</td>
+                                <td>{{ $d->kondisi_aset }}</td>
+                                <td><img src="{{ url('assets/img/' . $d->gambar) }}"
+                                        style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
+                                <td>
                             </tr>
             </div>
         </div>
@@ -133,7 +122,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Redirect ke route untuk menghapus data dengan ID yang telah ditentukan
-                    window.location.href = "/kaurpinjam/destroy/" + id;
+                    window.location.href = "/peminjam/destroy/" + id;
                 }
             });
         }

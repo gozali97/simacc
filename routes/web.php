@@ -52,6 +52,9 @@ Route::middleware(['auth', 'role:kades'])->group(function () {
     Route::get('/kades', [KadesController::class, 'index'])->name('kades');
     Route::get('/kades/profile', [KadesController::class, 'profile'])->name('kades.profile');
 
+    Route::get('/kades/laporan/aset', [LaporanController::class, 'aset'])->name('kades.laporan.aset');
+    Route::get('/kades/laporan/aset/print', [LaporanController::class, 'asetPrint'])->name('kades.laporan.asetPrint');
+
     Route::get('/kades/laporan/user', [LaporanController::class, 'user'])->name('kades.laporan.user');
     Route::get('/kades/laporan/user/print', [LaporanController::class, 'userPrint'])->name('kades.laporan.userPrint');
 

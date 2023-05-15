@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
 use App\Models\Mutasi;
 use App\Models\Peminjam;
 use App\Models\Peminjaman;
@@ -15,6 +16,34 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
+
+    public function aset()
+    {
+        $data = Aset::query()
+            ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->get();
+
+        return view('kades.laporan.aset', compact('data'));
+    }
+
+    public function asetPrint()
+    {
+
+        $data = Aset::query()
+            ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->get();
+
+        $pdf = Pdf::loadView('kades.laporan.aset-pdf', compact('data'));
+        return $pdf->download('laporan-data-aset.pdf');
+    }
 
     public function user()
     {
