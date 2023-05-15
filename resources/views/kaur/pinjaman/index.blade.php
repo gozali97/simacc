@@ -111,11 +111,11 @@
                                                 class="btn btn-icon btn-info">
                                                 <span class="tf-icons bx bx-info-circle"></span>
                                             </a>
-                                            {{-- <button data-bs-toggle="modal"
+                                            <button data-bs-toggle="modal"
                                                 data-bs-target="#confirmModal{{ $a->kd_peminjaman }}" type="button"
                                                 class="btn btn-icon btn-success">
                                                 <span class="tf-icons bx bx-analyse bx-tada-hover"></span>
-                                            </button> --}}
+                                            </button>
                                         </div>
                                     @elseif ($a->status == 'Proses')
                                         <div class="btn-group" role="group" aria-label="First group">
