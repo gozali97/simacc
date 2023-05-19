@@ -44,7 +44,13 @@ class PeminjamanController extends Controller
     public function getDetailAset(Request $request)
     {
         $kd_aset = $request->input('kd_aset');
-        $detail = DetailAset::query()->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')->where('detail_aset.kd_aset', $kd_aset)->where('detail_aset.status', 'in')->get();
+        $detail = DetailAset::query()
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->where('detail_aset.kd_aset', $kd_aset)
+            ->where('detail_aset.status', 'in')
+            ->get();
 
         return response()->json($detail);
     }
@@ -68,6 +74,7 @@ class PeminjamanController extends Controller
     public function store(Request $request)
     {
         try {
+
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [

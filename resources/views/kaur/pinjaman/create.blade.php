@@ -67,26 +67,41 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Nama Aset</label>
-                            <select id="aset" name="aset" class="form-select @error('aset') is-invalid @enderror"
-                                id="exampleFormControlSelect1" aria-label="Default select example">
-                                <option value="">Pilih Aset</option>
-                                @foreach ($aset as $a)
-                                    <option value="{{ $a->kd_aset }}">{{ $a->nama_aset }}</option>
-                                @endforeach
-                            </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Aset</label>
+                                    <select id="aset" name="aset"
+                                        class="form-select @error('aset') is-invalid @enderror"
+                                        id="exampleFormControlSelect1" aria-label="Default select example">
+                                        <option value="">Pilih Aset</option>
+                                        @foreach ($aset as $a)
+                                            <option value="{{ $a->kd_aset }}">{{ $a->nama_aset }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 id="count">Jumlah Dipinjam</h5>
+                                    <div class="table-responsive text-nowrap mt-2">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Kode Aset</th>
+                                                    <th>Ruang</th>
+                                                    <th>Kondisi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table" class="table-border-bottom-0">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                             @error('aset')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Detail Aset</label>
-                            <select id="detailAset" name="detail[]" class="custom-select2 form-control" multiple="multiple"
-                                style="width: 100%;">
-
-                            </select>
                         </div>
 
                         <div class="mb-3">
@@ -111,22 +126,49 @@
                         'kd_aset': kd_aset
                     },
                     success: function(data) {
-                        $.each(data, function(i, item) {
-                            $('#detailAset').append($('<option>', {
-                                value: item.kd_det_aset,
-                                text: item.kode_detail + '-' + item
-                                    .nama_aset
-                            }));
-                        });
+                        console.log(data);
+                        showDetailAset(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
                     }
                 });
             });
 
-            $('.custom-select2').select2();
+            function showDetailAset(data) {
+                var tableBody = $('#table');
+                tableBody.empty();
+
+                var count = 0;
+
+                data.forEach(function(d) {
+                    var row = $('<tr></tr>');
+                    var td1 = $('<td></td>');
+                    var checkbox = $('<input type="checkbox">')
+                        .attr('name', 'detail[]')
+                        .val(d.kd_det_aset)
+                        .on('change', function() {
+                            if ($(this).is(':checked')) {
+                                count++;
+                            } else {
+                                count--;
+                            }
+                            $('#count').text('Jumlah Dipinjam: ' + count);
+                        });
+                    td1.append(checkbox);
+                    var td2 = $('<td></td>').text(d.kode_detail);
+                    var td3 = $('<td></td>').text(d.nama_ruang);
+                    var td4 = $('<td></td>').text(d.kondisi_aset);
+
+                    row.append(td1);
+                    row.append(td2);
+                    row.append(td3);
+                    row.append(td4);
+
+                    tableBody.append(row);
+                });
+            }
+
         });
-
-        var today = new Date().toISOString().slice(0, 10);
-
-        document.getElementById('html5-date-input').value = today;
     </script>
 @endsection

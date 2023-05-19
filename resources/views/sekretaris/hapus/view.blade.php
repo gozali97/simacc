@@ -46,7 +46,7 @@
                             <tbody class="table-border-bottom-0">
                                 @foreach ($data as $d)
                                     <tr>
-                                        <td>{{ $d->kd_det_aset }}</td>
+                                        <td>{{ $d->kode_detail }}</td>
                                         <td>{{ $d->nama_aset }}</td>
                                         <td>{{ $d->nama_ruang }}</td>
                                         <td><img src="{{ url('assets/img/' . $d->gambar) }}"

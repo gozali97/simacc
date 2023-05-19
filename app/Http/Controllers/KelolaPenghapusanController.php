@@ -36,7 +36,6 @@ class KelolaPenghapusanController extends Controller
             ->select('penghapusan.*', 'detail_aset.*', 'users.nama', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset',)
             ->where('penghapusan.kd_penghapusan', $id)
             ->get();
-
         return view('sekretaris.hapus.view', compact('data'));
     }
 
@@ -65,29 +64,31 @@ class KelolaPenghapusanController extends Controller
                     return redirect()->back()->with('error', 'Detail aset tidak ditemukan.');
                 }
 
+                $detail->status = 'deleted';
+
                 // Hapus detail aset
-                if (!$detail->delete()) {
+                if (!$detail->save()) {
                     return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus detail aset.');
                 }
             }
 
             // Periksa jumlah detail aset yang tersisa untuk aset yang sama
-            $remainingDetails = DetailAset::where('kd_aset', $request->kd_aset)->count();
+            // $remainingDetails = DetailAset::where('kd_aset', $request->kd_aset)->count();
 
             // Hapus aset jika tidak ada detail aset yang tersisa
-            if ($remainingDetails == 0) {
-                // Temukan aset berdasarkan kd_aset
-                $aset = Aset::where('kd_aset', $request->kd_aset)->first();
+            // if ($remainingDetails == 0) {
+            //     // Temukan aset berdasarkan kd_aset
+            //     $aset = Aset::where('kd_aset', $request->kd_aset)->first();
 
-                if (!$aset) {
-                    return redirect()->back()->with('error', 'Aset tidak ditemukan.');
-                }
+            //     if (!$aset) {
+            //         return redirect()->back()->with('error', 'Aset tidak ditemukan.');
+            //     }
 
-                // Hapus aset
-                if (!$aset->delete()) {
-                    return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus aset.');
-                }
-            }
+            //     // Hapus aset
+            //     if (!$aset->delete()) {
+            //         return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus aset.');
+            //     }
+            // }
             DB::commit();
             return redirect()->route('listhapus.index')->with('success', 'Penghapusan aset berhasil disetujui.');
         } catch (\Exception $e) {

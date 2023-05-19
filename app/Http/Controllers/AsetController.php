@@ -103,7 +103,14 @@ class AsetController extends Controller
     public function view($id)
     {
         $data = Aset::where('kd_aset', $id)->first();
-        $detail = DetailAset::where('kd_aset', $data->kd_aset)->get();
+        $detail = DetailAset::query()
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('detail_aset.*', 'aset.nama_aset', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->where('detail_aset.kd_aset', $data->kd_aset)
+            ->get();
+
         $jenis = JenisAset::all();
         $ruang = Ruang::all();
         $kondisi = Kondisi::all();

@@ -41,6 +41,7 @@
                                     <th>Nama Aset</th>
                                     <th>Ruang Aset</th>
                                     <th>Gambar Aset</th>
+                                    <th>Status Aset</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
@@ -52,6 +53,14 @@
                                         <td><img src="{{ url('assets/img/' . $d->gambar) }}"
                                                 style="width:80px; height:80px;border-radius: 20%;" alt=""></td>
                                         <td>
+                                            @if ($d->status == 'in')
+                                                <span class="badge rounded-pill bg-label-success">Ready</span>
+                                            @elseif ($d->status == 'out')
+                                                <span class="badge rounded-pill bg-label-warning">Dipinjam</span>
+                                            @else
+                                                <span class="badge rounded-pill bg-label-danger">Dihapus</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

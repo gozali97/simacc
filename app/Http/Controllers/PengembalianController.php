@@ -21,19 +21,19 @@ class PengembalianController extends Controller
         return view('kaur.kembali.index', compact('data'));
     }
 
-    public function view($id) {
+    public function view($id)
+    {
         $data = Pengembalian::query()
-                    ->join('peminjaman', 'peminjaman.kd_peminjaman', 'pengembalian.kd_peminjaman')
-                    ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
-                    ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_peminjaman.kd_det_aset')
-                    ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
-                    ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
-                    ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
-                    ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
-                    ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset','peminjam.nama_peminjam', 'peminjaman.kd_peminjaman','peminjaman.tgl_pinjam')
-                    ->where('detail_peminjaman.kd_peminjaman', $id)
-                    ->get();
-                    // dd($data);
+            ->join('detail_pengembalian', 'detail_pengembalian.kd_kembali', 'pengembalian.kd_kembali')
+            ->join('peminjaman', 'peminjaman.kd_peminjaman', 'pengembalian.kd_peminjaman')
+            ->join('detail_aset', 'detail_aset.kd_det_aset', 'detail_pengembalian.kd_det_aset')
+            ->join('peminjam', 'peminjam.id_peminjam', 'peminjaman.id_peminjam')
+            ->join('aset', 'aset.kd_aset', 'detail_aset.kd_aset')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('detail_aset.*', 'kondisi.kondisi_aset', 'ruangs.nama_ruang', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.kd_peminjaman', 'peminjaman.tgl_pinjam')
+            ->where('pengembalian.kd_peminjaman', $id)
+            ->get();
 
         return view('kaur.kembali.view', compact('data'));
     }

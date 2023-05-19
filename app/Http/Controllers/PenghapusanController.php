@@ -33,6 +33,7 @@ class PenghapusanController extends Controller
             ->where('penghapusan.kd_penghapusan', $id)
             ->get();
 
+
         return view('kaur.hapus.view', compact('data'));
     }
 }
