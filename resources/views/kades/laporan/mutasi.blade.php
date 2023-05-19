@@ -68,8 +68,28 @@
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <div class="p-3 mt-4">
-                <a href="{{ route('kades.laporan.mutasiPrint') }}" class="btn icon icon-left btn-primary">
-                    <i class="bx bx-printer bx-tada-hover"></i> Cetak</a>
+                <form action="{{ route('kades.laporan.mutasiPrint') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="bulan">Pilih waktu</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input class="form-control" type="date" name="stat_date" value="pilih"
+                                    id="html5-date-input">
+                            </div>
+                            <div class="col-md-3">
+                                <input class="form-control" name="end_date" placeholder="pilih" type="date">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="icon-copy fa fa-print" aria-hidden="true" style="margin-right: 5px"></i>Print
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
             </div>
             <div class="p-2">
                 <table id="datatable" class="data-table table stripe hover nowrap">
@@ -80,7 +100,7 @@
                             <th>Tanggal Mutasi</th>
                             <th>Nama Aset</th>
                             <th>Ruang Aset</th>
-                            <th>STatus</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">

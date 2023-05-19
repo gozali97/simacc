@@ -71,7 +71,7 @@
                 <form action="{{ route('kades.laporan.asetPrint') }}" method="post">
                     @csrf
                     <div class="form-group">
-                        <label for="bulan">Pilih waktu</label>
+                        <label for="bulan">Pilih Periode</label>
                         <div class="row">
                             <div class="col-md-3">
                                 <input class="form-control" type="date" name="stat_date" value="pilih"
@@ -81,7 +81,7 @@
                                 <input class="form-control" name="end_date" placeholder="pilih" type="date">
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-secondary">
                                     <i class="icon-copy fa fa-print" aria-hidden="true" style="margin-right: 5px"></i>Print
                                 </button>
                             </div>
@@ -110,10 +110,7 @@
                                 <td>{{ $d->nama_aset }}</td>
                                 <td>{{ $d->nama_ruang }}</td>
                                 <td>{{ $d->nama_jenis }}</td>
-                                <td>
-                                    {{ $d->kondisi_aset }}
-
-                                </td>
+                                <td>{{ $d->kondisi_aset }}</td>
                                 <td><img src="{{ url('assets/img/' . $d->gambar) }}"
                                         style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
                                 <td>

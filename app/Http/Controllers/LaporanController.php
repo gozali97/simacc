@@ -12,12 +12,26 @@ use App\Models\Perencanaan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class LaporanController extends Controller
 {
 
     public function aset()
+    {
+        $data = Aset::query()
+            ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.kd_kondisi', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->get();
+
+        return view('kades.laporan.aset', compact('data'));
+    }
+
+    public function asetRekap()
     {
         $data = Aset::query()
             ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
@@ -30,8 +44,10 @@ class LaporanController extends Controller
         return view('kades.laporan.aset', compact('data'));
     }
 
-    public function asetPrint()
+    public function asetPrint(Request $request)
     {
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $data = Aset::query()
             ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
@@ -39,10 +55,37 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
             ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->whereBetween('aset.created_at', [$start, $end])
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.aset-pdf', compact('data'));
-        return $pdf->download('laporan-data-aset.pdf');
+        $pdf = Pdf::loadView('kades.laporan.aset-pdf', compact('data', 'start', 'end'));
+
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-aset.pdf"'
+        ]);
+    }
+
+    public function asetPrintRekap(Request $request)
+    {
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
+
+        $data = Aset::query()
+            ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
+            ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
+            ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
+            ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->whereBetween('aset.created_at', [$start, $end])
+            ->get();
+
+        $pdf = Pdf::loadView('kades.laporan.aset-pdf', compact('data', 'start', 'end'));
+
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-aset.pdf"'
+        ]);
     }
 
     public function user()
@@ -76,8 +119,11 @@ class LaporanController extends Controller
         return view('kades.laporan.peminjaman', compact('data'));
     }
 
-    public function peminjamanPrint()
+    public function peminjamanPrint(Request $request)
     {
+
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $data = Peminjaman::query()
             ->join('detail_peminjaman', 'detail_peminjaman.kd_peminjaman', 'peminjaman.kd_peminjaman')
@@ -87,10 +133,14 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('peminjaman.tgl_pinjam', 'detail_aset.kode_detail', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
+            ->whereBetween('peminjaman.created_at', [$start, $end])
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.peminjaman-pdf', compact('data'));
-        return $pdf->download('laporan-data-peminjaman.pdf');
+        $pdf = Pdf::loadView('kades.laporan.peminjaman-pdf', compact('data', 'start', 'end'));
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-peminjaman.pdf"'
+        ]);
     }
 
     public function kembali()
@@ -107,8 +157,11 @@ class LaporanController extends Controller
         return view('kades.laporan.pengembalian', compact('data'));
     }
 
-    public function kembaliPrint()
+    public function kembaliPrint(Request $request)
     {
+
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $data = Pengembalian::query()
             ->join('detail_pengembalian', 'detail_pengembalian.kd_kembali', 'pengembalian.kd_kembali')
@@ -117,10 +170,14 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('pengembalian.tgl_kembali', 'aset.nama_aset', 'pengembalian.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
+            ->whereBetween('pengembalian.created_at', [$start, $end])
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.pengembalian-pdf', compact('data'));
-        return $pdf->download('laporan-data-pengembalian.pdf');
+        $pdf = Pdf::loadView('kades.laporan.pengembalian-pdf', compact('data', 'start', 'end'));
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-pengembalian.pdf"'
+        ]);
     }
 
     public function mutasi()
@@ -137,8 +194,11 @@ class LaporanController extends Controller
         return view('kades.laporan.mutasi', compact('data'));
     }
 
-    public function mutasiPrint()
+    public function mutasiPrint(Request $request)
     {
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
+
 
         $data = Mutasi::query()
             ->join('detail_mutasi', 'detail_mutasi.kd_mutasi', 'mutasi.kd_mutasi')
@@ -147,10 +207,14 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_mutasi.id_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('detail_mutasi.tgl_mutasi', 'mutasi.nama_mutasi', 'aset.nama_aset', 'mutasi.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
+            ->whereBetween('mutasi.created_at', [$start, $end])
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.mutasi-pdf', compact('data'));
-        return $pdf->download('laporan-data-mutasi.pdf');
+        $pdf = Pdf::loadView('kades.laporan.mutasi-pdf', compact('data', 'start', 'end'));
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-mutasi.pdf"'
+        ]);
     }
 
     public function hapus()
@@ -166,8 +230,10 @@ class LaporanController extends Controller
         return view('kades.laporan.penghapusan', compact('data'));
     }
 
-    public function hapusPrint()
+    public function hapusPrint(Request $request)
     {
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $data = Penghapusan::query()
             ->join('detail_penghapusan', 'detail_penghapusan.kd_penghapusan', 'penghapusan.kd_penghapusan')
@@ -175,10 +241,14 @@ class LaporanController extends Controller
             ->join('aset', 'aset.kd_aset', 'penghapusan.kd_aset')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('penghapusan.tgl_penghapusan', 'aset.nama_aset', 'users.nama', 'penghapusan.status', 'jenis_asets.nama_jenis',)
+            ->whereBetween('penghapusan.created_at', [$start, $end])
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.penghapusan-pdf', compact('data'));
-        return $pdf->download('laporan-data-penghapusan.pdf');
+        $pdf = Pdf::loadView('kades.laporan.penghapusan-pdf', compact('data', 'start', 'end'));
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-penghapusan.pdf"'
+        ]);
     }
 
     public function rencana()
@@ -190,14 +260,19 @@ class LaporanController extends Controller
         return view('kades.laporan.rencana', compact('data'));
     }
 
-    public function rencanaPrint()
+    public function rencanaPrint(Request $request)
     {
+        $start = Carbon::parse($request->stat_date)->format('Y-m-d');
+        $end = Carbon::parse($request->end_date)->format('Y-m-d');
 
         $data = Perencanaan::query()
             ->select('perencanaan.*')
             ->get();
 
-        $pdf = Pdf::loadView('kades.laporan.rencana-pdf', compact('data'));
-        return $pdf->download('laporan-data-perencanaan.pdf');
+        $pdf = Pdf::loadView('kades.laporan.rencana-pdf', compact('data', 'start', 'end'));
+        return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-perencanaan.pdf"'
+        ]);
     }
 }

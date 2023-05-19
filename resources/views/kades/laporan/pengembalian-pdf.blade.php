@@ -33,6 +33,8 @@
 
 <body>
     <h2 style="text-align:center;">Laporan Data Pengembalian Aset</h2>
+    <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
+        {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
     <table>
         <thead>
             <tr>
@@ -45,16 +47,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data as $d)
+            @if ($data->isEmpty())
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $d->nama_aset }}</td>
-                    <td>{{ $d->nama_jenis }}</td>
-                    <td>{{ $d->nama_ruang }}</td>
-                    <td>{{ date('d-m-Y', strtotime($d->tgl_kembali)) }}</td>
-                    <td>{{ $d->status }}</td>
+                    <td colspan="6" style="font-weight: bold; text-align: center;">Tidak ada data</td>
                 </tr>
-            @endforeach
+            @else
+                @foreach ($data as $d)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $d->nama_aset }}</td>
+                        <td>{{ $d->nama_jenis }}</td>
+                        <td>{{ $d->nama_ruang }}</td>
+                        <td>{{ date('d-m-Y', strtotime($d->tgl_kembali)) }}</td>
+                        <td>{{ $d->status }}</td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
     <div class="footer">
