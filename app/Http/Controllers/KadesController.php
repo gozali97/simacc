@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
+use App\Models\Peminjam;
+use App\Models\Peminjaman;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +19,19 @@ class KadesController extends Controller
 
     public function index()
     {
-        return view('kades.index');
+        $peminjam = Peminjam::all();
+        $peminjam = $peminjam->count();
+
+        $kaur = User::where('role_id', 3)->get();
+        $kaur = $kaur->count();
+
+        $pinjam = Peminjaman::all();
+        $pinjam = $pinjam->count();
+
+        $aset = Aset::all();
+        $aset = $aset->count();
+
+        return view('kades.index', compact('peminjam', 'pinjam', 'kaur', 'aset'));
     }
 
     public function profile()
