@@ -54,7 +54,7 @@ class LaporanController extends Controller
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
-            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'detail_aset.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
             ->whereBetween('aset.created_at', [$start, $end])
             ->get();
 

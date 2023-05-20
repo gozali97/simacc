@@ -59,7 +59,15 @@
                         <td>{{ $d->nama_ruang }}</td>
                         <td>{{ $d->nama_jenis }}</td>
                         <td>{{ $d->kondisi_aset }}</td>
-                        <td>Aktif</td>
+                        <td>
+                            @if ($d->status == 'in')
+                                <p>Aktif</p>
+                            @elseif ($d->status == 'out')
+                                <p>Dipinjam</p>
+                            @else
+                                <p>Dihapus</p>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             @endif
