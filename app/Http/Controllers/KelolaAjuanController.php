@@ -52,6 +52,32 @@ class KelolaAjuanController extends Controller
         }
     }
 
+    public function cancel($id)
+    {
+
+        try {
+
+            DB::beginTransaction();
+            $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();
+
+            $data->status = "Proses";
+            $data->save();
+
+            if ($data->save()) {
+                $rencana = Perencanaan::where('nama_perencanaan', $data->nama_kebutuhan)->first();
+                $rencana->delete();
+
+                DB::commit();
+                return redirect()->route('listajuan.index')->with('success', 'Data Kebutuhan berhasil dibatalkan.');
+            } else {
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan, ' . $e->getMessage());
+        }
+    }
+
     public function decline(Request $request, $id)
     {
         $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();

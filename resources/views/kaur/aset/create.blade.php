@@ -132,7 +132,7 @@
                         (i + 1) +
                         '" name="kondisi[]" class="form-select @error('kondisi') is-invalid @enderror" id="exampleFormControlSelect1" aria-label="Default select example" required> <option value="">Pilih kondisi</option> @foreach ($kondisi as $k) <option value="{{ $k->id }}"> {{ $k->kondisi_aset }}</option> @endforeach </select> @error('kondisi') <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span> @enderror </div>  <div class="col"><label for="formFile" class="form-label">Foto</label> <input  class="form-control @error('gambar') is-invalid @enderror" type="file" id="gambar' +
                         (i + 1) +
-                        '" name="gambar[]" id="formFile" required /> @error('gambar') <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span> @enderror</div> </div> </div>';
+                        '" name="gambar[]" id="formFile" accept=".jpg, .png" required/> @error('gambar') <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong> </span> @enderror</div> </div> </div>';
                     cardBody.appendChild(newCard);
 
 

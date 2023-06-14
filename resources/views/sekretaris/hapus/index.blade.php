@@ -118,6 +118,12 @@
                                                 class="btn btn-icon btn-danger">
                                                 <i class="bx bx-x-circle bx-tada-hover"></i>
                                             </button>
+                                        @elseif($a->status == 'Disetujui')
+                                            <button data-bs-toggle="modal"
+                                                data-bs-target="#cancelModal{{ $a->kd_penghapusan }}"
+                                                class="btn btn-icon btn-warning">
+                                                <i class="bx bx-message-alt-x bx-tada-hover"></i>
+                                            </button>
                                         @endif
                                     </div>
                                 </td>
@@ -138,9 +144,41 @@
                                         <form action="{{ route('listhapus.confirm', $a->kd_penghapusan) }}" method="POST"
                                             enctype="multipart/form-data">
                                             @csrf
-                                            <div class="modal-body">Apakah Anda yakin ingin konfirmasi mutasi <span
+                                            <div class="modal-body">Apakah Anda yakin ingin konfirmasi hapus aset <span
                                                     class="fw-bold">{{ $a->nama_aset }}</span>?</div>
                                             <input type="hidden" name="kd_penghapusan" value="{{ $a->kd_penghapusan }}">
+                                            <input type="hidden" name="kd_det_aset" value="{{ $a->kd_det_aset }}">
+                                            <input type="hidden" name="kd_aset" value="{{ $a->kd_aset }}">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                    data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Cancel -->
+                            <div class="modal fade" id="cancelModal{{ $a->kd_penghapusan }}"
+                                aria-labelledby="modalToggleLabel{{ $a->kd_penghapusan }}" tabindex="-1"
+                                style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalToggleLabel">Konfirmasi Penghapusan</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('listhapus.cancel', $a->kd_penghapusan) }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="modal-body">Apakah Anda yakin ingin membatalkan persetujuan hapus
+                                                aset <span class="fw-bold">{{ $a->nama_aset }}</span>?</div>
+                                            <input type="hidden" name="kd_penghapusan"
+                                                value="{{ $a->kd_penghapusan }}">
                                             <input type="hidden" name="kd_det_aset" value="{{ $a->kd_det_aset }}">
                                             <input type="hidden" name="kd_aset" value="{{ $a->kd_aset }}">
                                             <div class="modal-footer">

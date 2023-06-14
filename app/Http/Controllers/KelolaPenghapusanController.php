@@ -98,6 +98,49 @@ class KelolaPenghapusanController extends Controller
         }
     }
 
+    public function cancel(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $penghapusan = Penghapusan::where('kd_penghapusan', $id)->first();
+            $penghapusan->status = "Proses";
+
+            if (!$penghapusan->save()) {
+                return redirect()->back()->with('error', 'gagal menyimpan penghapusan aset.');
+            }
+
+            $detailHapus = DetailPenghapusan::where('kd_penghapusan', $id)->get();
+
+
+            foreach ($detailHapus as $detail) {
+
+                $detail = DetailAset::where('kd_det_aset', $detail->kd_det_aset)
+                    ->where('kd_aset', $request->kd_aset)
+                    ->first();
+
+                if (!$detail) {
+                    return redirect()->back()->with('error', 'Detail aset tidak ditemukan.');
+                }
+
+                //$detail->status = 'deleted';
+                $detail->status = 'in';
+
+                // Hapus detail aset
+                if (!$detail->save()) {
+                    return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus detail aset.');
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('listhapus.index')->with('success', 'Penghapusan aset ayng disetujui berhasil dibatalkan.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mutasi aset, ' . $e->getMessage());
+        }
+    }
+
+
     public function decline(Request $request, $id)
     {
         try {

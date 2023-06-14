@@ -133,6 +133,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
     Route::get('/listhapus', [KelolaPenghapusanController::class, 'index'])->name('listhapus.index');
     Route::get('/listhapus/view/{id}', [KelolaPenghapusanController::class, 'View'])->name('listhapus.view');
     Route::post('/listhapus/confirm/{id}', [KelolaPenghapusanController::class, 'confirm'])->name('listhapus.confirm');
+    Route::post('/listhapus/cancel/{id}', [KelolaPenghapusanController::class, 'cancel'])->name('listhapus.cancel');
     Route::post('/listhapus/decline/{id}', [KelolaPenghapusanController::class, 'decline'])->name('listhapus.decline');
     Route::post('/listhapus/store', [KelolaPenghapusanController::class, 'store'])->name('listhapus.store');
     Route::get('/listhapus/edit/{id}', [KelolaPenghapusanController::class, 'edit'])->name('listhapus.edit');
@@ -151,6 +152,7 @@ Route::middleware(['auth', 'role:sekretaris'])->group(function () {
 
     Route::get('/listajuan', [KelolaAjuanController::class, 'index'])->name('listajuan.index');
     Route::post('/listajuan/confirm/{id}', [KelolaAjuanController::class, 'confirm'])->name('listajuan.confirm');
+    Route::post('/listajuan/cancel/{id}', [KelolaAjuanController::class, 'cancel'])->name('listajuan.cancel');
     Route::post('/listajuan/decline/{id}', [KelolaAjuanController::class, 'decline'])->name('listajuan.decline');
     Route::post('/listajuan/store', [KelolaAjuanController::class, 'store'])->name('listajuan.store');
     Route::get('/listajuan/edit/{id}', [KelolaAjuanController::class, 'edit'])->name('listajuan.edit');
