@@ -35,6 +35,31 @@
     <h2 style="text-align:center;">Laporan Data Mutasi Aset</h2>
     <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
         {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
+         @php
+        $hitungmutasi = \App\Models\DetailMutasi::query()
+                        ->join('mutasi', 'mutasi.kd_mutasi', 'detail_mutasi.kd_mutasi')
+                        ->whereBetween('detail_mutasi.created_at', [$start, $end])
+                        ->count();
+         $hitungdisetujui = \App\Models\DetailMutasi::query()
+                        ->join('mutasi', 'mutasi.kd_mutasi', 'detail_mutasi.kd_mutasi')
+                        ->where('mutasi.status', 'Disetujui')
+                        ->whereBetween('detail_mutasi.created_at', [$start, $end])
+                        ->count();   
+        $hitungditolak = \App\Models\DetailMutasi::query()
+                        ->join('mutasi', 'mutasi.kd_mutasi', 'detail_mutasi.kd_mutasi')
+                        ->where('mutasi.status', 'Ditolak')
+                        ->whereBetween('detail_mutasi.created_at', [$start, $end])
+                        ->count();  
+        $hitungaktif = \App\Models\DetailMutasi::query()
+                        ->join('mutasi', 'mutasi.kd_mutasi', 'detail_mutasi.kd_mutasi')
+                        ->where('mutasi.status', 'Aktif')
+                        ->whereBetween('detail_mutasi.created_at', [$start, $end])
+                        ->count(); 
+        @endphp
+        <p>Jumlah Mutasi    : {{ $hitungmutasi }}</p>
+        <p>Jumlah Mutasi Disetujui : {{ $hitungdisetujui }}</p>
+        <p>Jumlah Mutasi Ditolak : {{ $hitungditolak }}</p>
+        <p>Jumlah Mutasi Aktif : {{ $hitungaktif }}</p>
     <table>
         <thead>
             <tr>
@@ -70,7 +95,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 

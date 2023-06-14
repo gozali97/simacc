@@ -67,10 +67,7 @@
 
         <!-- Basic Bootstrap Table -->
         <div class="card">
-            <div class="p-3 mt-4">
-                {{-- <h4 class="text-blue h4">Data Table Simple</h4> --}}
-                <a href="/kaurmutasi/create" type="button" class="btn btn-outline-success">Tambah</a>
-            </div>
+            
             <div class="p-2">
                 <table id="datatable" class="data-table table stripe hover nowrap">
                     <thead>

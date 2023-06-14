@@ -35,6 +35,12 @@
     <h2 style="text-align:center;">Laporan Perencanaan</h2>
     <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
         {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
+         @php
+        $hitungsemua = \App\Models\Perencanaan::query()
+                        ->whereBetween('perencanaan.created_at', [$start, $end])
+                        ->count();
+    @endphp
+        <p>Jumlah Perencanaan Aset    : {{ $hitungsemua }}</p>
     <table>
         <thead>
             <tr>
@@ -66,7 +72,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 

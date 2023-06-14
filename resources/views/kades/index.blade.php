@@ -7,7 +7,7 @@
                 <div class="d-flex align-items-end row">
                     <div class="col-sm-7">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Welcome back {{ Auth::user()->nama }}! 🎉</h5>
+                            <h5 class="card-title text-primary">Welcome back {{ Auth::user()->nama }}</h5>
                             <p class="mb-4">
                                 Pemerintahan Desa Cibentang merupakan penyelenggara urusan pemerintahan dan kepentingan
                                 masyarakat desa Cibentang dalam sistem pemerintahan. Pemerintahan desa cibentang bertanggung

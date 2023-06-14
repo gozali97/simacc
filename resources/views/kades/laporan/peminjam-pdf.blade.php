@@ -40,6 +40,7 @@
                 <th>Nama Peminjam</th>
                 <th>Alamat</th>
                 <th>No Handphone</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,13 @@
                     <td>{{ $d->nama_peminjam }}</td>
                     <td>{{ $d->alamat }}</td>
                     <td>{{ $d->no_hp }}</td>
+                    <td>
+                    @if ($d->status == '1')
+                        <p>Aktif</p>
+                     @else
+                        <p>Tidak Aktif</p>
+                    @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -58,7 +66,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 

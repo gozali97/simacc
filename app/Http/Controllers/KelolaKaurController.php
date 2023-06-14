@@ -42,6 +42,11 @@ class KelolaKaurController extends Controller
             $gambar  = time() . 'kaur' . '.' . $request->gambar->extension();
             $path       = $request->file('gambar')->move('assets/img', $gambar);
 
+        $userexist = User::where('email', $request->email)->first();
+            if ($userexist) {
+                return redirect()->back()->with('error', 'Email sudah digunakan.');
+            }
+            
             User::create([
                 'nama' => $request->nama,
                 'email' => $request->email,
@@ -69,7 +74,7 @@ class KelolaKaurController extends Controller
 
     public function update(Request $request, $id)
     {
-
+        
         $data = User::find($id);
 
         if ($request->hasFile('gambar')) {

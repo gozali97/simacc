@@ -160,8 +160,10 @@
                                             <span class="badge rounded-pill bg-label-success">Ready</span>
                                         @elseif ($details->status == 'out')
                                             <span class="badge rounded-pill bg-label-warning">Dipinjam</span>
-                                        @else
+                                        @elseif ($details->status == 'del')
                                             <span class="badge rounded-pill bg-label-danger">Dihapus</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-label-warning">Dimutasi</span>
                                         @endif
                                     </td>
                                 </tr>

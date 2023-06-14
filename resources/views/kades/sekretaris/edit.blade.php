@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <a href="/kaurs" type="button" class="btn btn-secondary">Batal</a>
+                            <a href="/kades/sekre" type="button" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>

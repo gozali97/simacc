@@ -57,6 +57,11 @@ class KadesMasterController extends Controller
             $gambar  = time() . 'profil' . '.' . $request->gambar->extension();
             $path       = $request->file('gambar')->move('assets/img', $gambar);
 
+            $userexist = User::where('email', $request->email)->first();
+            if ($userexist) {
+                return redirect()->back()->with('error', 'Email sudah digunakan.');
+            }
+        
             User::create([
                 'nama' => $request->nama,
                 'email' => $request->email,

@@ -93,7 +93,7 @@
                                 <td>{{ date('d-m-Y', strtotime($a->tgl_penghapusan)) }}</td>
                                 <td> <span
                                         class="badge
-                            @if ($a->status === 'Aktif') bg-primary
+                            @if ($a->status === 'Proses') bg-primary
                             @elseif($a->status === 'Disetujui')
                                 bg-success
                             @else

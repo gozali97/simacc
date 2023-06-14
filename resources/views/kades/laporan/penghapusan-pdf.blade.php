@@ -35,6 +35,31 @@
     <h2 style="text-align:center;">Laporan Data Penghapusan Aset</h2>
     <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
         {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
+         @php
+        $hitungsemua = \App\Models\DetailPenghapusan::query()
+                       ->join('penghapusan', 'penghapusan.kd_penghapusan', 'detail_penghapusan.kd_penghapusan')
+                        ->whereBetween('detail_penghapusan.tgl_penghapusan', [$start, $end])
+                        ->count();
+        $hitungproses = \App\Models\DetailPenghapusan::query()
+                        ->join('penghapusan', 'penghapusan.kd_penghapusan', 'detail_penghapusan.kd_penghapusan')
+                        ->where('penghapusan.status', 'Proses')
+                        ->whereBetween('detail_penghapusan.tgl_penghapusan', [$start, $end])
+                        ->count();
+        $hitungdisetujui = \App\Models\DetailPenghapusan::query()
+                        ->join('penghapusan', 'penghapusan.kd_penghapusan', 'detail_penghapusan.kd_penghapusan')
+                        ->where('penghapusan.status', 'Disetujui')
+                        ->whereBetween('detail_penghapusan.tgl_penghapusan', [$start, $end])
+                        ->count();
+        $hitungditolak = \App\Models\DetailPenghapusan::query()
+                        ->join('penghapusan', 'penghapusan.kd_penghapusan', 'detail_penghapusan.kd_penghapusan')
+                        ->where('penghapusan.status', 'Ditolak')
+                        ->whereBetween('detail_penghapusan.tgl_penghapusan', [$start, $end])
+                        ->count();
+    @endphp
+        <p>Jumlah Penghapusan Aset    : {{ $hitungsemua }}</p>
+        <p>Jumlah Penghapusan Proses    : {{ $hitungproses }}</p>
+        <p>Jumlah Penghapusan Disetujui: {{ $hitungdisetujui }}</p>
+        <p>Jumlah Penghapusan Ditolak: {{ $hitungditolak }}</p>
     <table>
         <thead>
             <tr>
@@ -58,7 +83,9 @@
                         <td>{{ $d->nama }}</td>
                         <td>{{ $d->nama_aset }}</td>
                         <td>{{ $d->nama_jenis }}</td>
-                        <td>{{ date('d-m-Y', strtotime($d->tgl_penghapusan)) }}</td>
+                        <!--<td>{{ date('d-m-Y', strtotime($d->tgl_penghapusan)) }}</td> !-->
+                        <td>
+                            {{ \Carbon\Carbon::parse($d->tgl_penghapusan)->format('d-m-y') }} </td>
                         <td>{{ $d->status }}</td>
                     </tr>
                 @endforeach
@@ -70,7 +97,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 

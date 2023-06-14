@@ -56,7 +56,7 @@ Route::middleware(['auth', 'role:kades'])->group(function () {
     Route::post('/kades/laporan/aset/print', [LaporanController::class, 'asetPrint'])->name('kades.laporan.asetPrint');
 
     Route::get('/kades/laporan/user', [LaporanController::class, 'user'])->name('kades.laporan.user');
-    Route::post('/kades/laporan/user/print', [LaporanController::class, 'userPrint'])->name('kades.laporan.userPrint');
+    Route::get('/kades/laporan/user/print', [LaporanController::class, 'userPrint'])->name('kades.laporan.userPrint');
 
     Route::get('/kades/laporan/peminjaman', [LaporanController::class, 'peminjaman'])->name('kades.laporan.peminjaman');
     Route::post('/kades/laporan/peminjaman/print', [LaporanController::class, 'peminjamanPrint'])->name('kades.laporan.peminjamanPrint');

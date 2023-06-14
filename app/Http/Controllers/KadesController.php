@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Aset;
+use App\Models\DetailAset;
 use App\Models\Peminjam;
 use App\Models\Peminjaman;
 use App\Models\User;
@@ -28,7 +28,7 @@ class KadesController extends Controller
         $pinjam = Peminjaman::all();
         $pinjam = $pinjam->count();
 
-        $aset = Aset::all();
+        $aset = DetailAset::all();
         $aset = $aset->count();
 
         return view('kades.index', compact('peminjam', 'pinjam', 'kaur', 'aset'));

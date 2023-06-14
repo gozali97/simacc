@@ -173,7 +173,7 @@ class AsetController extends Controller
                 $detail->kd_aset = $kd_aset;
                 $detail->kd_ruang = $ruang[$i];
                 $detail->kd_kondisi = $kondisi[$i];
-                $detail->status = "out";
+                $detail->status = "mut";
 
                 if (!$detail->save()) {
                     throw new Exception('Gagal menyimpan data detail aset');
@@ -197,6 +197,8 @@ class AsetController extends Controller
             ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->where('aset.kd_aset', $id)
+            //kondisi aset ready
+             ->where('detail_aset.status', 'in')
             ->get();
         $kondisi = Kondisi::all();
 
@@ -243,7 +245,8 @@ class AsetController extends Controller
                     return redirect()->back()->with('error', 'Detail aset tidak ditemukan.');
                 }
 
-                $detail->status = "out";
+                //$detail->status = "out";
+                $detail->status = "del";
 
                 if (!$detail->save()) {
                     throw new \Exception('Gagal mengubah status DetailAset.');

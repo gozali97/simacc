@@ -36,7 +36,8 @@ class PeminjamanController extends Controller
     {
         $aset = Aset::query()->where('status', 'Aktif')->get();
 
-        $user = Peminjam::all();
+        //$user = Peminjam::all();
+        $user = Peminjam::query()->where('status',1)->get();
 
         return view('kaur.pinjaman.create', compact('aset', 'user'));
     }

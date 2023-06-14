@@ -96,7 +96,7 @@
                                 <td> <span
                                         class="badge
                             @if ($a->status === 'Proses') bg-primary
-                            @elseif($a->status === 'Aktif')
+                            @elseif($a->status === 'Disetujui')
                                 bg-success
                             @elseif($a->status === 'Selesai')
                                 bg-info
@@ -105,7 +105,7 @@
                                         {{ $a->status }}
                                     </span></span></td>
                                 <td>
-                                    @if ($a->status == 'Aktif')
+                                    @if ($a->status == 'Disetujui')
                                         <div class="btn-group" role="group" aria-label="First group">
                                             <a href="{{ route('kaurhapus.view', $a->kd_penghapusan) }}" type="button"
                                                 class="btn btn-icon btn-info">
@@ -122,10 +122,6 @@
                                             <a href="{{ route('kaurhapus.view', $a->kd_penghapusan) }}" type="button"
                                                 class="btn btn-icon btn-info">
                                                 <span class="tf-icons bx bx-info-circle"></span>
-                                            </a>
-                                            <a href="#" class="btn btn-icon btn-danger"
-                                                onclick="event.preventDefault(); confirmDelete('{{ $a->kd_penghapusan }}');">
-                                                <i class="bx bx-trash"></i>
                                             </a>
                                         </div>
                                     @else

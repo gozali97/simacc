@@ -54,15 +54,16 @@ class KelolaAjuanController extends Controller
 
     public function decline(Request $request, $id)
     {
-        $id_pinjam = $request->id_pinjam;
+        $data = Kebutuhan::query()->where('kd_kebutuhan', $id)->first();
 
-        $data = Kebutuhan::query()->where('kd_kebutuhan', $id_pinjam)->first();
-
-        $data->status = "Ditolak";
+        $data->update([
+            'status' => "Ditolak"
+        ]);
+       // $data->status = "Ditolak";
         $data->save();
 
         if ($data->save()) {
-            return redirect()->route('listpinjam.index')->with('success', 'Data Kebutuhan ditolak.');
+            return redirect()->route('listajuan.index')->with('success', 'Data Kebutuhan ditolak.');
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupdate kebutuhan');
         }

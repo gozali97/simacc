@@ -29,7 +29,6 @@
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">E-mail</label>
                                     <input class="form-control" type="text" id="email" name="email"
-                                        value="john.doe@example.com" placeholder="john.doe@example.com"
                                         value="{{ $data->email }}" readonly>
                                 </div>
                                 <div class="mb-3 col-md-6">
@@ -57,7 +56,7 @@
                             <div class="mb-3 col-md-6">
                                 <label for="email" class="form-label">E-mail</label>
                                 <input class="form-control" type="text" id="email" name="email"
-                                    value="john.doe@example.com" placeholder="john.doe@example.com">
+                                    value="{{ $data->email }}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="organization" class="form-label">Alamat</label>

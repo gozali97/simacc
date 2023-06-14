@@ -100,7 +100,7 @@
                             <th>Ruang Aset</th>
                             <th>Jenis Aset</th>
                             <th>Kondisi Aset</th>
-                            <th>Gambar Aset</th>
+                           
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -113,10 +113,7 @@
                                 <td>
                                     {{ $d->kondisi_aset }}
 
-                                </td>
-                                <td><img src="{{ url('assets/img/' . $d->gambar) }}"
-                                        style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
-                                <td>
+                               
                             </tr>
             </div>
         </div>

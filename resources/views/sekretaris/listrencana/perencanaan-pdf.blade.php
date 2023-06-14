@@ -51,7 +51,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 </html>

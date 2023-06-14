@@ -7,7 +7,7 @@
                 <div class="d-flex align-items-end row">
                     <div class="col-sm-7">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Welcome back {{ Auth::user()->nama }}! 🎉</h5>
+                            <h5 class="card-title text-primary">Welcome back {{ Auth::user()->nama }}</h5>
                             <p class="mb-4">
                                 Pemerintahan Desa Cibentang merupakan penyelenggara urusan pemerintahan dan kepentingan
                                 masyarakat desa Cibentang dalam sistem pemerintahan. Pemerintahan desa cibentang bertanggung
@@ -39,7 +39,7 @@
                                     <h5 class="text-warning mb-2">Aset</h5>
                                 </div>
                                 <div class="mt-sm-auto">
-                                    <h3 class="mb-0">{{ \App\Models\Aset::count() }}</h3>
+                                    <h3 class="mb-0">{{ $aset }}</h3>
                                 </div>
                             </div>
                             <div><i class='fas fa-archive' style='font-size:36px'></i></div>
@@ -56,7 +56,7 @@
                                     <h5 class="text-success mb-2">Kaur</h5>
                                 </div>
                                 <div class="mt-sm-auto">
-                                    <h3 class="mb-0">{{ \App\Models\user::where('role_id', 3)->count() }}</h3>
+                                    <h3 class="mb-0">{{ $kaur }}</h3>
                                 </div>
                             </div>
                             <div><i class='fas fa-briefcase' style='font-size:36px'></i></div>
@@ -73,7 +73,7 @@
                                     <h5 class="text-info mb-2">User</h5>
                                 </div>
                                 <div class="mt-sm-auto">
-                                    <h3 class="mb-0">{{ \App\Models\peminjam::count() }}</h3>
+                                    <h3 class="mb-0">{{ $peminjam }}</h3>
                                 </div>
                             </div>
                             <div><i class='fas fa-users' style='font-size:36px'></i></div>
@@ -90,7 +90,7 @@
                                     <h5 class="text-primary mb-2">Transaksi</h5>
                                 </div>
                                 <div class="mt-sm-auto">
-                                    <h3 class="mb-0">{{ \App\Models\peminjaman::count() }}</h3>
+                                    <h3 class="mb-0">{{ $pinjam }}</h3>
                                 </div>
                             </div>
                             <div><i class='fas fa-wallet' style='font-size:36px'></i></div>

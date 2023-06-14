@@ -1,6 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @if (session('error'))
+        <div class="bs-toast toast fade show bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ session('error') }}
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $(".bs-toast").alert('close');
+                }, 5000);
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <div class="bs-toast toast fade show bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $(".bs-toast").alert('close');
+                }, 5000);
+            });
+        </script>
+    @endif
+
     <div class="row p-3">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sekretaris /</span> Data Sekretaris</h4>
 
@@ -39,7 +82,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <a href="/kaurs" type="button" class="btn btn-secondary">Batal</a>
+                            <a href="/kades/sekre" type="button" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>

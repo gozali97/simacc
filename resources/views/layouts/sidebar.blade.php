@@ -16,7 +16,7 @@
         @auth
             <!-- Dashboard -->
             @if (Auth::user()->role->name === 'kades')
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a href="#" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
                         <div data-i18n="Analytics">Dashboard</div>
@@ -154,6 +154,7 @@
                         <div data-i18n="Without menu">Kebutuhan</div>
                     </a>
                 </li>
+                <!-- edit !-->
                 <li class="menu-item">
                     <a href="/listrencana" class="menu-link">
                         <div data-i18n="Without menu">Perencanaan</div>
@@ -175,7 +176,7 @@
         </li>
     @elseif (Auth::user()->role->name === 'kaur')
         <li class="menu-item {{ request()->is('dashboard*') ? 'active' : '' }}">
-            <a href="#" class="menu-link">
+            <a href="/kaur" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>

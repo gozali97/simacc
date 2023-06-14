@@ -96,16 +96,11 @@
                                 <td><img src="{{ url('assets/img/' . $d->gambar) }}"
                                         style="width:80px; height:80px;border-radius: 70%;" alt=""></td>
                                 <td>
-                                    {{-- <a href="{{ route('peminjam.edit', $d->id_peminjam) }}" type="button" class="btn btn-icon btn-warning">
-                                <span class="tf-icons bx bx-edit-alt"></span>
-                            </a>
-                            <button data-bs-toggle="modal" data-bs-target="#deleteModal{{ $d->id_peminjam}}"
-                                class="btn btn-icon btn-danger">
-                                <i class="bx bx-trash bx-tada-hover"></i>
-                            </button> --}}
-                                    <span class="badge bg-success">
-                                        Aktif
-                                    </span></span>
+                                     @if ($d->status == '1')
+                                <span class="badge rounded-pill bg-label-success">Aktif</span>
+                                @else
+                                <span class="badge rounded-pill bg-label-danger">Tidak Aktif</span>
+                                @endif
                                 </td>
                             </tr>
 

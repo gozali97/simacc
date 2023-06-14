@@ -48,14 +48,13 @@ class LaporanController extends Controller
     {
         $start = Carbon::parse($request->stat_date)->format('Y-m-d');
         $end = Carbon::parse($request->end_date)->format('Y-m-d');
-
         $data = Aset::query()
             ->join('detail_aset', 'detail_aset.kd_aset', 'aset.kd_aset')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('kondisi', 'kondisi.id', 'detail_aset.kd_kondisi')
-            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'detail_aset.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset')
-            ->whereBetween('aset.created_at', [$start, $end])
+            ->select('aset.nama_aset', 'detail_aset.kode_detail', 'detail_aset.gambar', 'detail_aset.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang', 'kondisi.kondisi_aset', 'detail_aset.tgl_masuk')
+            ->whereBetween('detail_aset.tgl_masuk', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.aset-pdf', compact('data', 'start', 'end'));
@@ -101,7 +100,10 @@ class LaporanController extends Controller
         $data = Peminjam::all();
 
         $pdf = Pdf::loadView('kades.laporan.peminjam-pdf', compact('data'));
-        return $pdf->download('laporan-data-peminjam.pdf');
+         return Response::make($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="laporan-data-peminjam.pdf"'
+        ]);
     }
 
     public function peminjaman()
@@ -133,7 +135,7 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('peminjaman.tgl_pinjam', 'detail_aset.kode_detail', 'aset.nama_aset', 'peminjam.nama_peminjam', 'peminjaman.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
-            ->whereBetween('peminjaman.created_at', [$start, $end])
+            ->whereBetween('peminjaman.tgl_pinjam', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.peminjaman-pdf', compact('data', 'start', 'end'));
@@ -170,7 +172,7 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_aset.kd_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('pengembalian.tgl_kembali', 'aset.nama_aset', 'pengembalian.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
-            ->whereBetween('pengembalian.created_at', [$start, $end])
+            ->whereBetween('pengembalian.tgl_kembali', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.pengembalian-pdf', compact('data', 'start', 'end'));
@@ -207,7 +209,7 @@ class LaporanController extends Controller
             ->join('ruangs', 'ruangs.kd_ruang', 'detail_mutasi.id_ruang')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('detail_mutasi.tgl_mutasi', 'mutasi.nama_mutasi', 'aset.nama_aset', 'mutasi.status', 'jenis_asets.nama_jenis', 'ruangs.nama_ruang')
-            ->whereBetween('mutasi.created_at', [$start, $end])
+            ->whereBetween('detail_mutasi.tgl_mutasi', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.mutasi-pdf', compact('data', 'start', 'end'));
@@ -241,7 +243,7 @@ class LaporanController extends Controller
             ->join('aset', 'aset.kd_aset', 'penghapusan.kd_aset')
             ->join('jenis_asets', 'jenis_asets.kd_jenis', 'aset.kd_jenis')
             ->select('penghapusan.tgl_penghapusan', 'aset.nama_aset', 'users.nama', 'penghapusan.status', 'jenis_asets.nama_jenis',)
-            ->whereBetween('penghapusan.created_at', [$start, $end])
+            ->whereBetween('penghapusan.tgl_penghapusan', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.penghapusan-pdf', compact('data', 'start', 'end'));
@@ -267,6 +269,7 @@ class LaporanController extends Controller
 
         $data = Perencanaan::query()
             ->select('perencanaan.*')
+            ->whereBetween('perencanaan.tgl_perencanaan', [$start, $end])
             ->get();
 
         $pdf = Pdf::loadView('kades.laporan.rencana-pdf', compact('data', 'start', 'end'));

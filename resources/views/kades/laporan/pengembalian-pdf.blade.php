@@ -35,6 +35,25 @@
     <h2 style="text-align:center;">Laporan Data Pengembalian Aset</h2>
     <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
         {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
+        @php
+        $hitungKembali = \App\Models\DetailPengembalian::query()
+                        ->join('pengembalian', 'pengembalian.kd_kembali', 'detail_pengembalian.kd_kembali')
+                        ->whereBetween('detail_pengembalian.created_at', [$start, $end])
+                        ->count();
+         $hitungselesai = \App\Models\DetailPengembalian::query()
+                        ->join('pengembalian', 'pengembalian.kd_kembali', 'detail_pengembalian.kd_kembali')
+                        ->where('pengembalian.status','Selesai')
+                        ->whereBetween('detail_pengembalian.created_at', [$start, $end])
+                        ->count();
+        $hitungproses = \App\Models\DetailPengembalian::query()
+                        ->join('pengembalian', 'pengembalian.kd_kembali', 'detail_pengembalian.kd_kembali')
+                        ->where('pengembalian.status','Proses')
+                        ->whereBetween('detail_pengembalian.created_at', [$start, $end])
+                        ->count();
+        @endphp
+        <p>Jumlah Pengembalian : {{ $hitungKembali }}</p>
+        <p>Jumlah pengembalian Selesai : {{ $hitungselesai }}</p>
+        <p>Jumlah pengembalian Proses : {{ $hitungproses }}</p>
     <table>
         <thead>
             <tr>
@@ -70,7 +89,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>yatno</p>
     </div>
 </body>
 

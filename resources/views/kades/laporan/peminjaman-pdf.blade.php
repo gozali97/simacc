@@ -35,6 +35,30 @@
     <h2 style="text-align:center;">Laporan Data Peminjaman Aset</h2>
     <p>Tanggal: {{ \Carbon\Carbon::parse($start)->format('d-m-Y') }} -
         {{ \Carbon\Carbon::parse($end)->format('d-m-Y') }}</p>
+        @php
+        $hitungsemua = \App\Models\DetailPeminjaman::query()
+                        ->whereBetween('detail_peminjaman.created_at', [$start, $end])
+                        ->count();
+        $hitungaktif = \App\Models\DetailPeminjaman::query()
+                        ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+                        ->where('peminjaman.status', 'Aktif')
+                        ->whereBetween('detail_peminjaman.created_at', [$start, $end])
+                        ->count();
+        $hitungselesai = \App\Models\DetailPeminjaman::query()
+                        ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+                        ->where('peminjaman.status', 'Selesai')
+                        ->whereBetween('detail_peminjaman.created_at', [$start, $end])
+                        ->count();
+        $hitungproses = \App\Models\DetailPeminjaman::query()
+                        ->join('peminjaman', 'peminjaman.kd_peminjaman', 'detail_peminjaman.kd_peminjaman')
+                        ->where('peminjaman.status', 'Proses')
+                        ->whereBetween('detail_peminjaman.created_at', [$start, $end])
+                        ->count();
+         @endphp
+        <p>Jumlah Seluruh Peminjaman   : {{ $hitungsemua }}</p>
+        <p>Jumlah Peminjaman Aktif     : {{ $hitungaktif }}</p>
+        <p>Jumlah Peminjaman Selesai   : {{ $hitungselesai }}</p>
+         <p>Jumlah Peminjaman Proses   : {{ $hitungproses }}</p>
     <table>
         <thead>
             <tr>
@@ -72,7 +96,7 @@
         <p>Mengetahui, <br> Kepala Desa Cibentang</p>
         <br>
         <br>
-        <p>Dr. Prunomo</p>
+        <p>Yatno</p>
     </div>
 </body>
 

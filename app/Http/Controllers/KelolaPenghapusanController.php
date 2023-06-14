@@ -64,7 +64,8 @@ class KelolaPenghapusanController extends Controller
                     return redirect()->back()->with('error', 'Detail aset tidak ditemukan.');
                 }
 
-                $detail->status = 'deleted';
+                //$detail->status = 'deleted';
+                $detail->status = 'del';
 
                 // Hapus detail aset
                 if (!$detail->save()) {
